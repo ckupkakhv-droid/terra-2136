@@ -120,6 +120,9 @@
 #campPanel .dossier > .campCompanion > small:not(.campReason) { display: none; }
 #campPanel .dossier > .campCompanion .companionAction > small { display: none; }
 #campPanel .dossier > :not(.campCompanion):is(.campReason, p, div:not([class])) { order: 1; }
+/* Отметки штатного обработчика («Назначение принято» и т. п.) — чернилами по бланку. */
+#campPanel .dossier > :is(.campCheck, .campReason) { margin: 0; font: 700 13px/1.3 var(--desk-type); color: var(--desk-green); }
+#campPanel .dossier > .campReason { color: var(--desk-red); }
 /* Кнопки на бумаге — тёмный металл. */
 #campPanel :is(.dossier, .blueprints .campConstructionSupply, .blueprints .campExpansion) .campButton:not([data-resident-job]):not(.residentJobLink):not([data-camp-back]):not(.dossierStep) {
   background: linear-gradient(#3b3b33, #23231e); color: #f0dfb4; border: 1px solid #14140f; box-shadow: inset 0 1px 0 #ffffff1a;
@@ -148,8 +151,9 @@
   #campPanel .campResidents.dossier { display: grid; grid-template-columns: minmax(230px, 40%) minmax(0, 1fr); grid-template-rows: auto auto auto auto auto 1fr auto; column-gap: 16px; row-gap: 8px; }
   #campPanel .campResidents.dossier > * { grid-column: 1 / -1; }
     #campPanel .dossier > .residentIdentityHead { grid-column: 1; grid-row: 2; }
-  #campPanel .dossier > .dossierNeeds { grid-column: 1; grid-row: 3; }
-  #campPanel .dossier > .campCompanion { grid-column: 1; grid-row: 4 / 7; align-self: start; }
+  #campPanel .dossier > :is(.campCheck, .campReason) { grid-column: 1; grid-row: 3; }
+  #campPanel .dossier > .dossierNeeds { grid-column: 1; grid-row: 4; }
+  #campPanel .dossier > .campCompanion { grid-column: 1; grid-row: 5 / 7; align-self: start; }
   #campPanel .dossier > .dossierOrderTitle { grid-column: 2; grid-row: 2; align-self: start; }
   #campPanel .dossier > .campJobs { grid-column: 2; grid-row: 2 / 7; margin-top: 28px; align-self: start; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
   /* В альбоме мало высоты: «К жителям» и рация — одна закреплённая строка сверху. */
