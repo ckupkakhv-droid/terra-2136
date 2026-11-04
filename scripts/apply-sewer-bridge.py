@@ -1,0 +1,12 @@
+"""Expose a reviewed terrain builder bridge without replacing the compiled game."""
+from pathlib import Path
+import hashlib,re
+root=Path(__file__).resolve().parents[1];p=root/'play/index.html';raw=p.read_bytes()
+if hashlib.sha256(raw).hexdigest()!='858fe60ec39a73b663dc0c5a915da3597afa99aefeddc414c7b6b3aaf2046cc9':
+ raise SystemExit('Unsupported baseline; review the bundle before adapting this bridge')
+s=raw.decode();assert s.count('rot();})();')==1
+s=s.replace('rot();})();','rot();window.TERRA_SEWER_BRIDGE={Chunk:Ie,shapes:L,Mesh:$t,Sphere:Hc,Material:vn,Group:Pi};})();')
+a=s.index('function recommendResident(');b=s.index('function _et(',a)
+s=s[:a]+re.sub(r'^[ \t]*//[^\n]*\n','',s[a:b],flags=re.M)+s[b:]
+assert len(s.encode())<=len(raw)
+p.write_text(s)

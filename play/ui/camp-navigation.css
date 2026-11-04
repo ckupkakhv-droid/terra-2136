@@ -49,3 +49,15 @@
 @media(prefers-reduced-motion: reduce) {
   #campPanel, #campPanel * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+#sewerAction { position:fixed; z-index:25; left:50%; bottom:32%; transform:translateX(-50%); min-height:48px; max-width:calc(100vw - 24px); padding:12px 18px; background:#172821f2; border:1px solid #b3a174; color:#f1dfbd; border-radius:5px; font:inherit; }
+#sewerAction[hidden] { display:none; }
+#sewerMap { z-index:35; }
+#sewerMap .win { touch-action:pan-y; overscroll-behavior:contain; width:min(580px,96vw); max-height:90dvh; overflow:auto; padding:16px; }
+#sewerMap h2 { display:flex; justify-content:space-between; align-items:center; font-size:18px; }
+#sewerMap .x { position:static; min-width:44px; min-height:44px; }
+#sewerRoute { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(4,60px); gap:5px; }
+.sewerCell { display:grid; place-content:center; padding:5px; border:1px solid #7e957b; background:#2c3932; color:#e2cfa9; font-size:12px; overflow-wrap:anywhere; text-align:center; }
+#sewerMap details { border-top:1px solid #73634b; }
+#sewerMap summary { min-height:48px; padding:12px 0; cursor:pointer; }
+#sewerMap p { font-size:13px; line-height:1.5; }
+#sewerLayerButton { margin:0 0 8px; width:100%; min-height:44px; }
