@@ -1,0 +1,242 @@
+/* «Штабной стол» (концепт Б): личное дело жителя и чертежи построек. Только CSS-градиенты,
+   без web-шрифтов, backdrop-filter и SVG-фильтров. Логика — в camp-dossier.js. */
+#campPanel {
+  --desk-paper: #e6d8b0; --desk-paper2: #d9c79a; --desk-ink: #2a2318; --desk-ink2: #5a4c35;
+  --desk-red: #a3342a; --desk-green: #2f6b35; --desk-amber: #f0b54a; --desk-blue: #1f4d7a;
+  --desk-type: "Courier New", "Liberation Mono", "DejaVu Sans Mono", monospace;
+  --desk-stamp: "DejaVu Sans Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+}
+/* Стол: тёмное дерево под бумагами. */
+#campPanel #campBody:is(.deskDossier, .deskBuild) {
+  background:
+    repeating-linear-gradient(92deg, #0000 0 22px, #0000000f 22px 23px, #0000 23px 61px, #ffffff06 61px 62px),
+    linear-gradient(180deg, #3b2a1b, #2a1d13 60%, #23180f);
+}
+
+/* ---------- Личное дело ---------- */
+#campPanel .campResidents.dossier {
+  position: relative; display: flex; flex-direction: column; gap: 10px;
+  margin: 6px 2px 10px; padding: 12px 12px 0; color: var(--desk-ink);
+  background:
+    radial-gradient(circle at 18% 22%, #a0773d14 0 40px, #0000 41px),
+    radial-gradient(circle at 82% 70%, #6b4a2210 0 60px, #0000 61px),
+    repeating-linear-gradient(0deg, #0000 0 27px, #8a74501a 27px 28px),
+    linear-gradient(170deg, var(--desk-paper), var(--desk-paper2));
+  border-radius: 3px; box-shadow: 0 10px 24px #0009, inset 0 0 40px #8a6a3a33;
+}
+#campPanel .dossier > [data-camp-back] {
+  order: -2; margin: -12px -12px 0; width: calc(100% + 24px); border-radius: 3px 3px 0 0;
+  background: #2b2a22; color: #e9d9b0; border: 0; border-bottom: 2px solid #00000055;
+  font-family: var(--desk-type); text-transform: uppercase; letter-spacing: .06em; font-size: 13px;
+}
+#campPanel .dossier > .residentIdentityHead { order: -1; position: relative; margin: 6px 0 0; align-items: flex-start; padding-right: 52px; }
+#campPanel .dossier .residentIdentityHead .residentPortrait {
+  position: relative; overflow: visible; width: 88px; height: 104px; border-radius: 1px; padding: 6px 6px 16px;
+  background: #f3ecd9; box-shadow: 0 3px 8px #0006, inset 0 0 0 1px #c9b98f; transform: rotate(-3deg); flex: 0 0 auto;
+}
+#campPanel .dossier .residentIdentityHead .residentPortrait > :not(.dossierClip) { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+#campPanel .dossier .residentIdentityHead .residentMonogram { color: #d6d0bd; background: transparent; }
+#campPanel .dossier .residentIdentityHead .residentMonogram > span,
+#campPanel .dossier .residentIdentityHead .residentPortrait > img { background: linear-gradient(160deg, #4a4a43, #1d1d1a 75%); filter: sepia(.35); }
+#campPanel .dossier .dossierClip { position: absolute; top: -14px; left: 14px; width: 14px; height: 40px; color: #8f9aa3; z-index: 1; }
+#campPanel .dossier .residentIdentityInfo { gap: 4px; }
+#campPanel .dossier .dossierNo, #campPanel .dossier .dossierOrderTitle, #campPanel .blueprints .bpNo {
+  font: 700 11px/1.3 var(--desk-type); letter-spacing: .14em; text-transform: uppercase; color: var(--desk-ink2);
+}
+#campPanel .dossier .residentIdentityInfo h3 { font: 700 20px/1.15 var(--desk-type); color: var(--desk-ink); border-bottom: 1px solid #5a4c3566; padding-bottom: 3px; }
+#campPanel .dossier .residentIdentityInfo small:not(.dossierNo) { color: var(--desk-ink2); font-family: var(--desk-type); font-size: 13px; }
+/* Профессия — красный штамп. */
+#campPanel .dossier .residentIdentityInfo .residentBadge {
+  align-self: flex-start; margin-top: 2px; padding: 2px 8px; border: 2px solid var(--desk-red); border-radius: 3px;
+  color: var(--desk-red); font: 800 12px/1.3 var(--desk-stamp); text-transform: uppercase; letter-spacing: .08em; transform: rotate(-3deg);
+  background: #a3342a0d;
+}
+#campPanel .dossier .residentIdentityInfo .residentBadge .gi { fill: currentColor; }
+/* Статус — второй штамп. */
+#campPanel .dossier .dossierStamp {
+  position: absolute; right: 4px; bottom: -6px; max-width: 46%; padding: 3px 9px; border: 3px double currentColor; border-radius: 4px;
+  font: 800 13px/1.15 var(--desk-stamp); text-transform: uppercase; letter-spacing: .06em; text-align: center;
+  color: var(--desk-red); transform: rotate(-9deg); opacity: .85; pointer-events: none; overflow-wrap: anywhere;
+}
+#campPanel .dossier .dossierStamp[data-tone="ok"] { color: var(--desk-green); }
+#campPanel .dossier .dossierStamp[data-tone="warn"] { color: #8a5a12; }
+#campPanel .dossier > .residentLiveStatus,
+#campPanel .dossier > .residentBio,
+#campPanel .dossier > .campFold,
+#campPanel .dossier > .campWorkHint { display: none; }
+/* Кнопка «i» — квадрат бумаги в углу. */
+#campPanel :is(.dossier, .blueprints) .deskInfo {
+  position: absolute; top: 0; right: 0; width: 48px; height: 48px; min-width: 48px; display: grid; place-items: center; padding: 0;
+  border: 0; border-radius: 4px; background: linear-gradient(160deg, #f1e6c6, #d6c391); box-shadow: 0 3px 6px #0006; color: var(--desk-ink); cursor: pointer;
+}
+#campPanel :is(.dossier, .blueprints) .deskInfo i { font: italic 700 24px/1 Georgia, "DejaVu Serif", serif; }
+#campPanel :is(.dossier, .blueprints) .deskInfo:focus-visible { outline: 3px solid var(--desk-amber); outline-offset: 2px; }
+/* Потребности. */
+#campPanel .dossier > .dossierNeeds { order: 0; display: grid; gap: 6px; margin-top: 8px; }
+#campPanel .dossier .dossierNeed { display: grid; grid-template-columns: 22px minmax(0, 1fr) 30px; align-items: center; gap: 8px; }
+#campPanel .dossier .dossierNeed .gi { width: 20px; height: 20px; fill: var(--desk-ink); }
+#campPanel .dossier .dossierNeed b { font: 700 13px/1 var(--desk-type); text-align: right; }
+#campPanel .dossier .dossierBar { height: 11px; border: 1px solid #3c3222; background: repeating-linear-gradient(90deg, #0000 0 calc(10% - 1px), #3c322255 calc(10% - 1px) 10%); position: relative; }
+#campPanel .dossier .dossierBar i {
+  position: absolute; inset: 1px auto 1px 1px; width: calc((100% - 2px) * var(--v, 0));
+  background: repeating-linear-gradient(115deg, #3a3122 0 2px, #0000 2px 5px);
+}
+#campPanel .dossier .dossierNeed[data-level="warn"] .dossierBar i { background: repeating-linear-gradient(115deg, #8a5a12 0 2px, #0000 2px 5px); }
+#campPanel .dossier .dossierNeed[data-level="bad"] .dossierBar i { background: repeating-linear-gradient(115deg, var(--desk-red) 0 2px, #0000 2px 5px); }
+#campPanel .dossier .dossierNeed[data-level="bad"] .gi { fill: var(--desk-red); }
+/* Наряд на работу — печати. */
+#campPanel .dossier > .dossierOrderTitle { order: 1; margin: 6px 0 0; font-size: 12px; }
+#campPanel .dossier > .dossierOrderTitle::after { content: " — поставь печать"; font-weight: 400; letter-spacing: .06em; text-transform: none; }
+#campPanel .dossier > .campJobs { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px 6px; }
+#campPanel .dossier .residentJobOption { position: relative; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; }
+#campPanel .dossier .residentJobOption > [data-resident-job] {
+  width: 72px; height: 72px; min-height: 72px; padding: 4px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  border: 2px dashed #5a4c35aa; background: #fffbe91f; color: var(--desk-ink);
+  font: 600 11px/1.1 var(--desk-stamp); white-space: nowrap; letter-spacing: 0; box-shadow: none; text-shadow: none;
+}
+#campPanel .dossier .residentJobOption > [data-resident-job] .campIcon { display: block; width: 26px; height: 26px; }
+#campPanel .dossier .residentJobOption > [data-resident-job] .gi { width: 26px; height: 26px; fill: currentColor; }
+#campPanel .dossier .residentJobOption > [data-resident-job]:not(:disabled):active { transform: scale(.94); background: #2f6b3522; }
+#campPanel .dossier .residentJobOption > [data-resident-job]:focus-visible { outline: 3px solid var(--desk-amber); outline-offset: 2px; }
+#campPanel .dossier .residentJobOption.isCurrent > [data-resident-job] { border: 3px solid var(--desk-green); color: var(--desk-green); background: #2f6b3518; }
+#campPanel .dossier .residentJobOption.isCurrent > [data-resident-job][data-resident-job="idle"] { border-color: var(--desk-red); color: var(--desk-red); background: #a3342a12; }
+#campPanel .dossier .residentJobOption > [data-resident-job]:disabled { opacity: .42; border-style: dotted; }
+#campPanel .dossier .dossierLock { position: absolute; top: 0; left: calc(50% + 20px); width: 18px; height: 18px; pointer-events: none; }
+#campPanel .dossier .dossierLock .gi { width: 18px; height: 18px; fill: var(--desk-ink2); }
+#campPanel .dossier .residentJobReason { font: italic 11px/1.25 var(--desk-type); color: var(--desk-red); text-align: center; }
+#campPanel .dossier .residentJobLink {
+  width: 100%; min-height: 48px; padding: 2px 4px; font: 700 11px/1.15 var(--desk-type); color: var(--desk-blue); text-decoration: underline;
+  border: 0; background: transparent; white-space: normal;
+}
+/* Напарник — вклеенная записка. */
+#campPanel .dossier > .campCompanion {
+  order: 3; color: var(--desk-ink); background: #f4ebcfcc; border: 1px dashed #5a4c3588; border-left: 4px solid var(--desk-green);
+  box-shadow: 0 2px 4px #0003; border-radius: 2px;
+}
+#campPanel .dossier > .campCompanion :is(small, .campReason) { color: var(--desk-ink2); }
+#campPanel .dossier > .campCompanion .campReason { color: var(--desk-red); }
+#campPanel .dossier > .campCompanion .companionTraining,
+#campPanel .dossier > .campCompanion > small:not(.campReason) { display: none; }
+#campPanel .dossier > .campCompanion .companionAction > small { display: none; }
+#campPanel .dossier > :not(.campCompanion):is(.campReason, p, div:not([class])) { order: 1; }
+/* Отметки штатного обработчика («Назначение принято» и т. п.) — чернилами по бланку. */
+#campPanel .dossier > :is(.campCheck, .campReason) { margin: 0; font: 700 13px/1.3 var(--desk-type); color: var(--desk-green); }
+#campPanel .dossier > .campReason { color: var(--desk-red); }
+/* Кнопки на бумаге — тёмный металл. */
+#campPanel :is(.dossier, .blueprints .campConstructionSupply, .blueprints .campExpansion) .campButton:not([data-resident-job]):not(.residentJobLink):not([data-camp-back]):not(.dossierStep) {
+  background: linear-gradient(#3b3b33, #23231e); color: #f0dfb4; border: 1px solid #14140f; box-shadow: inset 0 1px 0 #ffffff1a;
+}
+/* Рация: листать дела. */
+#campPanel .dossier > .dossierRadio {
+  order: 9; position: sticky; bottom: 0; z-index: 2; margin: 4px -12px 0; padding: 8px;
+  display: grid; grid-template-columns: 1fr minmax(0, 1.4fr) 1fr; gap: 8px; align-items: center;
+  background: linear-gradient(#2f3a30, #1e2620); border-top: 2px solid #11160f; border-radius: 0 0 3px 3px; box-shadow: 0 -4px 10px #0005;
+}
+#campPanel .dossier .dossierStep {
+  min-height: 48px; border-radius: 6px; border: 1px solid #0b0e0b; background: linear-gradient(#3a3f38, #222620); color: #e6e0cc;
+  font: 700 12px/1 var(--desk-stamp); text-transform: uppercase; letter-spacing: .06em;
+}
+#campPanel .dossier .dossierStep[data-step="-1"]::before { content: "◀ "; }
+#campPanel .dossier .dossierStep[data-step="1"]::after { content: " ▶"; }
+#campPanel .dossier .dossierStep:disabled { opacity: .45; }
+#campPanel .dossier .dossierDial {
+  display: block; min-height: 40px; padding: 10px 8px; border-radius: 4px; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font: 700 13px/20px var(--desk-type); color: #2b1d07;
+  background: linear-gradient(90deg, #0000 calc(50% - 1px), #c0281e calc(50% - 1px) calc(50% + 1px), #0000 calc(50% + 1px)), repeating-linear-gradient(90deg, #5a3a0a55 0 1px, #0000 1px 8px) top / 100% 7px no-repeat, linear-gradient(#f6c463, #d8962f);
+  box-shadow: inset 0 0 0 2px #1a1208, inset 0 3px 8px #0006;
+}
+/* Альбом: бланк в две колонки — дело слева, наряд справа. */
+@media (orientation: landscape) and (min-width: 600px) {
+  #campPanel .campResidents.dossier { display: grid; grid-template-columns: minmax(230px, 40%) minmax(0, 1fr); grid-template-rows: auto auto auto auto auto 1fr auto; column-gap: 16px; row-gap: 8px; }
+  #campPanel .campResidents.dossier > * { grid-column: 1 / -1; }
+    #campPanel .dossier > .residentIdentityHead { grid-column: 1; grid-row: 2; }
+  #campPanel .dossier > :is(.campCheck, .campReason) { grid-column: 1; grid-row: 3; }
+  #campPanel .dossier > .dossierNeeds { grid-column: 1; grid-row: 4; }
+  #campPanel .dossier > .campCompanion { grid-column: 1; grid-row: 5 / 7; align-self: start; }
+  #campPanel .dossier > .dossierOrderTitle { grid-column: 2; grid-row: 2; align-self: start; }
+  #campPanel .dossier > .campJobs { grid-column: 2; grid-row: 2 / 7; margin-top: 28px; align-self: start; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+  /* В альбоме мало высоты: «К жителям» и рация — одна закреплённая строка сверху. */
+  #campPanel .dossier > [data-camp-back] { grid-column: 1; margin: -12px 0 0 -12px; width: calc(100% + 12px); border-radius: 3px 0 0 0; min-height: 56px; }
+  #campPanel .dossier > .dossierRadio { grid-column: 2; grid-row: 1; position: sticky; top: 0; bottom: auto; margin: -12px -12px 0 -16px; padding: 4px 8px; border-top: 0; border-bottom: 2px solid #11160f; border-radius: 0 3px 0 0; box-shadow: 0 4px 10px #0005; }
+  #campPanel .dossier > .residentIdentityHead { padding-right: 52px; }
+  #campPanel .dossier > .residentIdentityHead { flex-wrap: wrap; }
+  #campPanel .dossier > .residentIdentityHead::after { content: ""; order: 2; flex-basis: 100%; height: 0; }
+  #campPanel .dossier .residentIdentityInfo { flex: 1 1 0; min-width: 0; }
+  #campPanel .dossier .residentIdentityInfo h3 { font-size: 17px; }
+  #campPanel .dossier .residentIdentityHead .residentPortrait { width: 74px; height: 88px; }
+  #campPanel .dossier .dossierStamp { position: static; order: 3; margin: 2px 0 0 auto; max-width: 100%; transform: rotate(-4deg); }
+}
+
+/* ---------- Чертежи построек ---------- */
+#campPanel .blueprints { color: #efe4c8; }
+#campPanel .blueprints > .deskTags { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+#campPanel .blueprints .deskTag {
+  position: relative; flex: 1 1 48px; min-width: 48px; max-width: 72px; min-height: 52px; padding: 12px 4px 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--desk-ink);
+  background: radial-gradient(circle at 50% 7px, #2a1d13 0 3px, #0000 4px), linear-gradient(170deg, #e8d6a6, #cdb47c);
+  clip-path: polygon(14% 0, 86% 0, 100% 14%, 100% 100%, 0 100%, 0 14%); box-shadow: 0 2px 4px #0006;
+}
+#campPanel .blueprints .deskTag .gi { width: 20px; height: 20px; fill: var(--desk-ink); }
+#campPanel .blueprints .deskTag b { font: 700 14px/1 var(--desk-type); }
+#campPanel .blueprints .deskTag[data-empty] b { color: var(--desk-red); }
+#campPanel .blueprints > :is(.campConstructionSupply, .campExpansion) {
+  color: var(--desk-ink); border: 0; border-left: 4px solid #8a6a3a; border-radius: 2px;
+  background: repeating-linear-gradient(0deg, #0000 0 23px, #8a74501a 23px 24px), linear-gradient(170deg, var(--desk-paper), var(--desk-paper2));
+  box-shadow: 0 6px 14px #0008;
+}
+#campPanel .blueprints > :is(.campConstructionSupply, .campExpansion) :is(strong, small, span) { color: inherit; }
+#campPanel .blueprints > :is(.campConstructionSupply, .campExpansion) .campReason { color: var(--desk-red); }
+#campPanel .blueprints > :is(.campConstructionSupply, .campExpansion) .gi { fill: currentColor; }
+#campPanel .blueprints > h3 { font: 700 15px/1.3 var(--desk-type); letter-spacing: .1em; text-transform: uppercase; color: #f0dfb4; }
+#campPanel .blueprints > .campGrid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+#campPanel .blueprints .campCard.bp {
+  position: relative; gap: 6px; padding: 10px 10px 10px; color: #eef4fb; border: 1px solid #9cc0e344; border-radius: 3px;
+  background:
+    linear-gradient(#ffffff14 1px, #0000 1px) 0 0 / 14px 14px, linear-gradient(90deg, #ffffff14 1px, #0000 1px) 0 0 / 14px 14px,
+    radial-gradient(ellipse at 30% 20%, #3c6fa0, #1f4d7a 70%, #193f66);
+  box-shadow: 0 6px 14px #0009, inset 0 0 0 4px #ffffff10;
+}
+#campPanel .blueprints .bp .bpNo { color: #cfe0f2; padding-right: 48px; font-size: 10px; }
+#campPanel .blueprints .bp > .campIcon { width: 56px; height: 56px; padding: 6px; border: 1.5px dashed #e8f1fbaa; border-radius: 4px; }
+#campPanel .blueprints .bp > .campIcon .gi { width: 100%; height: 100%; fill: #f1f7fd; }
+#campPanel .blueprints .bp > strong { font: 700 16px/1.15 var(--desk-type); color: #fff; }
+#campPanel .blueprints .bp > .bpLevel { align-self: flex-start; font: 700 11px/1 var(--desk-type); color: #cfe0f2; }
+#campPanel .blueprints .bp > small.bpNote { display: none; }
+#campPanel .blueprints .bp .bpCost { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+#campPanel .blueprints .bp .bpChip { display: inline-flex; align-items: center; gap: 3px; font: 700 14px/1 var(--desk-type); }
+#campPanel .blueprints .bp .bpChip .gi { width: 18px; height: 18px; fill: #f1f7fd; }
+#campPanel .blueprints .bp .bpChip[data-lack] { color: #ffb0a0; }
+#campPanel .blueprints .bp .bpChip[data-lack] .gi { fill: #ffb0a0; }
+#campPanel .blueprints .bp > .bpStamp {
+  position: absolute; right: 8px; top: 64px; padding: 2px 6px; border: 2px solid currentColor; border-radius: 3px; transform: rotate(-8deg);
+  font: 800 11px/1.2 var(--desk-stamp); text-transform: uppercase; letter-spacing: .06em; pointer-events: none; background: #0000001a;
+}
+#campPanel .blueprints .bp > .bpStamp[data-tone="ok"] { color: #f2c14e; }
+#campPanel .blueprints .bp > .bpStamp[data-tone="lack"] { color: #ff8f7a; }
+#campPanel .blueprints .bp > .bpStamp[data-tone="locked"] { color: #b9c6d3; }
+#campPanel .blueprints .bp > button.campButton {
+  margin-top: auto; background: linear-gradient(#f2c14e, #c98d22); color: #2a1a05; border: 1px solid #5d3c0b; font-weight: 800;
+}
+#campPanel .blueprints .bp > button.campButton:disabled { background: #ffffff14; color: #cfe0f2aa; border-color: #9cc0e344; }
+#campPanel .blueprints .bp > button.campButton .gi { fill: currentColor; }
+
+/* Лист «i» на бумаге. */
+#campPanel .campInfoSheet.deskSheet { background: linear-gradient(170deg, var(--desk-paper), var(--desk-paper2)); color: var(--desk-ink); border-top: 3px solid #8a6a3a; }
+#campPanel .campInfoSheet.deskSheet strong, #campPanel .campInfoSheet.deskSheet h4 { font-family: var(--desk-type); color: var(--desk-ink); }
+#campPanel .campInfoSheet.deskSheet .campInfoClose { color: var(--desk-ink); border-color: #5a4c3566; }
+#campPanel .campInfoSheet.deskSheet .campMeter { color: var(--desk-ink); }
+#campPanel .campInfoSheet.deskSheet small { color: var(--desk-ink2); }
+#campPanel .campInfoSheet.deskSheet .campBar { background: #3a312226; }
+#campPanel .campInfoSheet.deskSheet .campBar i { background: repeating-linear-gradient(115deg, #3a3122 0 2px, #0000 2px 5px); }
+@media (prefers-reduced-motion: reduce) { #campPanel .dossier .residentJobOption > [data-resident-job]:active { transform: none; } }
+/* Порядок на столе: бирки → чертежи → записки снабжения → уровень лагеря. */
+#campPanel .blueprints { display: flex; flex-direction: column; gap: 10px; }
+#campPanel .blueprints > * { order: 4; margin-top: 0; margin-bottom: 0; }
+#campPanel .blueprints > .deskTags { order: 0; }
+#campPanel .blueprints > .campGrid { order: 1; }
+#campPanel .blueprints > .campConstructionSupply { order: 2; position: relative; }
+#campPanel .blueprints > .campExpansion { order: 3; }
+#campPanel .blueprints > .campConstructionSupply > small.deskHint { display: none; }
+#campPanel .blueprints > .campConstructionSupply > strong:first-child { padding-right: 52px; min-height: 40px; display: flex; align-items: center; }
+#campPanel .blueprints > .campConstructionSupply > .deskInfo { top: 6px; right: 6px; }
