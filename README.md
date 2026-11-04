@@ -20,7 +20,7 @@
 
 **ТЕРРА** соединяет вылазки за припасами, развитие персонажа и управление поселением. Исследуй мир с видом сверху, выбирай снаряжение, назначай выжившим работу и готовь периметр к следующей атаке.
 
-[Что изменилось](CHANGELOG.md) · [Выпуск 0.4.4](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.4) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
+[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.4](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.4) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
 
 ## Три стороны одной экспедиции
 
@@ -195,3 +195,5 @@ python3 scripts/build-offline.py
 Награда и повторная загрузка канализации проверяются `python3 tests/sewer-boss.py` и `node --test tests/sewer-reward.mjs`. Саи — новый тип контента: для открытия сейва с ними нужна поддерживающая сборка; подробности совместимости — в `docs/SEWERS_RU.md`.
 
 </details>
+
+Шрифт витрины Fira Sans Extra Condensed — Mozilla / Carrois, [SIL OFL 1.1](assets/FIRA-OFL.txt). Трейлеры и их кадры сохранены из [прежней витрины команды «Терры»](https://github.com/89244114832maxim-ai/terra-play).
