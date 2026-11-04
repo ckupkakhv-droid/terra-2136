@@ -119,3 +119,7 @@
 .recordingControls button { min-height:48px; padding:10px 16px; border:1px solid #9e855b; background:#29362c; color:#f2dfbd; font:inherit; }
 .recordingControls button:focus-visible { outline:2px solid #f6cb83; outline-offset:2px; }
 @media(orientation:landscape) and (max-height:500px){.recordingLetterbox{max-height:3vh}.recordingCard{padding:12px;max-height:88dvh}.recordingCard h2{margin:6px 0}.recordingCard p{font-size:13px;line-height:1.5;margin:8px 0}}
+/* Reading/encounter scenes own the screen; removing the scene restores HUD
+   visibility without changing native hidden classes or input state. */
+body:has(#sewerRecording) #hud,
+body:has(#sewerRecording) #touch{visibility:hidden!important}

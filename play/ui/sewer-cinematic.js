@@ -1,7 +1,11 @@
-/* A staged recording, not the unfinished Raphael boss/model. No save writes. */
+import { leaseSewerCamera } from './sewer-camera.js';
+/* Found recordings and Raphael's encounter share modal input ownership.
+ * A supplied live subject gets a temporary render camera, without save writes.
+ */
 export function showRecording(game, message, options = {}) {
   if (game.state !== 'play' || document.getElementById('sewerRecording')) return;
-  const owner = game.p, previousFocus = document.activeElement;
+  const owner = game.p, world = game.world, dungeon = game.dg;
+  const previousFocus = document.activeElement;
   const frames = options.frames || [
     ['АГИ · ПАДЕНИЕ СЕТЕЙ', 'Города гасли по одному. За приказами машин пришла эпидемия. Внизу остались только следы тех, кто пытался удержать проход.'],
     ['ПОСЛЕДНИЙ ИЗ КЛАНА', message],
@@ -24,27 +28,39 @@ export function showRecording(game, message, options = {}) {
       const element=document.getElementById(id);if(element)element.style.display='none';
     }
   };
+  let frame=0, closed=false, cameraLease=null;
+  const next=root.querySelector('#recordingNext');
+  const ownsModal = () => game.p===owner && owner.alive!==false && game.world===world && game.dg===dungeon &&
+    game.state==='modal' && root.isConnected && !root.inert &&
+    ![...document.querySelectorAll('.modal:not(.hidden)')].some(panel => panel.getClientRects().length);
+  cameraLease=leaseSewerCamera(game,options.subject,{owns:ownsModal,onCancel:()=>close(true,false)});
+  if(cameraLease) {
+    root.style.background='linear-gradient(180deg,#05080722 35%,#050807bb 100%)';
+    root.style.justifyContent='flex-end';
+    const boxes=root.querySelectorAll('.recordingLetterbox');
+    boxes[0].style.cssText='flex:1;max-height:none;background:transparent;border:0';
+    boxes[1].style.display='none';
+    const card=root.querySelector('.recordingCard');
+    card.style.maxHeight='46dvh';card.style.background='#101a15ed';
+  }
   clearInput();
   game.state = 'modal';
   document.body.append(root);
-  let frame=0, closed=false;
-  const next=root.querySelector('#recordingNext');
-  const ownsModal = () => game.p===owner && game.state==='modal' && !root.inert &&
-    ![...document.querySelectorAll('.modal:not(.hidden)')].some(panel => panel.getClientRects().length);
   function draw() {
     root.querySelector('#recordingTitle').textContent=frames[frame][0];
     root.querySelector('#recordingText').textContent=frames[frame][1];
     root.querySelector('#recordingStep').textContent=`${frame+1} / ${frames.length}`;
     next.textContent=frame===frames.length-1?(options.finishLabel||'В тоннель'):'Далее';
+    cameraLease?.setFrame(frame);
   }
-  function close(restore=true) {
+  function close(restore=true,finished=true) {
     if(closed)return;
     const restoreGame=restore && ownsModal();
-    closed=true;clearInterval(lifecycle);window.removeEventListener('keydown',keyboard,true);root.remove();
+    closed=true;cameraLease?.release();clearInterval(lifecycle);window.removeEventListener('keydown',keyboard,true);root.remove();
     if(restoreGame) {
       clearInput();game.state='play';
       if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
-      options.onFinish?.();
+      if(finished)options.onFinish?.();
     }
   }
   function keyboard(event) {
@@ -62,7 +78,7 @@ export function showRecording(game, message, options = {}) {
   root.querySelector('#recordingSkip').onclick=()=>close();
   next.onclick=()=>{if(game.p!==owner)return close(false);if(++frame===frames.length)close();else draw();};
   window.addEventListener('keydown',keyboard,true);
-  const lifecycle=setInterval(()=>{if(!ownsModal())close(false);},100);
+  const lifecycle=setInterval(()=>{if(!ownsModal())close(false);else cameraLease?.check();},100);
   draw();next.focus();
-  return {close};
+  return {close,camera:cameraLease};
 }

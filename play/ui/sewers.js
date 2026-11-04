@@ -3,15 +3,17 @@ import { drawSewerMap } from './sewer-map.js';
 import { installSewerReward } from './sewer-reward.js';
 import { installRaphael } from './sewer-raphael.js';
 import { showRecording } from './sewer-cinematic.js';
+import { installSewerNavigation } from './sewer-navigation.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
  */
 export const CELLS = [[0,0],[1,0],[1,1],[2,1],[2,2],[3,2],[3,3]];
 export const ENTRANCE = {x:12,z:-10,kind:'metro',name:'Канализация · Южный коллектор',sewer:true};
+const RAPHAEL_LINE = '«Некоторые звали меня черепашкой-ниндзя. Я — Рафаэль. AGI забрал моих братьев и учителя. Из зелёных пиццеедов остался я. Крыс не трогай: они знают эти тоннели лучше людей».';
 export const LORE = [
   ['Журнал насосной', 'После начала AGI города теряли энергосети один за другим. Коллектор стал убежищем. Не открывайте нижнюю камеру, пока работают аварийные сбросы.'],
   ['Перехват «Ambrala»', 'В журнале российского НИИ «Заслон» найден зарубежный архив Ambrala. Непроверенная запись связывает выпуск вируса с секретной лабораторией в Китае и приказом AGI. Местный узел передавал те же команды. Для подтверждения нужны другие свидетельства кампании.'],
-  ['Последний из клана', '«Некоторые звали меня черепашкой-ниндзя. Я — Рафаэль. AGI забрал моих братьев и учителя. Из зелёных пиццеедов остался я. Крыс не трогай: они знают эти тоннели лучше людей». Впереди следы двух саев и красная ткань.'],
+  ['Последний из клана', `${RAPHAEL_LINE} Впереди следы двух саев и красная ткань.`],
   ['Сигнал на Москву', 'Северный ретранслятор всё ещё посылает машинные команды. Чем ближе к Москве, тем чаще в сводках встречаются патрульные роботы и холодное неоновое свечение. Маршрут в этот сектор пока не открыт.'],
 ];
 export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
@@ -23,18 +25,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     const [i,j] = CELLS[index];
     return {x:game.dg.ch.cx*48+i*16+8,z:game.dg.ch.cz*48+j*16+8};
   };
-  function syncObjective() {
-    if(!active())return;
-    const key=game.dg.key,won=!!game.defeated?.[key];
-    const chest=game.p.durableChests?.entries?.some(entry=>entry.domain==='dungeon'&&entry.key===key&&entry.kind==='boss');
-    const title=won?(chest?'Коллектор · заберите награду':'Коллектор · вернитесь к лестнице'):pumps.size<2?`Коллектор · насосы ${pumps.size}/2`:'Коллектор · последний из клана';
-    const hint=won?'Лестница на поверхность находится в первом секторе.':pumps.size<2?'Сухие дорожки обходят воду. Найдите и включите оба насоса.':'Охотник ждёт в нижней камере. Уклоняйтесь от красных колец и рывка.';
-    for(const [id,text] of [['objT',title],['objH',hint]]){
-      const element=document.getElementById(id);if(element&&element.textContent!==text)element.textContent=text;
-    }
-  }
-  const objective=game.ui.objective;
-  game.ui.objective=function(...args){const result=objective.apply(this,args);syncObjective();return result;};
+  const navigation=installSewerNavigation(game,{active,pumps:()=>pumps,center,boss:()=>raphael.enemy});
   const originalDungeon = bridge.Chunk.prototype.dungeon;
   bridge.Chunk.prototype.dungeon = function(theme, ...args) {
     if (theme !== 'metro' || args[0] !== '12,-10') return originalDungeon.call(this, theme, ...args);
@@ -169,10 +160,11 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
         if(!enemy)continue;
         seen.add(i);
         showRecording(this,LORE[2][1],{
+          subject:enemy,
           heading:'ВСТРЕЧА · ПОСЛЕДНИЙ ИЗ КЛАНА',skipLabel:'К бою',finishLabel:'Начать бой',
           frames:[
             ['ШАГИ ЗА ВОДОСБРОСОМ','Насосы смолкли. Из темноты выходит мутант в красной повязке. В руках — два сая. За его спиной шевелятся тени крыс.'],
-            ['РАФАЭЛЬ',LORE[2][1]],
+            ['РАФАЭЛЬ',RAPHAEL_LINE],
             ['НЕ ТРОГАЙ КРЫС','Охотник перекрывает проход. Красные кольца предупреждают об ударе и рывке. Отойдите с линии атаки и бейте, пока он восстанавливается. Награда ждёт в сундуке после победы.'],
           ],
         });
@@ -185,7 +177,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   };
   function updateSurfaceUI() {
     if(!game.p)return;
-    syncObjective();
+    navigation.sync();
     if(currentPlayer!==game.p){currentPlayer=game.p;pumps=new Set();seen=new Set();}
     group.visible=!game.world.inDungeon&&Math.hypot(game.p.x-ENTRANCE.x,game.p.z-ENTRANCE.z)<40;
     if(!active())rats.clear();

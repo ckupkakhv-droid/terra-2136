@@ -5,12 +5,13 @@ hits and one synchronous localStorage failure to exercise native durable paths.
 from pathlib import Path
 import os,shutil
 from playwright.sync_api import sync_playwright,expect
+expect.set_options(timeout=30000)
 out=Path(os.environ.get('TERRA_QA_OUTPUT','/tmp/terra-sewer-boss-qa'));out.mkdir(parents=True,exist_ok=True)
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('TERRA_CHROMIUM') or shutil.which('chromium') or shutil.which('google-chrome'),args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
  page=b.new_page(viewport={'width':1280,'height':800});page.set_default_timeout(30000);errors=[]
  page.on('pageerror',lambda e:(print('PAGEERROR',e.stack,flush=True),errors.append(str(e))))
- page.goto(os.environ.get('TERRA_TEST_URL','http://127.0.0.1:8082/play/'),timeout=90000)
+ page.goto(os.environ.get('TERRA_TEST_URL','http://127.0.0.1:8080/play/'),timeout=90000)
  page.locator('#mNew').click();page.locator('#skip').click();page.wait_for_function('game.sewers')
  def enter():
   page.evaluate('game.p.x=12;game.p.z=-10;game.camT=null');page.locator('#sewerAction').click();page.wait_for_function('!!game.dg && !game.dungeonTransition')

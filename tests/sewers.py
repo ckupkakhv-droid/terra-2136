@@ -4,12 +4,15 @@ not a combat playthrough or a physical-phone test.
 import os, shutil
 from pathlib import Path
 from playwright.sync_api import sync_playwright, expect
+# Native software rendering can exceed 5 s when CI shares the CPU. Keep the
+# assertion budget consistent with the existing 30 s integration waits.
+expect.set_options(timeout=30000)
 out=Path(os.environ.get('TERRA_QA_OUTPUT','/tmp/terra-sewer-qa'));out.mkdir(parents=True,exist_ok=True)
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path=os.environ.get('TERRA_CHROMIUM') or shutil.which('chromium') or shutil.which('google-chrome'),args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
  page=b.new_page(viewport={'width':1280,'height':800},has_touch=True);page.set_default_timeout(30000)
  errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('console',lambda m:errors.append(m.text) if m.type=='error' and 'favicon' not in m.location.get('url','') else None)
- page.goto(os.environ.get('TERRA_TEST_URL','http://127.0.0.1:8082/play/'),timeout=90000)
+ page.goto(os.environ.get('TERRA_TEST_URL','http://127.0.0.1:8080/play/'),timeout=90000)
  page.locator('#mNew').tap();page.locator('#skip').tap();page.wait_for_function('window.game.sewers')
  assert page.evaluate("(()=>{const c=new window.TERRA_SEWER_BRIDGE.Chunk(1000,1000);c.dungeon('metro','qa-original');return c.rooms.length===16})()"), 'Ordinary metro generator changed'
  assert page.evaluate('game.world.free(12,-10,.4)'), 'Entrance is blocked on the surface'
