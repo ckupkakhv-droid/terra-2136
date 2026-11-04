@@ -244,3 +244,8 @@
 // Мобильный каркас лагеря: play/ui/camp-mobile.* (HUD и логика выше не меняются).
 { const s = document.createElement('script'); s.src = new URL('camp-mobile.js', document.currentScript?.src || new URL('ui/', location.href)).href; document.head.append(s);
   const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-mobile.css', document.currentScript?.src || new URL('ui/', location.href)).href; document.head.append(l); }
+
+// «Штабной стол»: личное дело жителя и чертежи построек — play/ui/camp-dossier.* (только оформление).
+{ const base = document.currentScript?.src || new URL('ui/', location.href);
+  const s = document.createElement('script'); s.src = new URL('camp-dossier.js', base).href; document.head.append(s);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-dossier.css', base).href; document.head.append(l); }
