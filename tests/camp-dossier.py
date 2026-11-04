@@ -71,6 +71,16 @@ with sync_playwright() as p:
         dossier = page.locator('#campBody .campResidents.dossier')
         expect(dossier).to_be_visible()
         expect(dossier.locator('.dossierNeed')).to_have_count(5)
+        expect(dossier.locator('.dossierNeedName')).to_have_text(['Мораль', 'Еда', 'Вода', 'Отдых', 'Защита'])
+        spilled = page.evaluate("""() => [...document.querySelectorAll('#campBody .dossier .residentJobOption')].flatMap(opt => {
+          const box = opt.getBoundingClientRect();
+          return [...opt.querySelectorAll('.residentJobReason, .residentJobLink')].filter(node => {
+            if (node.hidden || node.getClientRects().length === 0) return false;
+            const r = node.getBoundingClientRect();
+            return r.width > 1 && (r.left < box.left - 1 || r.right > box.right + 1 || r.bottom > box.bottom + 1);
+          }).map(node => (node.textContent || '').trim().slice(0, 40));
+        })""")
+        assert not spilled, f'{name}: подписи работ вылезают из ячейки: {spilled}'
         expect(dossier.locator('.dossierNo')).to_contain_text('Личное дело')
         expect(dossier.locator('.dossierStamp')).to_be_visible()
         expect(dossier.locator('.dossierRadio .dossierDial')).to_contain_text('из 3')
@@ -104,6 +114,16 @@ with sync_playwright() as p:
         # Чертежи.
         tap(page.locator('#campTabs [data-camp-tab="build"]'))
         expect(page.locator('#campBody .blueprints .deskTag')).to_have_count(6)
+        expect(page.locator('#campBody .deskTag small')).to_have_text(['Дерево', 'Лом', 'Еда', 'Вода', 'Химикаты', 'Ткань'])
+        gen = page.locator('[data-building="generator"] > .campIcon').inner_html()
+        shop = page.locator('[data-building="workshop"] > .campIcon').inner_html()
+        assert gen and shop and gen != shop, 'У генератора и мастерской должен быть разный знак'
+        if width <= 420:
+            last = page.locator('#campBody .campCard.bp').last
+            last.evaluate("el => el.scrollIntoView({block: 'end'})")
+            card = last.bounding_box()
+            tabs = page.locator('#campTabs').bounding_box()
+            assert card['y'] + card['height'] <= tabs['y'] + 2, f'{name}: последняя карточка под навигацией'
         n = page.locator('#campBody .campCard[data-building]').count()
         assert n > 0
         expect(page.locator('#campBody .campCard.bp .bpStamp')).to_have_count(n)
