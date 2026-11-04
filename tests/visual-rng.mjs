@@ -37,7 +37,7 @@ for (let seed=0;seed<128;seed++) {
   if(jitter!==undefined)args.push(jitter);
   nativeAdd.apply(old,args);fixed.add(...args);
   assert.equal(b.calls(),a.calls(),`puddle draw count ${color}/${jitter}`);
-  assert.deepEqual(tail(b),tail(a),'subsequent seeded placements after puddle');cases++;
+  assert.deepEqual(tail(b),tail(a),'subsequent seeded coordinate samples after puddle');cases++;
  }
  const a=rng(seed),b=rng(seed),legacy=new ctx.Builder();legacy.dt=new ctx.Batch(a);
  legacy.R=(x,y)=>x+a()*(y-x);
@@ -45,10 +45,10 @@ for (let seed=0;seed<128;seed++) {
  const replacement={r:b,R:(x,y)=>x+b()*(y-x)};
  consumeWire.call(replacement);
  assert.equal(a.calls(),7);assert.equal(b.calls(),a.calls(),'removed wire consumed all native draws');
- assert.deepEqual(tail(b),tail(a),'subsequent seeded placements after wire');cases++;
+ assert.deepEqual(tail(b),tail(a),'subsequent seeded coordinate samples after wire');cases++;
  const c=rng(seed),d=rng(seed),tv={s:new ctx.Batch(c),g:new ctx.Batch(c)};
  drawTV.call(tv,1,2);
  const oldTV=new ctx.Batch(d);oldTV.box(1,0,2,1.2,.6,.5,'#4a3a2a');oldTV.box(1,.6,2,1,.7,.15,'#1a1a1a');
- assert.equal(c.calls(),2);assert.deepEqual(tail(c),tail(d),'subsequent seeded placements after fallback TV');cases++;
+ assert.equal(c.calls(),2);assert.deepEqual(tail(c),tail(d),'subsequent seeded coordinate samples after fallback TV');cases++;
 }
-console.log(`PASS ${cases} deterministic cases: puddles, removed wire, fallback TV; 128 seeds, next 24 placements match native stream.`);
+console.log(`PASS ${cases} deterministic cases: puddles, removed wire, fallback TV; 128 seeds, next 24 coordinate samples match native stream.`);
