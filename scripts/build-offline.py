@@ -13,7 +13,8 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 PLAY = ROOT / 'play'
 OUTPUT = ROOT / 'terra.html'
-MAX_BYTES = 50_000_000
+# Жёсткий потолок площадки — 50 МБ. Держим сборку у 40 МБ, чтобы оставался запас.
+MAX_BYTES = 40_000_000
 
 
 def encoded(raw):
@@ -35,6 +36,26 @@ for path in sorted((PLAY / 'assets').rglob('*.glb')):
         'gzip': compressed,
         'data': encoded(packed if compressed else raw),
     }
+
+# Архив window.TERRA_* загрузчик читает синхронно. В офлайне байты лежат
+# в window.TERRA_PACK, поэтому повторно класть их в fetch-шим не нужно.
+pack = {}
+for path in sorted((PLAY / 'assets' / 'pack').rglob('*')):
+    if path.is_file():
+        pack[path.relative_to(PLAY).as_posix()] = encoded(path.read_bytes())
+if len(pack) < 2:
+    raise ValueError('Offline build did not find play/assets/pack')
+boot_tag = '<script src="assets/vendor/fflate.min.js"></script>\n<script src="assets/boot.js"></script>'
+if html.count(boot_tag) != 1:
+    raise ValueError('Expected the fflate and boot script tags')
+fflate_source = (PLAY / 'assets/vendor/fflate.min.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
+boot_source = (PLAY / 'assets/boot.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
+html = html.replace(
+    boot_tag,
+    '<script>window.TERRA_PACK=' + json_script(pack) + '</script>'
+    '<script>' + fflate_source + '</script><script>' + boot_source + '</script>',
+    1,
+)
 
 # Match the complete relative path, not a basename: distinct folders may contain
 # equally named models. Unrelated requests keep the native fetch behavior.
