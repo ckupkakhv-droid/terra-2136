@@ -73,8 +73,9 @@
 #campPanel :is(.dossier, .blueprints) .deskInfo:focus-visible { outline: 3px solid var(--desk-amber); outline-offset: 2px; }
 /* Потребности. */
 #campPanel .dossier > .dossierNeeds { order: 0; display: grid; gap: 6px; margin-top: 8px; }
-#campPanel .dossier .dossierNeed { display: grid; grid-template-columns: 22px minmax(0, 1fr) 30px; align-items: center; gap: 8px; }
+#campPanel .dossier .dossierNeed { display: grid; grid-template-columns: 20px auto minmax(48px, 1fr) 28px; align-items: center; gap: 6px; }
 #campPanel .dossier .dossierNeed .gi { width: 20px; height: 20px; fill: var(--desk-ink); }
+#campPanel .dossier .dossierNeedName { font: 700 12px/1.1 var(--desk-type); color: var(--desk-ink); }
 #campPanel .dossier .dossierNeed b { font: 700 13px/1 var(--desk-type); text-align: right; }
 #campPanel .dossier .dossierBar { height: 11px; border: 1px solid #3c3222; background: repeating-linear-gradient(90deg, #0000 0 calc(10% - 1px), #3c322255 calc(10% - 1px) 10%); position: relative; }
 #campPanel .dossier .dossierBar i {
@@ -87,8 +88,8 @@
 /* Наряд на работу — печати. */
 #campPanel .dossier > .dossierOrderTitle { order: 1; margin: 6px 0 0; font-size: 12px; }
 #campPanel .dossier > .dossierOrderTitle::after { content: " — поставь печать"; font-weight: 400; letter-spacing: .06em; text-transform: none; }
-#campPanel .dossier > .campJobs { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px 6px; }
-#campPanel .dossier .residentJobOption { position: relative; align-items: center; gap: 4px; padding: 0; border: 0; background: transparent; }
+#campPanel .dossier > .campJobs { order: 2; display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px 8px; }
+#campPanel .dossier .residentJobOption { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; }
 #campPanel .dossier .residentJobOption > [data-resident-job] {
   width: 72px; height: 72px; min-height: 72px; padding: 4px; border-radius: 50%;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -104,10 +105,10 @@
 #campPanel .dossier .residentJobOption > [data-resident-job]:disabled { opacity: .42; border-style: dotted; }
 #campPanel .dossier .dossierLock { position: absolute; top: 0; left: calc(50% + 20px); width: 18px; height: 18px; pointer-events: none; }
 #campPanel .dossier .dossierLock .gi { width: 18px; height: 18px; fill: var(--desk-ink2); }
-#campPanel .dossier .residentJobReason { font: italic 11px/1.25 var(--desk-type); color: var(--desk-red); text-align: center; }
+#campPanel .dossier .residentJobReason { display: block; width: 100%; max-width: 100%; margin: 0; font: italic 11px/1.25 var(--desk-type); color: var(--desk-red); text-align: center; overflow-wrap: anywhere; }
 #campPanel .dossier .residentJobLink {
-  width: 100%; min-height: 48px; padding: 2px 4px; font: 700 11px/1.15 var(--desk-type); color: var(--desk-blue); text-decoration: underline;
-  border: 0; background: transparent; white-space: normal;
+  width: 100%; max-width: 100%; min-height: 48px; padding: 4px 2px; font: 700 12px/1.2 var(--desk-type); color: var(--desk-blue); text-decoration: underline;
+  border: 0; background: transparent; white-space: normal; overflow-wrap: anywhere; text-align: center;
 }
 /* Напарник — вклеенная записка. */
 #campPanel .dossier > .campCompanion {
@@ -129,7 +130,7 @@
 }
 /* Рация: листать дела. */
 #campPanel .dossier > .dossierRadio {
-  order: 9; position: sticky; bottom: 0; z-index: 2; margin: 4px -12px 0; padding: 8px;
+  order: 9; position: static; z-index: 2; margin: 8px -12px 0; padding: 8px;
   display: grid; grid-template-columns: 1fr minmax(0, 1.4fr) 1fr; gap: 8px; align-items: center;
   background: linear-gradient(#2f3a30, #1e2620); border-top: 2px solid #11160f; border-radius: 0 0 3px 3px; box-shadow: 0 -4px 10px #0005;
 }
@@ -155,7 +156,7 @@
   #campPanel .dossier > .dossierNeeds { grid-column: 1; grid-row: 4; }
   #campPanel .dossier > .campCompanion { grid-column: 1; grid-row: 5 / 7; align-self: start; }
   #campPanel .dossier > .dossierOrderTitle { grid-column: 2; grid-row: 2; align-self: start; }
-  #campPanel .dossier > .campJobs { grid-column: 2; grid-row: 2 / 7; margin-top: 28px; align-self: start; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+  #campPanel .dossier > .campJobs { grid-column: 2; grid-row: 2 / 7; margin-top: 28px; align-self: start; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
   /* В альбоме мало высоты: «К жителям» и рация — одна закреплённая строка сверху. */
   #campPanel .dossier > [data-camp-back] { grid-column: 1; margin: -12px 0 0 -12px; width: calc(100% + 12px); border-radius: 3px 0 0 0; min-height: 56px; }
   #campPanel .dossier > .dossierRadio { grid-column: 2; grid-row: 1; position: sticky; top: 0; bottom: auto; margin: -12px -12px 0 -16px; padding: 4px 8px; border-top: 0; border-bottom: 2px solid #11160f; border-radius: 0 3px 0 0; box-shadow: 0 4px 10px #0005; }
@@ -172,14 +173,16 @@
 #campPanel .blueprints { color: #efe4c8; }
 #campPanel .blueprints > .deskTags { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
 #campPanel .blueprints .deskTag {
-  position: relative; flex: 1 1 48px; min-width: 48px; max-width: 72px; min-height: 52px; padding: 12px 4px 4px;
-  display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--desk-ink);
+  position: relative; flex: 1 1 96px; min-width: 96px; max-width: 140px; min-height: 64px; padding: 12px 6px 6px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--desk-ink);
   background: radial-gradient(circle at 50% 7px, #2a1d13 0 3px, #0000 4px), linear-gradient(170deg, #e8d6a6, #cdb47c);
   clip-path: polygon(14% 0, 86% 0, 100% 14%, 100% 100%, 0 100%, 0 14%); box-shadow: 0 2px 4px #0006;
 }
 #campPanel .blueprints .deskTag .gi { width: 20px; height: 20px; fill: var(--desk-ink); }
+#campPanel .blueprints .deskTag small { font: 700 11px/1.1 var(--desk-type); color: var(--desk-ink2); text-align: center; }
 #campPanel .blueprints .deskTag b { font: 700 14px/1 var(--desk-type); }
-#campPanel .blueprints .deskTag[data-empty] b { color: var(--desk-red); }
+#campPanel .blueprints .deskTag[data-empty] b,
+#campPanel .blueprints .deskTag[data-empty] small { color: var(--desk-red); }
 #campPanel .blueprints > :is(.campConstructionSupply, .campExpansion) {
   color: var(--desk-ink); border: 0; border-left: 4px solid #8a6a3a; border-radius: 2px;
   background: repeating-linear-gradient(0deg, #0000 0 23px, #8a74501a 23px 24px), linear-gradient(170deg, var(--desk-paper), var(--desk-paper2));

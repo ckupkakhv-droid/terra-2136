@@ -67,10 +67,11 @@
 @media (orientation: portrait) and (max-width: 600px) {
   #campPanel .win { display: flex; flex-direction: column; }
   #campPanel .win > h2 { order: 1; margin-bottom: 6px; }
-  #campPanel #campBody { order: 2; flex: 1 1 auto; }
+  #campPanel #campBody { order: 2; flex: 1 1 auto; min-height: 0; padding-bottom: 28px; }
   #campPanel #campTabs {
     order: 3; flex: none; display: flex; gap: 0; margin: 6px 0 0; padding: 6px 0 0; min-height: 0;
     overflow: visible; touch-action: manipulation; border-top: 1px solid #74604999;
+    position: relative; z-index: 4; background: #12110e;
   }
   #campPanel #campTabs button {
     flex: 1 1 0; min-width: var(--camp-tap); min-height: 56px; margin: 0; padding: 4px 1px;

@@ -81,13 +81,13 @@ if heads != 1:
 def classic_source(path):
     source = (PLAY / path).read_text(encoding='utf-8')
     if path == 'ui/camp-navigation.js':
-        # These two add-ons are dynamically injected by the online camp script.
+        # Camp add-ons are dynamically injected by the online camp script.
         source, count = re.subn(
             r"\{\s*(?:const base[^;]*;\s*)?const s = document\.createElement\('script'\).*?document\.head\.append\(l\); \}",
             '', source, flags=re.S)
-        if count != 2:
-            raise ValueError(f'Expected two camp add-on loaders, found {count}')
-        for name in ('camp-mobile', 'camp-dossier'):
+        if count != 3:
+            raise ValueError(f'Expected three camp add-on loaders, found {count}')
+        for name in ('camp-mobile', 'camp-dossier', 'camp-live'):
             css = (PLAY / f'ui/{name}.css').read_text(encoding='utf-8')
             js = (PLAY / f'ui/{name}.js').read_text(encoding='utf-8')
             source += ('\n;(function(){var st=document.createElement("style");st.textContent='
