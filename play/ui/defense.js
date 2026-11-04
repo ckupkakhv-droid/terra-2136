@@ -434,7 +434,7 @@
         const res = campRes(), have = Math.floor(res[trip.ammo] || 0);
         const put = Math.min(have, trip.carry, Math.ceil(needFor(o)));
         if (put > 0) {
-          res[trip.ammo] = have - put;
+          res[trip.ammo] -= put; // склад и магазин меняются одним шагом: любая запись видит либо оба, либо ни одного
           o.mag = Math.min(magMax(o), magOf(o) + put);
           S.stats.refills++; S.stats.delivered += put;
           emit('refill', { turretId: trip.turret, settlerId: trip.id, amount: put, ammo: trip.ammo });
@@ -450,7 +450,7 @@
     S.views.clear();
     for (const I of Object.values(S.inst)) for (const pt of I.parts) pt.im.count = 0;
     for (const t of [...S.trips.values()]) endTrip(t);
-    S.player = game.p; S.dirty = true;
+    S.player = game.p; S.dirty = true; S.lastError = null;
     emit('session');
   }
   function setFuture(on) {
@@ -516,6 +516,47 @@
   function find(id) { return turrets().find((o) => idOf(o) === id); }
   const ok = (x = {}) => (emit(x.reason || 'action', x), { ok: true, ...x });
   const no = (reason) => ({ ok: false, reason });
+  /* Защищённая запись приказа: снимок затронутого состояния → изменение → синхронный game.save().
+   * game.save() (savePlayerCandidate) возвращает {ok, status, reason}; приказ считается выполненным
+   * только при status === 'committed'. Иначе — полный откат снимка (рюкзак, склад, запись турели,
+   * блок camp.defense), {ok:false, reason:'save-failed'} и событие с reason 'save-failed'.
+   * Побочные эффекты (визуал, отмена ходки) выполняются только после подтверждённой записи.
+   * status 'committed-unpublished' значит: запись на диске есть, но игра остановила дальнейшие записи —
+   * в памяти оставляем изменение (оно совпадает с диском), но отвечаем ok:false 'save-unconfirmed'. */
+  const restore = (obj, copy) => { if (!obj || !copy) return; for (const k of Object.keys(obj)) if (!(k in copy)) delete obj[k]; Object.assign(obj, JSON.parse(JSON.stringify(copy))); };
+  function tx(kind, { turret = null, mutate, after = null }) {
+    const p = game.p, camp = p.camp, o = turret;
+    const snap = {
+      inv: JSON.parse(JSON.stringify(p.inv || {})),
+      res: camp?.res ? JSON.parse(JSON.stringify(camp.res)) : null,
+      def: camp?.defense ? JSON.parse(JSON.stringify(camp.defense)) : undefined,
+      o: o ? JSON.parse(JSON.stringify(o)) : null
+    };
+    const extra = mutate();
+    let r;
+    try { r = game.save?.(); } catch (e) { r = { ok: false, status: 'error', reason: String(e?.message || e) }; }
+    if (r?.ok && r.status === 'committed') {
+      S.lastError = null;
+      after?.();
+      S.dirty = true; game.baseDirty = true;
+      return ok({ reason: kind, ...extra });
+    }
+    if (r?.status === 'committed-unpublished') {
+      after?.();
+      S.dirty = true; game.baseDirty = true;
+      S.lastError = { kind, reason: 'save-unconfirmed', status: r.status, save: r.reason };
+      emit('save-failed', { ok: false, kind, status: r.status, saveReason: r.reason });
+      return { ok: false, reason: 'save-unconfirmed', status: r.status, saveReason: r.reason };
+    }
+    restore(p.inv, snap.inv);
+    if (camp?.res && snap.res) restore(camp.res, snap.res);
+    if (camp) { if (snap.def === undefined) delete camp.defense; else if (camp.defense) restore(camp.defense, snap.def); else camp.defense = snap.def; }
+    if (o) restore(o, snap.o);
+    S.dirty = true; game.baseDirty = true;
+    S.lastError = { kind, reason: 'save-failed', status: r?.status || 'none', save: r?.reason || 'no-result' };
+    emit('save-failed', { ok: false, kind, status: r?.status, saveReason: r?.reason });
+    return { ok: false, reason: 'save-failed', status: r?.status, saveReason: r?.reason };
+  }
   const api = {
     version: 1,
     get ready() { return !!ctx && !!game?.p; },
@@ -545,41 +586,46 @@
       const lv = clampLvl(o.lvl); if (lv >= 3) return no('max-level');
       const cost = TYPES[dkOf(o)].up[lv], inv = game.p.inv;
       if (!Object.entries(cost).every(([k, n]) => (inv[k] || 0) >= n)) return no('resources');
-      for (const [k, n] of Object.entries(cost)) inv[k] -= n;
-      o.dk = dkOf(o); o.lvl = lv + 1; S.dirty = true; game.save?.();
-      return ok({ reason: 'upgrade', id, lvl: o.lvl });
+      return tx('upgrade', { turret: o, mutate: () => {
+        for (const [k, n] of Object.entries(cost)) inv[k] -= n;
+        o.dk = dkOf(o); o.lvl = lv + 1;
+        return { id, lvl: o.lvl };
+      } });
     },
     repair(id) {
       const o = find(id); if (!o) return no('not-found');
       const maxHp = ctx.B.defense?.hp?.turretB || 120;
       if (num(o.hp, maxHp) >= maxHp) return no('full');
       if ((game.p.inv.scrap || 0) < 2) return no('resources');
-      game.p.inv.scrap -= 2; o.hp = maxHp; game.baseDirty = true; game.save?.();
-      return ok({ reason: 'repair', id });
+      return tx('repair', { turret: o, mutate: () => { game.p.inv.scrap -= 2; o.hp = maxHp; return { id }; } });
     },
     reload(id) {
       const o = find(id); if (!o) return no('not-found');
       const t = TYPES[dkOf(o)], inv = game.p.inv, put = Math.min(Math.floor(inv[t.ammo] || 0), Math.ceil(needFor(o)));
       if (put <= 0) return no(needFor(o) < 1 ? 'full' : 'no-ammo');
-      inv[t.ammo] -= put; o.dk = dkOf(o); o.mag = Math.min(magMax(o), magOf(o) + put); game.save?.();
-      return ok({ reason: 'reload', id, amount: put });
+      return tx('reload', { turret: o, mutate: () => { inv[t.ammo] -= put; o.dk = dkOf(o); o.mag = Math.min(magMax(o), magOf(o) + put); return { id, amount: put }; } });
     },
     assign(settlerId, on = true) {
       const s = settler(settlerId); if (!s) return no('not-found');
-      const d = dstate(), has = d.porters.includes(settlerId);
-      if (on && !has) d.porters.push(settlerId);
-      if (!on && has) { d.porters = d.porters.filter((x) => x !== settlerId); const tr = S.trips.get(settlerId); tr && endTrip(tr); }
-      game.save?.();
-      return ok({ reason: 'assign', settlerId, porter: !!on });
+      const has = (game.p.camp?.defense?.porters || []).includes(settlerId);
+      if (!!on === has) return ok({ reason: 'assign', settlerId, porter: !!on, unchanged: true });
+      return tx('assign', {
+        mutate: () => { const d = dstate(); d.porters = on ? [...d.porters, settlerId] : d.porters.filter((x) => x !== settlerId); return { settlerId, porter: !!on }; },
+        after: () => { if (!on) { const tr = S.trips.get(settlerId); tr && endTrip(tr); } }
+      });
     },
-    setPriority(id, prio) { const o = find(id); if (!o) return no('not-found'); o.dprio = Math.max(0, Math.min(3, prio | 0)); return ok({ reason: 'priority', id }); },
+    setPriority(id, prio) {
+      const o = find(id); if (!o) return no('not-found');
+      const v = Math.max(0, Math.min(3, prio | 0));
+      if (num(o.dprio, 0) === v) return ok({ reason: 'priority', id, priority: v, unchanged: true });
+      return tx('priority', { turret: o, mutate: () => { o.dprio = v; return { id, priority: v }; } });
+    },
     deposit(item, n) {
       if (!['a545', 'nails', 'gas', 'powder'].includes(item)) return no('item');
       const inv = game.p.inv, put = Math.min(Math.floor(inv[item] || 0), Math.max(0, n | 0) || Infinity);
       if (!(put > 0)) return no('no-items');
       const res = campRes(); if (!res) return no('no-camp');
-      inv[item] -= put; res[item] = (res[item] || 0) + put; game.save?.();
-      return ok({ reason: 'deposit', item, amount: put });
+      return tx('deposit', { mutate: () => { inv[item] -= put; res[item] = (res[item] || 0) + put; return { item, amount: put }; } });
     },
     _debug: () => ({ ms: +(S.ms || 0).toFixed(3), msMax: +(S.msMax || 0).toFixed(2), trips: S.trips.size, pool: S.pool?.list.length || 0, poolMax: S.pool?.n || 0, views: S.views.size, stats: { ...S.stats } })
   };
@@ -593,12 +639,20 @@
     b.type = 'button';
     b.addEventListener('click', () => {
       const r = fn();
-      if (r && r.ok === false) game.ui?.toast?.('Нельзя: ' + (REASON[r.reason] || r.reason), '#ffba66');
+      if (r && (r.reason === 'save-failed' || r.reason === 'save-unconfirmed')) game.ui?.toast?.(saveErrorText(r), '#ff6a5a');
+      else if (r && r.ok === false) game.ui?.toast?.('Нельзя: ' + (REASON[r.reason] || r.reason), '#ffba66');
       renderDefense(lastContainer);
     });
     return b;
   }
   const REASON = { resources: 'не хватает ресурсов в рюкзаке', 'no-ammo': 'нет боеприпасов в рюкзаке', full: 'уже полно', 'max-level': 'максимальный уровень', limit: 'лимит турелей', 'no-items': 'в рюкзаке нет', 'not-found': 'турель не найдена' };
+  const SAVE_REASON = { 'storage-write': 'в браузере закончилось место', 'backup-failed': 'не записалась резервная копия, игра остановила записи до перезагрузки', 'backup-unverified': 'не проверилась резервная копия', 'write-unverified': 'запись не подтвердилась', 'changed-externally': 'сохранение изменили в другой вкладке', guest: 'в кооперативе сохраняет хозяин', dungeon: 'в подземелье запись недоступна' };
+  function saveErrorText(e) {
+    const why = SAVE_REASON[e.saveReason || e.save] || e.saveReason || e.save || e.status || 'неизвестная причина';
+    return e.reason === 'save-unconfirmed'
+      ? 'Приказ записан, но игра не подтвердила сохранение (' + why + '). Перезагрузите игру.'
+      : 'Приказ не выполнен: игра не смогла записать сохранение (' + why + '). Ресурсы и турели не изменились.';
+  }
   const costText = (c) => Object.entries(c || {}).map(([k, n]) => ammoName(k) + ' ' + n).join(', ');
   let lastContainer = null;
   function styleOnce() {
@@ -608,6 +662,7 @@
     st.textContent = '#campPanel .defenseStat{display:grid;gap:2px;padding:8px;border:1px solid var(--camp-line,#6a5640);border-radius:8px;background:#151a18;min-width:0}'
       + '#campPanel .defenseStat b{font-size:16px;color:var(--camp-ink,#f1dfbd)}#campPanel .defenseStat span{font-size:11px;color:var(--panel-muted,#c2b29b);overflow-wrap:anywhere}'
       + '#campPanel .defenseBody{display:grid;gap:6px;min-width:0}#campPanel .defenseBody .campItemCard__title{display:flex;flex-wrap:wrap;gap:6px;align-items:center}'
+      + '#campPanel .defenseSaveError{display:block;padding:10px 12px;border:1px solid #c0503f;background:#2a1513;color:#ffd7cf;font-size:13px}'
       + '#campPanel .defenseWide{grid-column:1/-1}#campPanel .defenseWide .campItemCard__actions{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:flex-start}';
     document.head.append(st);
   }
@@ -635,6 +690,11 @@
     container.dataset.defenseTurrets = '1';
     if (!st.ready) return;
     const s = st.summary.stock;
+    if (S.lastError) {
+      const e = el('div', 'campItemCard defenseWide defenseSaveError', saveErrorText(S.lastError));
+      e.setAttribute('role', 'alert');
+      list.append(e);
+    }
     summary.append(stat(st.limit.used + '/' + st.limit.max, 'турелей (лимит по уровню лагеря)'), stat(st.summary.porters, 'подносчиков'),
       stat(st.summary.needAmmo, 'ждут боеприпасы'), stat(s.a545 + ' · ' + s.nails + ' · ' + s.gas, 'склад: 5.45 · гвозди · газ'));
     for (const t of st.turrets) {
