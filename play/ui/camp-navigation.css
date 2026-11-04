@@ -1,0 +1,44 @@
+
+/* Same camp material/palette; no additional screen, sticky HUD or camera input. */
+#campPanel .residentRecommendation {
+  display: grid; gap: 6px; min-width: 0; margin: 8px 0 12px; padding: 10px;
+  border: 1px solid #8b9b6b; border-left: 3px solid #b7ca91;
+  border-radius: 5px; background: rgba(44, 49, 34, .65); color: var(--panel-ink);
+}
+#campPanel .residentRecommendation strong,
+#campPanel .residentRecommendation small { overflow-wrap: anywhere; }
+#campPanel .residentRecommendation small { line-height: 1.4; color: var(--panel-muted); }
+#campPanel .residentRecommendAction {
+  min-height: 48px; width: 100%; padding: 10px 12px; white-space: normal;
+  overflow-wrap: anywhere; text-align: left; touch-action: manipulation;
+}
+#campPanel .residentRecommendationReasons summary {
+  min-height: 44px; display: flex; align-items: center; cursor: pointer;
+  font-size: 12px; line-height: 1.4;
+}
+#campPanel .residentRecommendationReasons ul {
+  margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Warm field-console accents; survival information stays in the game world. */
+#campPanel { --camp-focus: #f6cb83; --camp-surface: #1a2321; }
+#campPanel :is(button,input,summary):focus-visible,
+#topBtns button:focus-visible { outline: 2px solid var(--camp-focus, #f6cb83); outline-offset: 2px; }
+#campPanel .residentSearch { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; margin: 14px 0 8px; padding: 12px; background: var(--camp-surface); border: 1px solid #746049; border-left: 3px solid #b58b55; border-radius: 5px; }
+#campPanel .residentSearch label { grid-column: 1/-1; font-size: 13px; color: var(--panel-ink); }
+#campPanel .residentSearch input { min-width: 0; width: 100%; min-height: 48px; border: 1px solid #81765d; border-radius: 4px; background: #101716; color: #f1dfbd; padding: 10px; font: inherit; font-size: 16px; }
+#campPanel .residentSearch input::placeholder { color: #b7b3a6; }
+#campPanel .residentSearchStatus { grid-column: 1/-1; line-height: 1.5; color: var(--panel-muted); }
+#campPanel .campSearchHidden { display: none !important; }
+#campPanel .residentRecommendationReasons summary { cursor: pointer; padding: 10px 0; }
+#campPanel .residentRecommendationReasons li { margin: 8px 0; }
+#campPanel .campResidents .residentSummary strong { white-space: normal; overflow-wrap: anywhere; }
+@media(max-width: 420px) {
+  #campPanel .campResidents .residentFilters { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #campPanel .campResidents .residentRow { grid-template-columns: minmax(0,1fr); }
+  #campPanel .campResidents .residentRow > .campButton:last-child { min-height: 48px; }
+}
+@media(prefers-reduced-motion: reduce) {
+  #campPanel, #campPanel * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
