@@ -171,6 +171,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     if(nearby==='terminal') {
       if (!nearTerminal()) return false;
       showRecording(game,'',{
+        presentation:'terminal',
         heading:'ОБЪЕКТ 7 · АВАРИЙНЫЙ ТЕРМИНАЛ',skipLabel:'Закрыть',finishLabel:'Отойти от терминала',
         frames:[
           ['ПОСЛЕДНЯЯ СМЕНА','На тусклом экране остался журнал российского филиала Ambrala: «Объект 7 · НИИ „Полынь“». Статус гермозоны — нарушен. Рядом с клавиатурой засохли следы бирюзового раствора.'],
