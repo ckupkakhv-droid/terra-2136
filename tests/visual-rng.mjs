@@ -52,3 +52,17 @@ for (let seed=0;seed<128;seed++) {
  assert.equal(c.calls(),2);assert.deepEqual(tail(c),tail(d),'subsequent seeded coordinate samples after fallback TV');cases++;
 }
 console.log(`PASS ${cases} deterministic cases: puddles, removed wire, fallback TV; 128 seeds, next 24 coordinate samples match native stream.`);
+
+// Native TV is still invoked under the kit adapter to preserve its behavior.
+// Its new glow must be suppressed along with its body before adding the kit TV.
+ctx.Ie = class {};
+ctx.Ie.prototype.tv = drawTV;
+ctx.pc = () => true;
+ctx.nrt = new Set();
+ctx.Vp = {box(){},add(){}};
+vm.runInContext(between('function D3(e,t,i){', 'function srt(){'),ctx);
+vm.runInContext(between('Yn("tv",', ',Yn("rack"'),ctx);
+let screens=0;
+new ctx.Ie().tv.call({s:{},g:{add(){screens++;}},R(){return 0;},kp_(){}},1,2);
+assert.equal(screens,1,'kit TV must emit exactly one screen, without fallback overlay');
+console.log('PASS kit TV suppresses fallback glow and emits one screen');
