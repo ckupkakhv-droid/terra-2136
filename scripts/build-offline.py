@@ -9,6 +9,7 @@ import gzip
 import hashlib
 import json
 import re
+from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 PLAY = ROOT / 'play'
@@ -35,6 +36,36 @@ for path in sorted((PLAY / 'assets').rglob('*.glb')):
         'gzip': compressed,
         'data': encoded(packed if compressed else raw),
     }
+
+# Асинхронный загрузчик проверяет и поднимает window.TERRA_* до старта игры.
+# В офлайне байты лежат в window.TERRA_PACK: версии URL не требуют сети.
+pack = {}
+for path in sorted((PLAY / 'assets' / 'pack').rglob('*')):
+    if path.is_file():
+        pack[path.relative_to(PLAY).as_posix()] = encoded(path.read_bytes())
+if len(pack) < 2:
+    raise ValueError('Offline build did not find play/assets/pack')
+boot_scripts = re.compile(
+    r'<script\s+src="assets/vendor/fflate\.min\.js"\s*>\s*</script>\s*'
+    r'<script([^>]*?)\bsrc="(assets/boot\.js(?:\?[^"<>]*)?)"([^>]*)>\s*</script>')
+boot_matches = list(boot_scripts.finditer(html))
+if len(boot_matches) != 1:
+    raise ValueError('Expected the fflate and boot script tags')
+boot_attributes = (boot_matches[0].group(1) + boot_matches[0].group(3)).strip()
+boot_raw = (PLAY / 'assets/boot.js').read_bytes()
+loader_pins = parse_qs(urlsplit(boot_matches[0].group(2)).query).get('v', [])
+if loader_pins != [hashlib.sha256(boot_raw).hexdigest()]:
+    raise ValueError('Boot loader cache version is stale; run scripts/assets_boot.py')
+manifest_pins = re.findall(r'\bdata-terra-manifest-sha256=["\']([^"\']+)["\']', boot_attributes)
+manifest_sha = hashlib.sha256((PLAY / 'assets/pack/manifest.json').read_bytes()).hexdigest()
+if manifest_pins != [manifest_sha]:
+    raise ValueError('Boot manifest SHA256 does not match the embedded archive')
+fflate_source = (PLAY / 'assets/vendor/fflate.min.js').read_text(encoding='utf-8').replace('</script', '<\\/script')
+boot_source = boot_raw.decode('utf-8').replace('</script', '<\\/script')
+html = boot_scripts.sub(lambda _: (
+    '<script>window.TERRA_PACK=' + json_script(pack) + '</script>'
+    '<script>' + fflate_source + '</script><script ' + boot_attributes + '>' + boot_source + '</script>'
+), html, count=1)
 
 # Match the complete relative path, not a basename: distinct folders may contain
 # equally named models. Unrelated requests keep the native fetch behavior.
@@ -99,12 +130,15 @@ def classic_source(path):
 
 def inline_script(match):
     attributes, path = match.group(1) + match.group(3), match.group(2)
-    if 'module' in attributes:
+    # Preserve staged scripts until boot.js activates them in online order.
+    kind = re.search(r'\btype\s*=\s*(["\'])(.*?)\1', attributes)
+    opening = '<script' + attributes + '>'
+    if kind and kind.group(2) in ('module', 'application/x-terra-module'):
         name = Path(path).name
         if name not in modules:
             raise ValueError(f'Module entry is not bundled: {path}')
-        return '<script type="module">import "terra/' + name + '";</script>'
-    return '<script>' + classic_source(path) + '</script>'
+        return opening + 'import "terra/' + name + '";</script>'
+    return opening + classic_source(path) + '</script>'
 
 
 html, scripts = re.subn(
@@ -112,7 +146,7 @@ html, scripts = re.subn(
 html, styles = re.subn(
     r'<link rel="stylesheet" href="(ui/[^"]+)">',
     lambda match: '<style>' + (PLAY / match.group(1)).read_text(encoding='utf-8') + '</style>', html)
-if re.search(r'<(?:script|link)\b[^>]*(?:src|href)="(?:ui|art)/', html):
+if re.search(r'<(?:script|link)\b[^>]*(?:src|href)="(?:ui|art|assets)/', html):
     raise ValueError('Unresolved local script or stylesheet in offline HTML')
 raw = html.encode('utf-8')
 if len(raw) > MAX_BYTES:
