@@ -121,6 +121,10 @@
       var water = hex === '#24383a' || hex === '#3a4a52';
       var mud = hex === '#3a3024' && prim === L.discH;
       if (!water && !mud) return origAdd.apply(this, arguments);
+      // Preserve the native add() draw, including its default jitter. The new
+      // geometry has a different tint, but must not move the chunk RNG stream.
+      var jitter = arguments[11] === undefined ? 0.07 : arguments[11];
+      if (jitter) this.r();
       var seed = hash(x, z);
       var prim2 = puddlePrim(seed);
       var before = this.p.length;
@@ -132,7 +136,7 @@
           origAdd.call(this, prim2, x, 0.028, z, scaleX, 1, scaleZ, '#10242c', rotY, 0, 0, 0, 1);
           paintEdge(this, prim2, before);
         } else {
-          origAdd.call(this, prim2, x, 0.012, z, scaleX * 1.08, 1, scaleZ * 1.08, '#2a2418', rotY + seed, 0, 0, 0.04, 1);
+          origAdd.call(this, prim2, x, 0.012, z, scaleX * 1.08, 1, scaleZ * 1.08, '#2a2418', rotY + seed, 0, 0, 0, 1);
         }
       } finally {
         this._terraPuddle = false;
