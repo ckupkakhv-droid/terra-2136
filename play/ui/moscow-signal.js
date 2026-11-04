@@ -2,7 +2,7 @@ import { showRecording } from './sewer-cinematic.js';
 import { SEWER_KEY } from './sewer-register.js';
 
 // This clue is derived from existing durable progress; listening never writes a save.
-export function installMoscowSignal(game) {
+export function installMoscowSignal(game, onSignal = () => {}, isBusy = () => false) {
   const button = document.createElement('button');
   button.id = 'moscowSignalAction';
   button.type = 'button';
@@ -14,7 +14,7 @@ export function installMoscowSignal(game) {
   const eligible = () => !!game.p?.alive && !!game.defeated?.[SEWER_KEY] &&
     game.p.routeTransit?.stage === 2 && !game._coopGuest && !game.net?.role;
   function nearby() {
-    if (!eligible() || game.state !== 'play' || game.world?.inDungeon || game.dungeonTransition) return null;
+    if (!eligible() || isBusy() || game.state !== 'play' || game.world?.inDungeon || game.dungeonTransition) return null;
     const sites = window.TerraWorldSites;
     if (!sites?.placementForContainer || !sites?.noteFor) return null;
     return game.world.conts?.find(container =>
@@ -29,8 +29,14 @@ export function installMoscowSignal(game) {
       heading: 'РАДИОПОСТ НОЛЬ · МОСКОВСКИЙ ПЕРЕХВАТ',
       finishLabel: 'Вернуться',
       onFinish() {
+        onSignal();
         button.hidden = !nearby();
         if (!button.hidden) button.focus({preventScroll:true});
+        else {
+          const canvas=document.getElementById('c');
+          if (canvas && !canvas.hasAttribute('tabindex')) canvas.tabIndex=-1;
+          canvas?.focus({preventScroll:true});
+        }
       },
       frames: [
         ['РУЧНАЯ ЛЕНТА', 'На старой катушке повторяется тот же машинный позывной, что звучал под коллектором. Кто-то записал его поверх сигнала «Арес-7».'],

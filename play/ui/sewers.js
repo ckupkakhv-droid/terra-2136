@@ -4,6 +4,7 @@ import { installSewerReward } from './sewer-reward.js';
 import { installRaphael } from './sewer-raphael.js';
 import { showRecording } from './sewer-cinematic.js';
 import { installMoscowSignal } from './moscow-signal.js';
+import { installMoscowScout } from './moscow-scout.js';
 import { installSewerNavigation } from './sewer-navigation.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
@@ -20,7 +21,8 @@ export const LORE = [
 export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   if (!bridge?.Chunk || game.sewers) return;
   const reward=installSewerReward(game,bridge), raphael=installRaphael(game,bridge), rats=installSewerRats(game);
-  const moscowSignal=installMoscowSignal(game);
+  const moscowScout=installMoscowScout(game);
+  const moscowSignal=installMoscowSignal(game,()=>moscowScout.start(),()=>moscowScout.engaged);
   let pumps = new Set(), currentPlayer = null, currentDungeon = null, seen = new Set(), warnedLocked=false;
   const active = () => game.dg?.sewer === true;
   const center = index => {
@@ -186,6 +188,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   };
   function updateSurfaceUI() {
     if(!game.p)return;
+    moscowScout.check();
     moscowSignal.update();
     navigation.sync();
     if(currentPlayer!==game.p){currentPlayer=game.p;pumps=new Set();seen=new Set();}
