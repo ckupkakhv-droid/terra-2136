@@ -127,6 +127,7 @@ CHANGELOG.md        — история изменений
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
 - Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
+- Мутант коллекторов «Рафаэль» (`play/assets/sewer/mutant.glb`): тело, риг и анимации — [Quaternius](https://quaternius.com) Universal Base Characters и Universal Animation Library 1 (CC0 1.0); голова, панцирь, одежда, саи, текстуры, клипы scream/emerge — собственные (`tools/art/sewer_mutant/`). Подробно: `play/assets/sewer/CREDITS.md`
 - Шрифт [DejaVu](https://dejavu-fonts.github.io)
 - Библиотеки: [three.js](https://threejs.org) (MIT), [fflate](https://github.com/101arrowz/fflate) (MIT), [PeerJS](https://peerjs.com) (MIT)
 
