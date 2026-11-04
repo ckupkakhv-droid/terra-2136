@@ -34,6 +34,13 @@
 #campPanel .residentRecommendationReasons summary { cursor: pointer; padding: 10px 0; }
 #campPanel .residentRecommendationReasons li { margin: 8px 0; }
 #campPanel .campResidents .residentSummary strong { white-space: normal; overflow-wrap: anywhere; }
+#campPanel .residentJobOption { display: flex; flex-direction: column; gap: 7px; min-width: 0; padding: 8px; border: 1px solid #74604966; border-radius: 5px; background: var(--camp-surface); }
+#campPanel .residentJobOption > .campButton { width: 100%; min-height: 48px; white-space: normal; overflow-wrap: anywhere; }
+#campPanel .residentJobReason { line-height: 1.5; overflow-wrap: anywhere; }
+#campPanel .residentJobLink { margin-top: auto; background: transparent; color: var(--panel-ink); text-decoration: underline; text-underline-offset: 3px; font-size: 12px; }
+#campPanel .residentJobOption > [hidden] { display: none; }
+#campPanel .campResidents > [data-camp-back] { position: sticky; top: 0; z-index: 2; width: 100%; background: #252e28; box-shadow: 0 5px 12px #101716cc; }
+#campPanel .campResidents [data-resident-job] { scroll-margin-block-start: 64px; }
 @media(max-width: 420px) {
   #campPanel .campResidents .residentFilters { grid-template-columns: repeat(2,minmax(0,1fr)); }
   #campPanel .campResidents .residentRow { grid-template-columns: minmax(0,1fr); }

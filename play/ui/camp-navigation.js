@@ -7,6 +7,8 @@
     const tabs = panel.querySelector('#campTabs');
     let query = '';
     let currentRows = null;
+    const jobOptions = new WeakMap();
+    let reasonSequence = 0;
     const normalize = value => value.toLocaleLowerCase('ru').replaceAll('ё', 'е').trim();
 
     function enhanceResidents() {
@@ -54,8 +56,58 @@
       rows.before(toolbar);
       filter();
     }
-    new MutationObserver(enhanceResidents).observe(body, {childList: true, subtree: true});
-    enhanceResidents();
+    const destinations = {
+      build: ['build', 'Открыть очередь работ'],
+      repair: ['build', 'Открыть очередь работ'],
+      haul: ['warehouses', 'Открыть склады и доставку'],
+      operate: ['power', 'Открыть энергоснабжение'],
+    };
+    function explainJobs() {
+      for (const button of body.querySelectorAll('.campJobs [data-resident-job]')) {
+        let option = jobOptions.get(button);
+        if (!option) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'residentJobOption';
+          button.before(wrapper);
+          wrapper.append(button);
+          const reason = document.createElement('small');
+          reason.className = 'campReason residentJobReason';
+          reason.id = `resident-job-reason-${++reasonSequence}`;
+          wrapper.append(reason);
+          option = {reason, signature: null, originalDescription: button.getAttribute('aria-describedby') || ''};
+          const destination = destinations[button.dataset.residentJob];
+          if (destination) {
+            const link = document.createElement('button');
+            link.type = 'button';
+            link.className = 'campButton residentJobLink';
+            link.textContent = destination[1];
+            link.dataset.campDestination = destination[0];
+            link.addEventListener('click', () => {
+              const game = window.game;
+              if (!link.isConnected || !button.disabled || panel.classList.contains('hidden') || game?.state !== 'modal') return;
+              game.ui.campPanel.select(destination[0]);
+            });
+            wrapper.append(link);
+            option.link = link;
+          }
+          jobOptions.set(button, option);
+        }
+        const signature = `${button.disabled}:${button.title}`;
+        if (signature === option.signature) continue;
+        option.signature = signature;
+        option.reason.textContent = button.disabled ? button.title || 'Сейчас недоступно' : '';
+        option.reason.hidden = !button.disabled;
+        if (option.link) option.link.hidden = !button.disabled;
+        const description = [option.originalDescription, button.disabled ? option.reason.id : ''].filter(Boolean).join(' ');
+        if (description) button.setAttribute('aria-describedby', description);
+        else button.removeAttribute('aria-describedby');
+      }
+    }
+    function enhanceContent() { enhanceResidents(); explainJobs(); }
+    new MutationObserver(enhanceContent).observe(body, {
+      childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'title'],
+    });
+    enhanceContent();
 
     // Move focus only; Enter/Space use the native buttons and their existing handlers.
     tabs.addEventListener('keydown', event => {
