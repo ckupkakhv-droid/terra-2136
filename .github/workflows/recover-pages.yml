@@ -1,0 +1,41 @@
+name: Recover a stuck Pages deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_sha:
+        description: 'Old deployment commit SHA to cancel'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  cancel-stale-deployment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      DEPLOYMENT_SHA: ${{ inputs.deployment_sha }}
+    steps:
+      - name: Cancel the specified stale deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$DEPLOYMENT_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo '::error::Expected a full deployment commit SHA.'; exit 1; }
+          state=$(gh api "repos/$GH_REPO/pages/deployments/$DEPLOYMENT_SHA" --jq '.status')
+          echo "Current deployment state: $state"
+          case "$state" in
+            deployment_succeed|deployment_succeeded) echo '::error::Refusing to cancel a successful deployment.'; exit 1 ;;
+          esac
+          if ! output=$(gh api --method POST "repos/$GH_REPO/pages/deployments/$DEPLOYMENT_SHA/cancel" 2>&1); then
+            printf '%s\n' "$output"
+            while IFS= read -r line; do printf '::error::%s\n' "${line//%/%25}"; done <<< "$output"
+            exit 1
+          fi
+          printf '%s\n' "$output"
+          echo 'Cancellation requested. Check Pages status before retrying deployment.' >> "$GITHUB_STEP_SUMMARY"
