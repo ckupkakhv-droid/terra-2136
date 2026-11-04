@@ -1,3 +1,4 @@
+import { showRecording } from './sewer-cinematic.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
  */
@@ -108,7 +109,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     for(let i=0;i<CELLS.length;i++){
       const c=center(i);if(Math.hypot(this.p.x-c.x,this.p.z-c.z)>6||seen.has(i))continue;
       seen.add(i);
-      if(i===6)this.ui.note(LORE[2][1]);
+      if(i===6)showRecording(this,LORE[2][1]);
       else if(i>0){for(let n=0;n<2;n++)this.spawnEnemy('zombie',c.x-2+n*4,c.z,{force:1,aggro:1});}
     }
     // Sewage slows traversal; both pumps clear the channel for this expedition.

@@ -35,7 +35,14 @@ with sync_playwright() as p:
   page.evaluate('(i)=>{const r=game.dg.ch.rooms[i];game.p.x=r.x;game.p.z=r.z}',index)
   page.wait_for_function('game.dg.flood==='+('true' if index==1 else 'false'))
  page.wait_for_function('game.dg.flood===false');print('Pumps drained',flush=True)
- page.evaluate('const r=game.dg.ch.rooms[6];game.p.x=r.x;game.p.z=r.z');expect(page.locator('#noteM')).to_be_visible();expect(page.locator('#noteT')).to_contain_text('Рафаэль');page.locator('#noteM [data-close]').click()
+ page.emulate_media(reduced_motion='reduce');page.keyboard.down('w')
+ page.evaluate('const r=game.dg.ch.rooms[6];game.p.x=r.x;game.p.z=r.z')
+ expect(page.locator('#sewerRecording')).to_be_visible();assert page.evaluate('game.state')=='modal'
+ assert page.evaluate('!game.keys.has("KeyW") && !game.stL.on && !game.stR.on')
+ page.locator('#recordingNext').click();expect(page.locator('#recordingText')).to_contain_text('Рафаэль')
+ page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(out/'recording.png'))
+ page.keyboard.press('Escape');expect(page.locator('#sewerRecording')).to_have_count(0);assert page.evaluate('game.state')=='play'
+ page.keyboard.up('w')
  page.evaluate('game.ui.openMap()');page.locator('#sewerLayerButton').tap()
  expect(page.locator('#sewerMap')).to_be_visible();expect(page.locator('.sewerCell')).to_have_count(7)
  for name,w,h in [('portrait',390,844),('landscape',844,390)]:
@@ -48,7 +55,11 @@ with sync_playwright() as p:
  page.evaluate('game.save()');page.reload();page.locator('#mContinue').click();page.wait_for_function('game.state==="play"');page.wait_for_function('window.game.sewers')
  assert page.evaluate('!game.world.inDungeon')
  page.evaluate('game.p.x=12;game.p.z=-10');page.locator('#sewerAction').tap();page.wait_for_function('!!game.dg && !game.dungeonTransition');page.wait_for_function('game.sewers.pumps.length===0')
+ page.evaluate('const r=game.dg.ch.rooms[6];game.p.x=r.x;game.p.z=r.z')
+ expect(page.locator('#sewerRecording')).to_be_visible()
+ for _ in range(3):page.locator('#recordingNext').click()
+ expect(page.locator('#sewerRecording')).to_have_count(0);assert page.evaluate('game.state')=='play'
  page.evaluate('game.exitDungeon()');page.wait_for_function('!game.dg && !game.dungeonTransition')
  assert not errors,errors
- print('PASS: native entry/exit, seven connected sectors, two pumps/drainage, map in two orientations, save/reload and re-entry reset; no JS/transition errors')
+ print('PASS: native entry/exit, seven connected sectors, two pumps/drainage, map in two orientations, save/reload and re-entry reset; recording skip/completion/input release in reduced-motion; no JS/transition errors')
  b.close()
