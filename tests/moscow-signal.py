@@ -116,7 +116,7 @@ with sync_playwright() as p:
       game.ring=function(...args){warnings++;if(dodge){game.p.x+=4;dodge=false;}return ring.apply(this,args);};
       game.beam=function(...args){shots++;return beam.apply(this,args);};
       game.hurtPlayer=function(d,e,...args){if(e===drone)attacks++;return hurt.call(this,d,e,...args);};
-      let dodged=0;
+      game.p.inv_t=0;const playerHp=game.p.hp;let dodged=0;
       try {
         for(let i=0;i<60;i++)game.enemyUpdate(.1);
         dodged=attacks;game.p.x=start.x;game.p.z=start.z;
@@ -125,10 +125,10 @@ with sync_playwright() as p:
       finally { game.ring=ring;game.beam=beam;game.hurtPlayer=hurt; }
       const hp=drone.hp;game.hurtEnemy(drone,10,{});const damaged=drone.hp<hp;
       game.hurtEnemy(drone,10000,{});game.enemyUpdate(.01);
-      return {melee,warnings,shots,attacks,dodged,damaged,noReward:game.p.xp===xp&&game.p.level===level&&game.p.kills===kills,
+      return {melee,warnings,shots,attacks,dodged,playerDamaged:game.p.hp<playerHp,damaged,noReward:game.p.xp===xp&&game.p.level===level&&game.p.kills===kills,
         removed:!game.enemies.includes(drone)&&!game.world.scene.getObjectByName('moscowScoutVisual')};
     }''')
-    assert result['melee'] and result['warnings'] >= 1 and result['shots'] >= 1 and result['attacks'] >= 1 and result['dodged'] == 0 and result['damaged'] and result['removed'] and result['noReward'], result
+    assert result['melee'] and result['warnings'] >= 1 and result['shots'] >= 1 and result['attacks'] >= 1 and result['dodged'] == 0 and result['playerDamaged'] and result['damaged'] and result['removed'] and result['noReward'], result
     expect(page.locator('#moscowSignalAction')).to_be_visible()
     page.locator('#moscowSignalAction').tap()
     page.keyboard.press('Escape')
