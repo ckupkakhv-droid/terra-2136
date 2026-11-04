@@ -1,0 +1,40 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Рафаэль — мутант коллекторов (превью)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#111614;color:#e8e0c8;font:14px/1.4 system-ui,sans-serif;overflow:hidden}
+#ui{position:fixed;left:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 24px)}
+button{background:#26302c;color:#e8e0c8;border:1px solid #4b5a54;border-radius:6px;padding:6px 10px;cursor:pointer}button.on{background:#7a2b22;border-color:#c0473a}
+#info{position:fixed;left:12px;bottom:12px;opacity:.8}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body><div id="ui"></div><div id="info">Загрузка mutant.glb…</div>
+<script type="module">
+// Превью ассета: python3 -m http.server в play/ → /assets/sewer/preview.html. Кнопки — клипы; мышь — вращение.
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const r=new THREE.WebGLRenderer({antialias:true});r.setPixelRatio(Math.min(2,devicePixelRatio));r.setSize(innerWidth,innerHeight);
+r.outputColorSpace=THREE.SRGBColorSpace;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.2;r.shadowMap.enabled=true;document.body.appendChild(r.domElement);
+const sc=new THREE.Scene();sc.background=new THREE.Color(0x151b19);
+const cam=new THREE.PerspectiveCamera(35,innerWidth/innerHeight,.05,50);cam.position.set(1.6,1.4,3.6);
+const ctl=new OrbitControls(cam,r.domElement);ctl.target.set(0,.95,0);ctl.update();
+sc.add(new THREE.HemisphereLight(0xc8d8e0,0x2a2620,.9));
+const key=new THREE.DirectionalLight(0xffe2c0,3.5);key.position.set(2.5,4.5,4);key.castShadow=true;sc.add(key);
+const rim=new THREE.DirectionalLight(0x5fe8d0,2);rim.position.set(-3,3,-4);sc.add(rim);
+const fl=new THREE.Mesh(new THREE.CircleGeometry(3,64),new THREE.MeshStandardMaterial({color:0x2a2e2c,roughness:.9}));fl.rotation.x=-Math.PI/2;fl.receiveShadow=true;sc.add(fl);
+const ONCE=new Set(['attack','attack2','hit','death','scream','emerge']);
+let mix,cur,acts={};const clock=new THREE.Clock();
+const L=new GLTFLoader();L.setMeshoptDecoder(MeshoptDecoder);
+L.load('mutant.glb',g=>{const o=g.scene;o.traverse(m=>{if(m.isMesh){m.castShadow=true;m.frustumCulled=false}});sc.add(o);mix=new THREE.AnimationMixer(o);
+ let tris=0;o.traverse(m=>{if(m.isMesh)tris+=m.geometry.index.count/3});
+ const ui=document.getElementById('ui');
+ for(const c of g.animations){const a=mix.clipAction(c);if(ONCE.has(c.name)){a.setLoop(THREE.LoopOnce);a.clampWhenFinished=true}acts[c.name]=a;
+  const b=document.createElement('button');b.textContent=c.name;b.onclick=()=>play(c.name);ui.appendChild(b)}
+ document.getElementById('info').textContent=`треугольников ${tris} · клипов ${g.animations.length} · ${g.animations.map(c=>c.name+' '+c.duration.toFixed(2)+'с').join(' · ')}`;
+ play('idle');
+},undefined,e=>document.getElementById('info').textContent='Ошибка: '+e.message);
+function play(n){const a=acts[n];if(!a)return;if(cur&&cur!==a)cur.fadeOut(.15);a.reset().fadeIn(.15).play();cur=a;
+ document.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.textContent===n))}
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();r.setSize(innerWidth,innerHeight)});
+r.setAnimationLoop(()=>{const dt=clock.getDelta();mix&&mix.update(dt);r.render(sc,cam)});
+window.__acts=acts;
+</script></body></html>
