@@ -139,12 +139,12 @@ python3 scripts/build-offline.py
   - Оборона лагеря: ящик подносчика `box` из [Survival Kit 2.0](https://kenney.nl/assets/survival-kit) — Kenney, CC0 1.0, `play/assets/defense/ammo-crate.glb`.
 - [OpenGameArt](https://opengameart.org) — CC0
 - [game-icons.net](https://game-icons.net) — CC BY 3.0
-- [Quaternius](https://quaternius.com) ([itch.io](https://quaternius.itch.io))
-  - Оборона лагеря: модели турелей из [Turret Pack (March 2020)](https://opengameart.org/content/lowpoly-steampunk-turrets) — Quaternius, CC0 1.0. Gun_8 → «Спарка ПКМ», Gun_3 → «Гвоздомёт», Long_1 → «Огнемёт «Пропан»»; перекрашены и сжаты, `play/assets/defense/`.
+- [Quaternius](https://quaternius.com) ([itch.io](https://quaternius.itch.io)) — модели и анимации CC0 (мутант коллекторов, см. ниже)
 - [Mixamo](https://www.mixamo.com) — анимации
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
+- Модели турелей обороны (`play/assets/defense/turrets.glb`) — собственная процедурная геометрия и атлас команды (`tools/art/turret_gen.py`): бочка, тренога, мешки, покрышки, трубы, баллоны, заплатки и трафареты. Надписи — шрифт DejaVu. Ящик подносчика по-прежнему Kenney, CC0.
 - Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Мутант коллекторов «Рафаэль» (`play/assets/sewer/mutant.glb`): тело, риг и анимации — [Quaternius](https://quaternius.com) Universal Base Characters и Universal Animation Library 1 (CC0 1.0); голова, панцирь, одежда, саи, текстуры, клипы scream/emerge — собственные (`tools/art/sewer_mutant/`). Подробно: `play/assets/sewer/CREDITS.md`
@@ -166,7 +166,7 @@ python3 scripts/build-offline.py
 
 ## Проверка обороны лагеря
 
-При запущенном сервере: `python3 tests/defense-turrets.py`. Тест делает «старое» сохранение с турелью без новых полей (на сборке из `TERRA_BASELINE_URL`, если она на том же адресе, иначе на текущей), загружает его, ставит Гвоздомёт и Огнемёт, назначает двух подносчиков (одного кнопкой во вкладке «Оборона»), ждёт доставку со склада, проверяет стрельбу, подписи видов в полосках прочности, возврат при сносе (своя цена вида и улучшений), блок `camp.defense` из более новой версии, сохранение/загрузку и нагрузку 18 турелей + 30 врагов. Скриншоты — в `TERRA_QA_OUTPUT` (по умолчанию `/tmp/terra-defense-qa`). Код — `play/ui/defense.js`, обвязка бандла — одноразовый `scripts/apply-defense-hook.py` (уже применён; правки ищет по якорям, повторный запуск ничего не меняет), модели — `play/assets/defense/`.
+При запущенном сервере: `python3 tests/defense-turrets.py`. Тест делает «старое» сохранение с турелью без новых полей (на сборке из `TERRA_BASELINE_URL`, если она на том же адресе, иначе на текущей), загружает его, ставит Гвоздомёт и Огнемёт, назначает двух подносчиков (одного кнопкой во вкладке «Оборона»), ждёт доставку со склада, проверяет стрельбу, подписи видов в полосках прочности, возврат при сносе (своя цена вида и улучшений), блок `camp.defense` из более новой версии, сохранение/загрузку и нагрузку 18 турелей + 30 врагов. Скриншоты — в `TERRA_QA_OUTPUT` (по умолчанию `/tmp/terra-defense-qa`). Код — `play/ui/defense.js`, обвязка бандла — одноразовый `scripts/apply-defense-hook.py` (уже применён; правки ищет по якорям, повторный запуск ничего не меняет), модели — `play/assets/defense/turrets.glb` (генератор `tools/art/turret_gen.py`).
 
 `python3 tests/defense-cache.py` подменяет постройку в том же массиве `base` (длина не меняется): другой вид турели, перенос, вышка вместо стены и обратно. Кеш стволов и бонус башни должны догнать состав без `baseDirty`.
 
