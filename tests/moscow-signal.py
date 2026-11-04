@@ -37,6 +37,11 @@ with sync_playwright() as p:
     expect(page.locator('#moscowSignalAction')).to_be_hidden()
     page.evaluate('game.p.routeTransit={v:1,stage:2}')
     expect(page.locator('#moscowSignalAction')).to_be_visible()
+    # A nearby receiver behind a wall must not be usable through the obstacle.
+    page.evaluate('window.signalSegHit=game.world.segHit;game.world.segHit=()=>0')
+    expect(page.locator('#moscowSignalAction')).to_be_hidden()
+    page.evaluate('game.world.segHit=window.signalSegHit;delete window.signalSegHit')
+    expect(page.locator('#moscowSignalAction')).to_be_visible()
     page.wait_for_function('signalToasts.length === 1')
     before = page.evaluate('''() => JSON.stringify({defeated:game.defeated,
       transit:game.p.routeTransit,inv:game.p.inv,weapons:game.p.weapons,chests:game.p.durableChests})''')

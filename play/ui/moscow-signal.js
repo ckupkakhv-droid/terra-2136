@@ -19,6 +19,7 @@ export function installMoscowSignal(game, onSignal = () => {}, isBusy = () => fa
     if (!sites?.placementForContainer || !sites?.noteFor) return null;
     return game.world.conts?.find(container =>
       Math.hypot(game.p.x - container.x, game.p.z - container.z) <= 2.3 &&
+      game.world.segHit(game.p.x, game.p.z, container.x, container.z, 1.1) < 0 &&
       sites.placementForContainer(game, container)?.id === 'signal' && sites.noteFor(game, container)) || null;
   }
   button.addEventListener('pointerdown', event => event.stopPropagation());
