@@ -1,4 +1,5 @@
 import { makeSaiGeometry } from './sewer-gear.js';
+import { installMetroArchitecture } from './metro-entrance.js';
 /* Run before window.load: native save validation must know saved sewer gear. */
 export const SEWER_KEY = '12,-10';
 export const RAPHAEL_BOSS = 'sewer_raphael';
@@ -12,6 +13,7 @@ globalThis.TERRA_ASSETS.sewer_lab = 'url:assets/sewer/lab/lab_kit.glb';
 
 export function registerSewerContent(bridge = globalThis.TERRA_SEWER_BRIDGE) {
   if (!bridge?.bosses || !bridge?.weapons?.katana || typeof bridge.WeaponBuilder !== 'function') return false;
+  installMetroArchitecture(bridge);
   if (bridge.WeaponBuilder) bridge.makeSaiGeometry=()=>makeSaiGeometry(bridge);
   if (!Object.hasOwn(bridge.weapons, SAI_WEAPON)) {
     // Native random drops enumerate this registry. The sai is reward-only;
