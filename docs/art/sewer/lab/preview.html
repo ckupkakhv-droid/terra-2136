@@ -1,0 +1,54 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Объект 7 · НИИ «Полынь» — превью lab_kit.glb</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#0b0e0d;color:#e8e0c8;font:14px/1.4 system-ui,sans-serif;overflow:hidden}
+#ui{position:fixed;left:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}button{background:#26302c;color:#e8e0c8;border:1px solid #4b5a54;border-radius:6px;padding:6px 10px;cursor:pointer}
+#info{position:fixed;left:12px;bottom:12px;opacity:.8;max-width:90%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body><div id="ui"><button data-m="room">Комната 16×16</button><button data-m="row">Все узлы</button><label>гермодверь <input id="door" type="range" min="-110" max="0" value="-70"></label><label><input id="game" type="checkbox"> свет как в игре (без ламп)</label></div><div id="info">Загрузка…</div>
+<script type="module">
+// Превью набора лаборатории. Запуск из корня репозитория: python3 -m http.server → /docs/art/sewer/lab/preview.html
+// Параметры URL (для скриншотов): m=room|row, cp=x,y,z & ct=x,y,z (камера), door=угол°, w,h, shot=1 (без OrbitControls)
+import * as THREE from 'three';import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const q=new URLSearchParams(location.search);const W=+q.get('w')||innerWidth,H=+q.get('h')||innerHeight;
+const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});r.setPixelRatio(q.get('w')?1:Math.min(2,devicePixelRatio));r.setSize(W,H);r.outputColorSpace=THREE.SRGBColorSpace;r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.1;r.shadowMap.enabled=true;document.body.appendChild(r.domElement);
+const cam=new THREE.PerspectiveCamera(+(q.get('fov')||55),W/H,.05,100);const ctl=q.get('shot')?null:new OrbitControls(cam,r.domElement);
+const HINGE=new THREE.Vector3(-1.17,0,0); // ось петель hermodoor в системе bulkhead
+let K=null,sc=null,door=null,dyn=[];
+const L=new GLTFLoader();L.setMeshoptDecoder(MeshoptDecoder);
+L.load(q.get('f')||'../../../../play/assets/sewer/lab/lab_kit.glb',g=>{K={};g.scene.children.forEach(n=>K[n.name]=n);
+ g.scene.traverse(m=>{if(m.material){m.material.roughness=1;m.material.metalness=0}}); // как в игре
+ let t=0;g.scene.traverse(m=>{if(m.isMesh)t+=m.geometry.index.count/3});document.getElementById('info').textContent=`lab_kit.glb · узлов ${Object.keys(K).length}: ${Object.keys(K).join(', ')} · треугольников ${t}`;
+ build(q.get('m')||'room');window.__done=1;},undefined,e=>{document.getElementById('info').textContent='Ошибка: '+e.message;window.__err=String(e)});
+function build(mode){
+ sc=new THREE.Scene();sc.background=new THREE.Color(0x0b0e0d);sc.fog=new THREE.Fog(0x0b0e0d,18,40);const gameLight=document.getElementById('game').checked||q.get('game');
+ sc.add(new THREE.HemisphereLight(0xa8b8c0,0x2a2620,.45));const key=new THREE.DirectionalLight(0xfff0dd,.5);key.position.set(6,14,8);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-12,right:12,top:12,bottom:-12});sc.add(key);
+ const box=(x,y,z,w,h,d,c)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:c,roughness:1}));m.position.set(x,y+h/2,z);m.receiveShadow=true;sc.add(m)};
+ const put=(n,x,y,z,ry=0)=>{const o=K[n].clone();o.position.set(x,y,z);o.rotation.y=ry;o.traverse(m=>{if(m.isMesh)m.castShadow=m.receiveShadow=true});sc.add(o);return o};
+ const lamp=(x,y,z,ry)=>{put('lamp_cage',x,y,z,ry);if(gameLight)return;const p=new THREE.PointLight(0xffb870,9,9,1.6);p.position.copy(new THREE.Vector3(0,-.15,.32).applyAxisAngle(new THREE.Vector3(0,1,0),ry).add(new THREE.Vector3(x,y,z)));sc.add(p)};
+ const glow=(x,y,z)=>{if(gameLight)return;const v=new THREE.PointLight(0x5fe8d0,2.5,5,1.8);v.position.set(x,y,z);sc.add(v)};
+ const hermo=(bh,deg)=>{bh.updateMatrixWorld();const d=put('hermodoor',0,0,0);d.position.copy(bh.localToWorld(HINGE.clone()));d.rotation.y=bh.rotation.y+deg*Math.PI/180;return d};
+ if(mode==='row'){box(0,-.1,0,40,.1,12,0x303c36);let x=-13;
+  for(const [n,w] of [['vault_4m',4.6],['bulkhead',4.4],['hermodoor',2.8],['vat',1.6],['vat_broken',2.4],['lab_table',2.4],['crate_bio',1.4],['growth_cluster',1.6],['lamp_cage',1]]){const o=n==='lamp_cage'?(lamp(x,1.6,-.3,0),null):put(n,x,0,0);if(/vat|growth/.test(n))glow(x,1.2,1);x+=w}
+  cam.position.set(-4,3.2,12);cam.lookAt(-4,1.2,0);if(ctl)ctl.target.set(-4,1.2,0);
+ } else { // комната коллектора 16×16 как в play/ui/sewers.js (#10): пол y=0, лоток 3 м, дорожки ±3,6, трубы y=2,5
+  box(0,-.16,0,16,.16,16,0x303c36);box(0,0,0,3,.02,14,0x24453c);for(const dx of [-3.6,3.6])box(dx,0,0,3,.2,15,0x596058);
+  for(const dx of [-3.6,3.6]){const c=new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,15,10),new THREE.MeshStandardMaterial({color:0x735d43,roughness:1}));c.rotation.x=Math.PI/2;c.position.set(dx,2.5,0);sc.add(c)}
+  for(const dz of [-6,6])box(0,2.7,dz,15,.2,.25,0x343b37);
+  for(const z of [-6,-2,6])put('vault_4m',-7.8,0,z,Math.PI/2);const bh=put('bulkhead',-7.8,0,2,Math.PI/2);door=hermo(bh,+(q.get('door')??document.getElementById('door').value));door.userData.base=bh.rotation.y;
+  for(const z of [-6,-2,2,6])put('vault_4m',7.8,0,z,-Math.PI/2);
+  for(const z of [-4,4]){lamp(-7.8,2.6,z,Math.PI/2);lamp(7.8,2.6,z,-Math.PI/2)}
+  put('vat',6.6,0,-5.2);put('vat',6.6,0,-3.6);put('vat_broken',6.4,0,-1.6,-.6);put('lab_table',6.9,0,2.2,-Math.PI/2);put('crate_bio',6.7,0,4.6,.2);put('crate_bio',6.0,0,5.6,-.3);
+  put('growth_cluster',-6.6,0,-4.5);put('growth_cluster',6.0,0,-.2,1.3);put('crate_bio',-6.8,0,4.8,.4);put('growth_cluster',-6.2,0,5.6,2);
+  for(const [x,z] of [[6.6,-5.2],[6.6,-3.6],[6.4,-1.6]])glow(x,1.2,z);
+  cam.position.set(-5.2,1.65,6.8);cam.lookAt(-7.6,1.25,1);if(ctl)ctl.target.set(-7.6,1.25,1);
+ }
+ if(q.get('cp')){cam.position.set(...q.get('cp').split(',').map(Number));const t=q.get('ct').split(',').map(Number);cam.lookAt(...t);if(ctl)ctl.target.set(...t)}
+ if(ctl)ctl.update();
+}
+if(q.get('shot')){document.getElementById('ui').style.display='none';document.getElementById('info').style.display='none'}
+document.querySelectorAll('button').forEach(b=>b.onclick=()=>K&&build(b.dataset.m));
+document.getElementById('game').onchange=()=>K&&build('room');
+document.getElementById('door').oninput=e=>{if(door)door.rotation.y=door.userData.base+e.target.value*Math.PI/180};
+addEventListener('resize',()=>{if(q.get('w'))return;cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();r.setSize(innerWidth,innerHeight)});
+r.setAnimationLoop(()=>{if(sc)r.render(sc,cam)});
+</script></body></html>
