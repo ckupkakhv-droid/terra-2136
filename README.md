@@ -128,7 +128,7 @@ CHANGELOG.md        — история изменений
 - Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Мутант коллекторов «Рафаэль» (`play/assets/sewer/mutant.glb`): тело, риг и анимации — [Quaternius](https://quaternius.com) Universal Base Characters и Universal Animation Library 1 (CC0 1.0); голова, панцирь, одежда, саи, текстуры, клипы scream/emerge — собственные (`tools/art/sewer_mutant/`). Подробно: `play/assets/sewer/CREDITS.md`
-- Набор лаборатории «Объект 7 · НИИ „Полынь“» (`play/assets/sewer/lab/lab_kit.glb`, `decals.webp`): собственная процедурная геометрия, текстуры и логотип Ambrala (`tools/art/sewer_lab/`); надписи RU/CN набраны шрифтом [Noto Sans CJK SC](https://github.com/notofonts/noto-cjk) (SIL OFL 1.1). Подробно: `play/assets/sewer/CREDITS.md`
+- Набор лаборатории «Объект 7 · НИИ „Полынь“» (`play/assets/sewer/lab/lab_kit.glb`): собственная процедурная геометрия, текстуры и логотип Ambrala (`tools/art/sewer_lab/`); надписи RU/CN набраны шрифтом [Noto Sans CJK SC](https://github.com/notofonts/noto-cjk) (SIL OFL 1.1). Подробно: `play/assets/sewer/CREDITS.md`
 - Шрифт [DejaVu](https://dejavu-fonts.github.io)
 - Библиотеки: [three.js](https://threejs.org) (MIT), [fflate](https://github.com/101arrowz/fflate) (MIT), [PeerJS](https://peerjs.com) (MIT)
 
@@ -152,8 +152,14 @@ CHANGELOG.md        — история изменений
 
 `python3 tests/camp-mobile.py` проверяет мобильный каркас лагеря (`play/ui/camp-mobile.*`, подключается из `camp-navigation.js`) в 390×844, 844×390, 360×740, 667×375 и 1280×800: цели касания не меньше 48 px, вкладки без обрезки и наложений, нижняя панель в портрете и рельс в альбоме, отступы safe-area, вкладка «Оборона» и точки встраивания `window.terraCampUI` для разделов-дополнений. Скриншоты — в `/tmp/terra-camp-mobile-qa`.
 
+`python3 tests/camp-dossier.py` проверяет «Штабной стол» (`play/ui/camp-dossier.*`) в тех же пяти размерах: печать в личном деле меняет работу жителя штатным обработчиком, «i», листание дел, чертежи построек, вкладку «Оборона», цели ≥ 48 px и загрузку сохранения через «Продолжить». Скриншоты — в `/tmp/terra-camp-dossier-qa`.
+
 `play/ui/` редактируется напрямую, сборщик не требуется. `scripts/apply-camp-navigation.py` документирует замену текста и подключение файлов к точной исходной версии HTML; повторное применение или другая исходная версия отклоняются. При переносе новой версии в архив нужно включать весь каталог `play/`.
 
 `python3 tests/camp-jobs.py` проверяет карточку жителя в сенсорной эмуляции: видимые причины недоступности работ, закреплённый возврат к списку, переходы к очереди работ/складам/энергоснабжению, отсутствие изменения состояния при навигации и штатные приказы отдыха/возврата к автоматической работе. Физический телефон и полный экспорт/импорт сохранения этим тестом не проверяются.
 
 `python3 tests/field-hud.py` проверяет HUD в чистых профилях: настольный браузер и сенсорная эмуляция, отсутствие наложения цели на здоровье/кнопки/миникарту/сенсорное управление (в том числе 667×375 и 568×320), раскрытие подсказки без включения джойстика или атаки, управление картой/паузой/навыками с клавиатуры. Используются те же `TERRA_CHROMIUM`, `TERRA_TEST_URL` и `TERRA_QA_OUTPUT`. Скриншоты по умолчанию сохраняются в `/tmp/terra-field-hud-qa`.
+
+Первый участок канализации и его проверка описаны в [docs/SEWERS_RU.md](docs/SEWERS_RU.md).
+
+Награда и повторная загрузка канализации проверяются `python3 tests/sewer-boss.py` и `node --test tests/sewer-reward.mjs`. Саи — новый тип контента: для открытия сейва с ними нужна поддерживающая сборка; подробности совместимости — в `docs/SEWERS_RU.md`.

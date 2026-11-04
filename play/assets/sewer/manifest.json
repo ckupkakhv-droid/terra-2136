@@ -349,9 +349,7 @@
       }
     },
     "decals": {
-      "file": "lab/decals.webp",
-      "sha256": "161adf774cce82c5f2ac099036c99b812f326881bd2527f57bd04634848b16a3",
-      "bytes": 113258,
+      "embedded": "текстура материала lab_decals внутри lab/lab_kit.glb (отдельного файла нет)",
       "size": [
         1024,
         1024
@@ -425,7 +423,7 @@
         "source": "tools/art/sewer_lab/"
       },
       {
-        "part": "шрифт надписей на табличках (растеризован в decals)",
+        "part": "шрифт надписей на табличках (растеризован в текстуру табличек)",
         "author": "Adobe / Google — Noto Sans CJK SC Bold",
         "license": "SIL Open Font License 1.1",
         "url": "https://github.com/notofonts/noto-cjk"

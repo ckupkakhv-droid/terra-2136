@@ -1,4 +1,4 @@
-# Текстуры набора лаборатории «Объект 7»: тайлы (кирпич, бетон) + исходники для запекания + decals.webp (RU/CN, логотип Ambrala)
+# Текстуры набора лаборатории «Объект 7»: тайлы (кирпич, бетон) + исходники для запекания + decals.png (RU/CN, логотип Ambrala)
 import os, math, numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 D=os.environ.get('LAB_TEX','/workspace/art-sewer/lab/tex/'); os.makedirs(D,exist_ok=True)
@@ -56,7 +56,7 @@ h=np.where(joint,0.,1.)*1.0; h=np.asarray(Image.fromarray((h*255).astype(np.uint
 gy,gx=np.gradient(h); nn=np.stack([-gx*4,gy*4,np.ones_like(h)],-1); nn/=np.linalg.norm(nn,axis=-1,keepdims=True); save(nn*.5+.5,'brick_n.png')
 # резина/уплотнитель
 save(np.stack([.10,.10,.10],-1)*(.8+.4*tnoise(N,5,16)[...,None]),'rubber.png')
-# ---------- decals.webp 1024×1024 ----------
+# ---------- decals.png 1024×1024 (вшивается в lab_kit.glb) ----------
 def logo(g,cx,cy,R,col=(31,174,140),fg=(242,242,234)):
     pts=[(cx+math.cos(math.pi/3*i+math.pi/6)*R,cy+math.sin(math.pi/3*i+math.pi/6)*R) for i in range(6)]; g.polygon(pts,fill=col)
     w=max(2,int(R*.13))
@@ -102,6 +102,6 @@ put('vat_label',amblabel(512,256,'ШТАММ «ПОЛЫНЬ-7»','毒株 P-7 · 
 put('crate_label',bisign(512,256,'БИОМАТЕРИАЛ|ХРАНИТЬ ПРИ −20 °C','生物材料 · 储存温度 −20 °C',bg=(226,194,58),bio=True),0,768)
 lg=Image.new('RGBA',(192,192),(0,0,0,0)); logo(ImageDraw.Draw(lg),96,96,90); put('logo',lg,512,832)
 put('vat_label_03',amblabel(320,192,'ШТАММ «ПОЛЫНЬ-7»','毒株 P-7 · 样本 03'),704,832)
-A.save(D+'decals.png'); A.save(D+'decals.webp',quality=88,method=6)
+A.save(D+'decals.png')
 import json; json.dump(R,open(D+'decals.json','w'),ensure_ascii=False)
-print('ok',os.path.getsize(D+'decals.webp'))
+print('ok',os.path.getsize(D+'decals.png'))

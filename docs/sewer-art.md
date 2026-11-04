@@ -70,7 +70,7 @@ window.TERRA_ASSETS.sewer_mutant='url:assets/sewer/mutant.glb'
 ## Файлы
 
 - `play/assets/sewer/lab/lab_kit.glb` — 9 именованных корневых узлов.
-- `play/assets/sewer/lab/decals.webp` — атлас табличек 1024² (те же таблички вшиты в glb; отдельный файл — для дополнительных табличек Codex, прямоугольники в `manifest.json → lab.decals.rects_px`).
+- Таблички (атлас 1024²) вшиты в `lab_kit.glb` как текстура материала `lab_decals`; прямоугольники табличек — в `manifest.json → lab.decals.rects_px`.
 - `docs/art/sewer/lab/preview.html` — превью: комната 16×16 как в #10, все узлы, угол гермодвери, свет «как в игре». Запуск: `python3 -m http.server` в корне репозитория, затем `/docs/art/sewer/lab/preview.html`.
 - `tools/art/sewer_lab/` — `lab_tex.py` (текстуры, таблички), `build_lab.py` (Blender 4.2: геометрия, атлас), `post.mjs` (материалы), `build.sh`.
 
@@ -124,4 +124,3 @@ const vat=kit.getObjectByName('vat').clone(); vat.position.set(x,0,z); vat.rotat
 - Камера игры смотрит сверху: таблички на стенах вертикальные и в игре почти не читаются. Сверху видны крышки ящиков (жёлтая этикетка), кольца на колбах, шляпки наростов и красный кирпич.
 - Свод срезан на 3,4 м (высота стен в #10), полного кирпичного свода как в концепте нет — он закрыл бы героя.
 - Пузыри в колбе почти сливаются с жидкостью; образца внутри нет.
-- Таблички в glb и `decals.webp` дублируются (~100 КБ).

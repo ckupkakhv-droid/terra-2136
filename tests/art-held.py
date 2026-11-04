@@ -25,7 +25,10 @@ def run(p, query, art):
     pg.evaluate("()=>{game.p.level=30;setInterval(()=>{game.p.hp=game.p.maxHp||100},50)}")
     seen = {}
     for k in ['katana', 'rifle', 'stick']:
-        pg.evaluate(EQUIP, k); pg.wait_for_timeout(1200)
+        pg.evaluate(EQUIP, k)
+        pg.wait_for_function('(k)=>game.wMeshType===k && !!game.wMesh?.geometry', arg=k)
+        if art:
+            pg.wait_for_function('(k)=>game.wMesh.geometry.userData.terraArt === "w_"+k', arg=k)
         seen[k] = pg.evaluate("()=>game.wMesh.geometry.userData.terraArt||null")
     shown = pg.evaluate("()=>TERRA_ART.heldShowcase()")
     st = pg.evaluate("()=>TERRA_ART.heldStats")
