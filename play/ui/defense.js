@@ -2,6 +2,7 @@
  * Подключается к бандлу через window.TERRA_DEFENSE_CTX/HOOK (scripts/apply-defense-hook.py).
  * Сейв: турели остаются записями p.base с t:"turretB"; новые необязательные поля
  * dk (вид), lvl, mag, dprio. Блок p.camp.defense {v:1, porters:[]}. Без полей — значения по умолчанию.
+ * Блок с v>1 (более новая версия) не читается и не переписывается: модуль замирает.
  */
 (() => {
   'use strict';
@@ -81,10 +82,14 @@
     const h = game.homePos?.();
     return h ? { x: h.x, z: h.z, warehouse: false } : null;
   };
+  // сейв с блоком camp.defense новее v1: модуль замирает и ничего не пишет ни в блок, ни в турели,
+  // поэтому сохранение из этой сборки не портит данные более новой (проверка без правки валидатора бандла)
+  const isFuture = () => Number(game?.p?.camp?.defense?.v) > 1;
   const dstate = () => {
     const c = game.p.camp;
     if (!c) return { v: 1, porters: [] };
     if (!c.defense || typeof c.defense !== 'object') c.defense = { v: 1, porters: [] };
+    if (isFuture()) return { v: c.defense.v, porters: [] }; // блок из более новой версии не трогаем
     if (!Array.isArray(c.defense.porters)) c.defense.porters = [];
     c.defense.v = 1;
     return c.defense;
@@ -105,6 +110,7 @@
     if (Array.isArray(uu)) for (const r of RECIPES) if (!uu.some((x) => x.id === r.id)) uu.push(r);
     const base = Li.turretB;
     if (!base) return false;
+    if (!base.baseCost) base.baseCost = { ...base.cost };
     base.n = TYPES.pkm.name;
     base.dk = 'pkm';
     base.turret = 0; // родной тик больше не стреляет: огонь и магазин ведёт этот модуль
@@ -113,7 +119,17 @@
       if (!Li[t.key]) Li[t.key] = { ...base, n: t.name, cost: t.cost, lvl: t.lvlReq, as: 'turretB', dk };
     }
     if (B.defense?.hp && !B.defense.hp.turretB) B.defense.hp.turretB = 120;
+    // снос: родной код возвращает долю B.refund от A.refundOf(запись) || A.cost
+    base.refundOf = (o) => paidCost(o);
     return true;
+  }
+  // всё, что вложено в турель: цена её вида + улучшения до текущего уровня
+  function paidCost(o) {
+    const t = TYPES[dkOf(o)] || TYPES.pkm, out = {};
+    const add = (c) => { for (const [k, v] of Object.entries(c || {})) out[k] = (out[k] || 0) + v; };
+    add(t.cost || ctx.Li.turretB.baseCost);
+    for (let i = 1; i < clampLvl(o?.lvl); i++) add(t.up[i]);
+    return out;
   }
 
   /* ---------- модели ---------- */
@@ -208,7 +224,7 @@
     game._defenseGeo = orig;
     game.geoOf = function (e, t, i, n) {
       // турель рисует GLB-модель модуля; в общем меше остаётся только полоса прочности
-      if (e === 'turretB' && S.tmpl[dkOf(t)]) return;
+      if (e === 'turretB' && S.tmpl[dkOf(t)] && !S.future) return;
       return orig.call(this, ctx.Li[e]?.as || e, t, i, n);
     };
   }
@@ -437,8 +453,19 @@
     S.player = game.p; S.dirty = true;
     emit('session');
   }
+  function setFuture(on) {
+    S.future = on;
+    S.player = null; S.dirty = true; game.baseDirty = true;
+    for (const I of Object.values(S.inst)) for (const pt of I.parts) pt.im.count = 0;
+    for (const t of [...S.trips.values()]) endTrip(t);
+    if (S.pool) { S.pool.list.length = 0; S.pool.mesh.count = 0; }
+    if (on) { console.warn('[defense] сейв из более новой версии обороны (camp.defense.v=' + game.p.camp.defense.v + '): модуль отключён'); game.ui?.toast?.('Оборона: сейв из более новой версии — турели отключены, данные не меняются', '#ffb84a'); }
+    emit('future');
+  }
   function update(dt) {
     if (!ctx || !game.p || !game.scene) return;
+    if (isFuture() !== !!S.future) setFuture(isFuture());
+    if (S.future) return;
     const t0 = performance.now();
     try { step(dt); } finally { const ms = performance.now() - t0; S.ms = S.ms == null ? ms : S.ms * 0.95 + ms * 0.05; S.msMax = Math.max(S.msMax || 0, ms); }
   }
@@ -494,6 +521,7 @@
     get ready() { return !!ctx && !!game?.p; },
     getState() {
       if (!ctx || !game?.p) return { ready: false, limit: { used: 0, max: TIER_LIMIT[0] }, summary: null, turrets: [], porters: [], catalog: [] };
+      if (isFuture()) return { ready: false, future: true, limit: { used: turrets().length, max: limit() }, summary: null, turrets: [], porters: [], catalog: [] };
       const list = turrets().map(cardOf), res = campRes() || {};
       return {
         ready: true,
@@ -595,6 +623,12 @@
     lastContainer = container;
     styleOnce();
     const st = api.getState();
+    if (st.future) {
+      const s = container.querySelector('.campSection__summary') || container, l = container.querySelector('.campSection__list') || container;
+      s.textContent = ''; l.textContent = '';
+      l.append(el('div', 'campItemCard__meta', 'Сохранение сделано более новой версией обороны. Турели отключены, чтобы не испортить данные — обновите игру.'));
+      return;
+    }
     const summary = container.querySelector('.campSection__summary') || container;
     const list = container.querySelector('.campSection__list') || container;
     summary.textContent = ''; list.textContent = '';
@@ -664,10 +698,41 @@
   function updateBadge() {
     const ui = window.terraCampUI;
     if (!ui?.setBadge || !api.ready) return;
-    const n = api.getState().summary.needAmmo;
+    const n = api.getState().summary?.needAmmo || 0;
     if (n !== S.badge) { S.badge = n; ui.setBadge('defense', n, 'warn'); }
   }
+  // родная вкладка с полосками прочности подписывает любую turretB как «Турель»:
+  // после отрисовки меняем подпись на вид турели (карточки идут в порядке game.defenseList()).
+  function relabelNative() {
+    const panel = document.getElementById('campPanel');
+    if (!panel || panel.classList.contains('hidden') || !game?.defenseList) return;
+    const list = game.defenseList();
+    if (!list.some((d) => d.type === 'turretB')) return;
+    for (const grid of panel.querySelectorAll('.defGrid')) {
+      const cards = [...grid.children];
+      if (cards.length !== list.length) continue;
+      const heads = cards.map((c) => c.firstChild?.nodeType === 3 ? c.firstChild : null);
+      const ok = list.every((d, i) => heads[i] && (d.type !== 'turretB' || heads[i].nodeValue === 'Турель' || cards[i].dataset.dk));
+      if (!ok) continue;
+      const turrets = new Map(game.p.base.filter(isTurret).map((o) => [game.defenseId(o), o]));
+      list.forEach((d, i) => {
+        const o = d.type === 'turretB' && turrets.get(d.id);
+        if (!o) return;
+        const t = TYPES[dkOf(o)] || TYPES.pkm, name = t.name + (clampLvl(o.lvl) > 1 ? ' · ур. ' + clampLvl(o.lvl) : '');
+        if (heads[i].nodeValue !== name) heads[i].nodeValue = name;
+        cards[i].dataset.dk = dkOf(o);
+      });
+    }
+  }
+  function watchNative() {
+    const panel = document.getElementById('campPanel');
+    if (!panel) return setTimeout(watchNative, 500);
+    let q = 0;
+    new MutationObserver(() => { if (!q) { q = 1; queueMicrotask(() => { q = 0; relabelNative(); }); } })
+      .observe(panel, { childList: true, subtree: true });
+  }
   function watchPanel() {
+    watchNative();
     let tries = 0;
     const attach = () => {
       const ui = window.terraCampUI;
@@ -711,6 +776,10 @@
     patchPlace();
     S.dirty = true;
     game.baseDirty = true;
+  }
+  for (const k of ['build', 'upgrade', 'repair', 'reload', 'assign', 'setPriority', 'deposit']) {
+    const f = api[k];
+    api[k] = function () { return isFuture() ? no('future') : f.apply(this, arguments); };
   }
   window.TERRA_DEFENSE_HOOK = boot;
   if (window.TERRA_DEFENSE_CTX) boot(window.game);
