@@ -103,10 +103,20 @@
         else button.removeAttribute('aria-describedby');
       }
     }
-    function enhanceContent() { enhanceResidents(); explainJobs(); }
-    new MutationObserver(enhanceContent).observe(body, {
-      childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'title'],
-    });
+    let watchedJobs = null;
+    const jobObserver = new MutationObserver(explainJobs);
+    function enhanceContent() {
+      enhanceResidents();
+      const jobs = body.querySelector('.campJobs');
+      if (jobs === watchedJobs) return;
+      jobObserver.disconnect();
+      watchedJobs = jobs;
+      if (jobs) {
+        explainJobs();
+        jobObserver.observe(jobs, {subtree: true, attributes: true, attributeFilter: ['disabled', 'title']});
+      }
+    }
+    new MutationObserver(enhanceContent).observe(body, {childList: true, subtree: true});
     enhanceContent();
 
     // Move focus only; Enter/Space use the native buttons and their existing handlers.
@@ -123,6 +133,108 @@
     for (const [id, text] of Object.entries({bCamp: 'Лагерь и жители', bMap: 'Карта · M', bPause: 'Пауза · Esc'})) {
       const button = document.getElementById(id);
       if (button) { button.setAttribute('aria-label', text); button.title = text; }
+    }
+    enhanceFieldHud();
+  }
+
+  function enhanceFieldHud() {
+    const hud = document.getElementById('hud');
+    const objective = document.getElementById('obj');
+    const title = document.getElementById('objT');
+    const hint = document.getElementById('objH');
+    if (!hud || !objective || !title || !hint) return;
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.id = 'objectiveToggle';
+    toggle.setAttribute('aria-controls', 'objectiveDetails');
+    toggle.setAttribute('aria-labelledby', 'objT objectiveActionLabel');
+    const action = document.createElement('span');
+    action.id = 'objectiveActionLabel';
+    action.className = 'hudScreenReaderText';
+    const chevron = document.createElement('span');
+    chevron.className = 'objectiveChevron';
+    chevron.textContent = '⌄';
+    chevron.setAttribute('aria-hidden', 'true');
+    const shortTitle = document.createElement('span');
+    shortTitle.className = 'objectiveShortTitle';
+    shortTitle.textContent = 'Цель';
+    shortTitle.setAttribute('aria-hidden', 'true');
+    objective.prepend(toggle);
+    toggle.append(title, shortTitle, action, chevron);
+    const details = document.createElement('section');
+    details.id = 'objectiveDetails';
+    const detailTitle = document.createElement('strong');
+    detailTitle.id = 'objectiveDetailTitle';
+    details.setAttribute('aria-labelledby', detailTitle.id);
+    details.append(detailTitle, hint);
+    objective.append(details);
+    const syncTitle = () => {
+      if (detailTitle.textContent !== title.textContent) detailTitle.textContent = title.textContent;
+    };
+    const titleObserver = new MutationObserver(syncTitle);
+    let expanded;
+    function expand(open) {
+      if (expanded === open) return;
+      expanded = open;
+      objective.classList.toggle('objectiveExpanded', open);
+      hud.classList.toggle('objectiveDetailsOpen', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      action.textContent = open ? 'Скрыть подробности цели' : 'Показать подробности цели';
+      details.hidden = !open;
+      titleObserver.disconnect();
+      if (open) {
+        syncTitle();
+        titleObserver.observe(title, {childList: true, characterData: true, subtree: true});
+      }
+    }
+    expand(false);
+    // The touch controller listens on window: reading/scrolling the hint must not steer it.
+    objective.addEventListener('pointerdown', event => event.stopPropagation());
+    toggle.addEventListener('click', event => {
+      event.stopPropagation();
+      if (window.game?.state === 'play') expand(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    toggle.addEventListener('keydown', event => {
+      if (['Enter', ' '].includes(event.key)) event.stopPropagation();
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        expand(false);
+      }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!objective.contains(event.target)) expand(false);
+    }, true);
+    new MutationObserver(() => {
+      if (hud.classList.contains('hidden')) expand(false);
+    }).observe(hud, {attributes: true, attributeFilter: ['class']});
+
+    // Native HUD buttons use pointerdown. Keyboard/assistive click needs the same action.
+    const actions = {bMap: game => game.ui.openMap(), bPause: game => game.ui.pause()};
+    for (const [id, caption] of Object.entries({bCamp: 'Лагерь', bMap: 'Карта', bPause: 'Пауза'})) {
+      const button = document.getElementById(id);
+      if (!button) continue;
+      const label = document.createElement('span');
+      label.className = 'hudButtonCaption';
+      label.textContent = caption;
+      label.setAttribute('aria-hidden', 'true');
+      button.append(label);
+      button.addEventListener('keydown', event => {
+        if (['Enter', ' '].includes(event.key)) event.stopPropagation();
+      });
+      if (actions[id]) button.addEventListener('click', event => {
+        if (event.detail === 0 && window.game?.state === 'play') actions[id](window.game);
+      });
+    }
+    const skills = document.getElementById('lvlW');
+    if (skills) {
+      skills.tabIndex = 0;
+      skills.addEventListener('keydown', event => {
+        if (!['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (window.game?.state === 'play') window.game.ui.openInv('skills');
+      });
     }
   }
   if (document.readyState === 'complete') start();
