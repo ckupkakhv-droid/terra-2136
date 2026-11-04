@@ -1,0 +1,18 @@
+name: Идея
+description: Предложить механику, район, противника или улучшение
+title: "[Идея] "
+labels: [enhancement]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: О чём идея
+      options: [Механика, Лагерь, Район или локация, Противник или босс, Управление и удобство, Сюжет, Другое]
+    validations: {required: true}
+  - type: textarea
+    id: idea
+    attributes: {label: Опиши идею}
+    validations: {required: true}
+  - type: textarea
+    id: why
+    attributes: {label: Зачем это игроку}
