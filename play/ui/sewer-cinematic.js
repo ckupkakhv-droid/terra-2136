@@ -1,0 +1,84 @@
+import { leaseSewerCamera } from './sewer-camera.js';
+/* Found recordings and Raphael's encounter share modal input ownership.
+ * A supplied live subject gets a temporary render camera, without save writes.
+ */
+export function showRecording(game, message, options = {}) {
+  if (game.state !== 'play' || document.getElementById('sewerRecording')) return;
+  const owner = game.p, world = game.world, dungeon = game.dg;
+  const previousFocus = document.activeElement;
+  const frames = options.frames || [
+    ['АГИ · ПАДЕНИЕ СЕТЕЙ', 'Города гасли по одному. За приказами машин пришла эпидемия. Внизу остались только следы тех, кто пытался удержать проход.'],
+    ['ПОСЛЕДНИЙ ИЗ КЛАНА', message],
+    ['ЮЖНЫЙ КОЛЛЕКТОР · СЛЕД ПРОДОЛЖАЕТСЯ', 'У стены — красная ткань и две глубокие борозды. Крысы не боятся этого места. Самого охотника здесь уже нет.'],
+  ];
+  const root = document.createElement('section');
+  root.id = 'sewerRecording';
+  root.setAttribute('role', 'dialog');
+  root.setAttribute('aria-modal', 'true');
+  root.setAttribute('aria-labelledby', 'recordingTitle');
+  root.innerHTML = '<div class="recordingLetterbox"></div><div class="recordingCard scroll"><small>НАЙДЕННАЯ ЗАПИСЬ · ЮЖНЫЙ КОЛЛЕКТОР</small><h2 id="recordingTitle"></h2><p id="recordingText"></p><div class="recordingControls"><span id="recordingStep"></span><button type="button" id="recordingSkip">Пропустить</button><button type="button" id="recordingNext">Далее</button></div></div><div class="recordingLetterbox"></div>';
+  if(options.heading)root.querySelector('small').textContent=options.heading;
+  if(options.skipLabel)root.querySelector('#recordingSkip').textContent=options.skipLabel;
+  const clearInput = () => {
+    game.keys?.clear();
+    if (game.mouse) game.mouse.down = false;
+    game.meleeRelease?.(true);
+    for (const [stick,id] of [[game.stL,'stickL'],[game.stR,'stickR']]) {
+      if (stick) Object.assign(stick,{on:false,x:0,y:0,id:-1});
+      const element=document.getElementById(id);if(element)element.style.display='none';
+    }
+  };
+  let frame=0, closed=false, cameraLease=null;
+  const next=root.querySelector('#recordingNext');
+  const ownsModal = () => game.p===owner && owner.alive!==false && game.world===world && game.dg===dungeon &&
+    game.state==='modal' && root.isConnected && !root.inert &&
+    ![...document.querySelectorAll('.modal:not(.hidden)')].some(panel => panel.getClientRects().length);
+  cameraLease=leaseSewerCamera(game,options.subject,{owns:ownsModal,onCancel:()=>close(true,false)});
+  if(cameraLease) {
+    root.style.background='linear-gradient(180deg,#05080722 35%,#050807bb 100%)';
+    root.style.justifyContent='flex-end';
+    const boxes=root.querySelectorAll('.recordingLetterbox');
+    boxes[0].style.cssText='flex:1;max-height:none;background:transparent;border:0';
+    boxes[1].style.display='none';
+    const card=root.querySelector('.recordingCard');
+    card.style.maxHeight='46dvh';card.style.background='#101a15ed';
+  }
+  clearInput();
+  game.state = 'modal';
+  document.body.append(root);
+  function draw() {
+    root.querySelector('#recordingTitle').textContent=frames[frame][0];
+    root.querySelector('#recordingText').textContent=frames[frame][1];
+    root.querySelector('#recordingStep').textContent=`${frame+1} / ${frames.length}`;
+    next.textContent=frame===frames.length-1?(options.finishLabel||'В тоннель'):'Далее';
+    cameraLease?.setFrame(frame);
+  }
+  function close(restore=true,finished=true) {
+    if(closed)return;
+    const restoreGame=restore && ownsModal();
+    closed=true;cameraLease?.release();clearInterval(lifecycle);window.removeEventListener('keydown',keyboard,true);root.remove();
+    if(restoreGame) {
+      clearInput();game.state='play';
+      if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
+      if(finished)options.onFinish?.();
+    }
+  }
+  function keyboard(event) {
+    if(!ownsModal()) { close(false); return; }
+    // Native shortcuts (I/M/L) must not open another modal behind this one.
+    event.stopImmediatePropagation();
+    if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();close();}
+    else if(event.key==='Tab') {
+      event.preventDefault();event.stopImmediatePropagation();
+      const buttons=[root.querySelector('#recordingSkip'),next];
+      const i=buttons.indexOf(document.activeElement);
+      buttons[(i+(event.shiftKey?-1:1)+buttons.length)%buttons.length].focus();
+    }
+  }
+  root.querySelector('#recordingSkip').onclick=()=>close();
+  next.onclick=()=>{if(game.p!==owner)return close(false);if(++frame===frames.length)close();else draw();};
+  window.addEventListener('keydown',keyboard,true);
+  const lifecycle=setInterval(()=>{if(!ownsModal())close(false);else cameraLease?.check();},100);
+  draw();next.focus();
+  return {close,camera:cameraLease};
+}

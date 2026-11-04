@@ -1,0 +1,128 @@
+{
+  "id": "sewer_mutant",
+  "name": "Рафаэль — мутант коллекторов",
+  "file": "mutant.glb",
+  "sha256": "0c0f7e5ce1d2c7636703a496b7eb6ae92e3688203acc5382a73d08a85c9b050d",
+  "bytes": 685468,
+  "connect": "window.TERRA_ASSETS.sewer_mutant='url:assets/sewer/mutant.glb'",
+  "units": "meters",
+  "up": "+Y",
+  "forward": "+Z",
+  "pivot": "на полу между стопами (0,0,0)",
+  "height_m": {
+    "rest_bbox": 1.82,
+    "suggested_Ke_height": 2.0,
+    "note": "без записи в таблице высот Ke нормализует к 1.8 м"
+  },
+  "mesh": {
+    "skinned_meshes": 1,
+    "primitives": 1,
+    "triangles": 10452,
+    "vertices": 12057,
+    "materials": 1,
+    "doubleSided": true,
+    "max_influences": 4
+  },
+  "skeleton": {
+    "joints": 53,
+    "root": "root",
+    "rig": "Quaternius UBC/UAL (UE-манекен без leaf-костей), саи привязаны к hand_r / hand_l"
+  },
+  "textures": {
+    "baseColor": "1024×1024 WebP",
+    "normal": "512×512 WebP",
+    "atlas": "одна текстура на весь персонаж"
+  },
+  "compression": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization",
+    "EXT_texture_webp"
+  ],
+  "clips": {
+    "idle": {
+      "duration_s": 1.67,
+      "loop": "loop",
+      "source": "UAL1 Sword_Idle"
+    },
+    "walk": {
+      "duration_s": 1.33,
+      "loop": "loop",
+      "source": "UAL1 Walk_Loop"
+    },
+    "run": {
+      "duration_s": 0.92,
+      "loop": "loop",
+      "source": "UAL1 Jog_Fwd_Loop"
+    },
+    "attack": {
+      "duration_s": 1.5,
+      "loop": "once",
+      "source": "UAL1 Sword_Attack"
+    },
+    "attack2": {
+      "duration_s": 1.0,
+      "loop": "once",
+      "source": "UAL1 Punch_Cross"
+    },
+    "hit": {
+      "duration_s": 0.33,
+      "loop": "once",
+      "source": "UAL1 Hit_Chest"
+    },
+    "death": {
+      "duration_s": 2.33,
+      "loop": "once, clamp",
+      "source": "UAL1 Death01"
+    },
+    "crawl": {
+      "duration_s": 2.0,
+      "loop": "loop",
+      "source": "UAL1 Crouch_Fwd_Loop"
+    },
+    "scream": {
+      "duration_s": 1.58,
+      "loop": "once",
+      "source": "своя: Sword_Idle + рёв (голова/грудь вверх, руки в стороны, дрожь)"
+    },
+    "emerge": {
+      "duration_s": 2.0,
+      "loop": "once (нужен setLoop(LoopOnce) — в one-shot regex игры нет)",
+      "source": "своя: подъём таза из-под воды −1,1 м → Crouch_Idle_Loop → Sword_Idle"
+    }
+  },
+  "licenses": [
+    {
+      "part": "базовое тело (без головы), скин-веса, карта нормалей тела, исходный цвет кожи",
+      "author": "Quaternius",
+      "work": "Universal Base Characters [Standard] — Superhero_Male_FullBody",
+      "license": "CC0 1.0",
+      "url": "https://quaternius.itch.io/universal-base-characters",
+      "license_file": "LICENSE_Quaternius_UBC.txt",
+      "license_sha256": "0f4beaf0fe360a7732e58bbe3dbf60a2422367fbea60cb9ea4add968f383268e",
+      "zip_sha256": "fdbf1804c90dfc1ea03e992bff7da2dfd1a79318e13270a660180f9308455f40"
+    },
+    {
+      "part": "скелет и 8 клипов (idle…crawl), основа scream/emerge",
+      "author": "Quaternius",
+      "work": "Universal Animation Library 1 [Standard] — UAL1_Standard.glb",
+      "license": "CC0 1.0",
+      "url": "https://quaternius.itch.io/universal-animation-library",
+      "license_file": "LICENSE_Quaternius_UAL1.txt",
+      "license_sha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061",
+      "zip_sha256": "cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724"
+    },
+    {
+      "part": "голова черепахи, повязка, панцирь, щитки, пластрон, ватник, нашивка «Мосводосток», ремень, подсумок, противогаз, наколенники, обмотки, саи; текстуры; клипы scream/emerge",
+      "author": "команда «Терры»",
+      "license": "© 2026 Команда «Терры» (см. LICENSE)",
+      "source": "tools/art/sewer_mutant/"
+    },
+    {
+      "part": "шрифт надписи на нашивке (запечён в текстуру)",
+      "author": "DejaVu Fonts",
+      "license": "Bitstream Vera / DejaVu (свободная)",
+      "url": "https://dejavu-fonts.github.io"
+    }
+  ],
+  "note": "Образ — фанатская отсылка к Рафаэлю (TMNT) по решению владельца проекта; логотипы и ассеты франшизы не используются."
+}

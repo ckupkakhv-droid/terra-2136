@@ -86,3 +86,41 @@
   #objT { display: none; }
   .objectiveShortTitle { display: block; }
 }
+
+#sewerAction, #moscowSignalAction { position:fixed; z-index:25; left:50%; bottom:32%; transform:translateX(-50%); min-height:48px; max-width:calc(100vw - 24px); padding:12px 18px; background:#172821f2; border:1px solid #b3a174; color:#f1dfbd; border-radius:5px; font:inherit; }
+#sewerAction[hidden], #moscowSignalAction[hidden] { display:none; }
+#sewerMap { z-index:35; }
+#sewerMap .win { touch-action:pan-y; overscroll-behavior:contain; width:min(580px,96vw); max-height:90dvh; overflow:auto; padding:16px; background:linear-gradient(155deg,#29362e 0%,#111b17 34%,#101714 100%); border:1px solid #718073; box-shadow:inset 0 0 0 3px #111b17,inset 0 0 0 4px #47564a,0 18px 60px #000c; }
+#sewerMap h2 { position:sticky; top:0; z-index:1; background:#17231c; border-bottom:1px solid #887457; color:#ecd09c; letter-spacing:.12em; padding:4px 0; display:flex; justify-content:space-between; align-items:center; font-size:18px; }
+#sewerMap .x { position:static; min-width:44px; min-height:44px; }
+#sewerRoute { padding:8px; background:linear-gradient(#94b6a308 1px,transparent 1px),linear-gradient(90deg,#94b6a308 1px,transparent 1px),radial-gradient(ellipse at 30% 20%,#263f33,#101c19); background-size:24px 24px,24px 24px,100% 100%; border:1px solid #718371; border-radius:4px; box-shadow:inset 0 0 24px #0009; }
+#sewerRoute svg { display:block; width:min(100%,360px); height:auto; max-height:none; margin:auto; }
+.sewerPipe { fill:none; stroke:#526858; stroke-width:17; stroke-linecap:round; }
+.sewerPipeExplored { fill:none; stroke:#b6c99d; stroke-width:3; }
+.sewerJunction { fill:#1a2923; stroke:#687c66; stroke-width:2; stroke-dasharray:4 3; }
+.explored .sewerJunction { stroke:#a8b891; stroke-dasharray:none; }
+.sewerPlanIcon { fill:#e4c48f; font-size:22px; }
+.sewerPlanLabel { fill:#d3cfb6; font-size:16px; }
+.sewerPlayer { fill:none; stroke:#ffd487; stroke-width:3; }
+.sewerLegend { color:#c5b995; font-size:11px!important; line-height:1.5; }
+
+#sewerMap details { border-top:1px solid #73634b; }
+#sewerMap summary { min-height:48px; padding:12px 0; cursor:pointer; }
+#moscowRoute summary { color:#e4c48f; font-weight:600; }
+#sewerMap p { font-size:13px; line-height:1.5; }
+#sewerLayerButton { margin:0 0 8px; width:100%; min-height:44px; }
+#sewerRecording { position:fixed; inset:0; z-index:38; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(90deg,#060b09b8,#10151155,#060b09c9); padding:var(--st) var(--sr) var(--sb) var(--sl); }
+.recordingLetterbox { flex:1; min-height:12px; max-height:14vh; background:#030605e8; border-bottom:1px solid #8a755c55; }
+.recordingCard { width:min(760px,100%); align-self:center; padding:20px; max-height:70dvh; overflow:auto; touch-action:pan-y; background:#101a15f2; border-left:3px solid #a44b39; color:#e8dec8; box-shadow:0 10px 40px #000a; }
+.recordingCard small { color:#c7a56e; letter-spacing:1px; font-size:11px; }
+.recordingCard h2 { font-size:clamp(18px,3vw,30px); color:#e4be8f; }
+.recordingCard p { font-size:clamp(14px,2vw,18px); line-height:1.65; }
+.recordingControls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.recordingControls span { margin-right:auto; font-size:12px; }
+.recordingControls button { min-height:48px; padding:10px 16px; border:1px solid #9e855b; background:#29362c; color:#f2dfbd; font:inherit; }
+.recordingControls button:focus-visible { outline:2px solid #f6cb83; outline-offset:2px; }
+@media(orientation:landscape) and (max-height:500px){.recordingLetterbox{max-height:3vh}.recordingCard{padding:12px;max-height:88dvh}.recordingCard h2{margin:6px 0}.recordingCard p{font-size:13px;line-height:1.5;margin:8px 0}}
+/* Reading/encounter scenes own the screen; removing the scene restores HUD
+   visibility without changing native hidden classes or input state. */
+body:has(#sewerRecording) #hud,
+body:has(#sewerRecording) #touch{visibility:hidden!important}
