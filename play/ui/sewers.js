@@ -6,6 +6,7 @@ import { showRecording } from './sewer-cinematic.js';
 import { installMoscowSignal } from './moscow-signal.js';
 import { installMoscowScout } from './moscow-scout.js';
 import { installSewerNavigation } from './sewer-navigation.js';
+import { buildSewerLab } from './sewer-lab.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
  */
@@ -14,7 +15,7 @@ export const ENTRANCE = {x:12,z:-10,kind:'metro',name:'Канализация ·
 const RAPHAEL_LINE = '«Некоторые звали меня черепашкой-ниндзя. Я — Рафаэль. AGI забрал моих братьев и учителя. Из зелёных пиццеедов остался я. Крыс не трогай: они знают эти тоннели лучше людей».';
 export const LORE = [
   ['Журнал насосной', 'После начала AGI города теряли энергосети один за другим. Коллектор стал убежищем. Не открывайте нижнюю камеру, пока работают аварийные сбросы.'],
-  ['Перехват «Ambrala»', 'В журнале российского НИИ «Заслон» найден зарубежный архив Ambrala. Непроверенная запись связывает выпуск вируса с секретной лабораторией в Китае и приказом AGI. Местный узел передавал те же команды. Для подтверждения нужны другие свидетельства кампании.'],
+  ['Перехват «Ambrala»', 'Объект 7 · НИИ «Полынь». Российский филиал Ambrala исследовал штамм «Полынь-7». В журнале сохранился приказ AGI о выпуске вируса из секретной лаборатории в Китае. Местный узел принимал те же команды. Следующие записи ведут к московскому контуру.'],
   ['Последний из клана', `${RAPHAEL_LINE} Впереди следы двух саев и красная ткань.`],
   ['Сигнал на Москву', 'Северный ретранслятор всё ещё посылает машинные команды. Чем ближе к Москве, тем чаще в сводках встречаются патрульные роботы и холодное неоновое свечение. Маршрут в этот сектор пока не открыт.'],
 ];
@@ -24,6 +25,17 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   const moscowScout=installMoscowScout(game);
   const moscowSignal=installMoscowSignal(game,()=>moscowScout.start(),()=>moscowScout.engaged);
   let pumps = new Set(), currentPlayer = null, currentDungeon = null, seen = new Set(), warnedLocked=false;
+  let lab = null;
+  const labForCols = new WeakMap();
+  function syncLab() {
+    const next = game.dg?.sewer && game.world.inDungeon ? labForCols.get(game.dg.ch.cols) : null;
+    if (lab !== next) { lab?.removeFromParent(); lab = next || null; }
+    if (!lab) return;
+    if (lab.parent !== game.world.scene) game.world.scene.add(lab);
+    const distance = Math.hypot(game.p.x-lab.position.x,game.p.z-lab.position.z);
+    lab.visible = distance < 30;
+    for (const child of lab.children) if (child.isLight) child.visible = distance < 22;
+  }
   const active = () => game.dg?.sewer === true;
   const center = index => {
     const [i,j] = CELLS[index];
@@ -62,6 +74,9 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     }
     this.poi={x:ox+8,z:oz+8};
     this.bld.push({x0:ox,z0:oz,x1:ox+64,z1:oz+64});
+    const labGroup = buildSewerLab(this,game,bridge);
+    // World.build copies selected Chunk fields but keeps the collider array.
+    if (labGroup) labForCols.set(this.cols,labGroup);
   };
   const transition = game.runDungeonTransition;
   game.runDungeonTransition = function(descriptor, ...args) {
@@ -106,7 +121,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     }
     drawSewerMap(layer.querySelector('#sewerRoute'),CELLS,{seen,pumps,playerIndex});
     const journal=layer.querySelector('#sewerJournal');journal.replaceChildren();
-    for (const [index,[title,text]] of LORE.entries()) {if(index && !seen.has([0,3,6,6][index]))continue;const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('p');s.textContent=title;p.textContent=text;d.append(s,p);journal.append(d);}
+    for (const [index,[title,text]] of LORE.entries()) {if(index && !seen.has([0,2,6,6][index]))continue;const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('p');s.textContent=title;p.textContent=text;d.append(s,p);journal.append(d);}
     const moscowRoute=layer.querySelector('#moscowRoute');moscowRoute.replaceChildren();
     if(moscowSignal.eligible()) {
       const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('p');
@@ -188,6 +203,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   };
   function updateSurfaceUI() {
     if(!game.p)return;
+    syncLab();
     moscowScout.check();
     moscowSignal.update();
     navigation.sync();

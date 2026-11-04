@@ -20,7 +20,7 @@ export function drawSewerMap(host, cells, {seen, pumps, playerIndex = -1}) {
     const group=node('g',{class:`sewerCell ${explored?'explored':''}`,transform:`translate(${x},${y})`});
     group.append(node('circle',{r:23,class:'sewerJunction'}));
     const icon=index===0?'↑':pump?(pumps.has(index)?'✓':'○'):explored?'·':'?';
-    const label=index===0?'Лестница':pump?`Насос ${index===1?'I':'II'}`:index===6?(explored?'Ткань':'Неизвестно'):`Проход ${index}`;
+    const label=index===0?'Лестница':pump?`Насос ${index===1?'I':'II'}`:index===2&&explored?'Объект 7':index===6?(explored?'Ткань':'Неизвестно'):`Проход ${index}`;
     group.append(node('text',{y:6,'text-anchor':'middle',class:'sewerPlanIcon'},icon),node('text',{y:43,'text-anchor':'middle',class:'sewerPlanLabel'},label));
     if(index===playerIndex)group.append(node('circle',{r:30,class:'sewerPlayer','aria-label':'Вы здесь'}));
     svg.append(group);
