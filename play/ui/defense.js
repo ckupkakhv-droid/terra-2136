@@ -258,7 +258,9 @@
     const P = S.pool;
     if (!P) { game.hurtEnemy(target, dmg, { wt: 'turret' }); return; }
     if (P.list.length >= P.n) P.list.shift();
-    const dx = target.x - from.x, dz = target.z - from.z, dy = 1.1 - from.y, d = Math.hypot(dx, dy, dz) || 1;
+    // Обычная цель — грудь наземного врага (1.1). Разведчик задаёт aimY над землёй.
+    const aimY = Number.isFinite(target.aimY) ? target.aimY : 1.1;
+    const dx = target.x - from.x, dz = target.z - from.z, dy = aimY - from.y, d = Math.hypot(dx, dy, dz) || 1;
     const sp = kind === 'nail' ? TYPES.nail.speed : TYPES.pkm.speed;
     P.list.push({ kind, x: from.x, y: from.y, z: from.z, vx: (dx / d) * sp, vy: (dy / d) * sp, vz: (dz / d) * sp, t: d / sp, target, dmg, slow });
   }
