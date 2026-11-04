@@ -1,0 +1,273 @@
+/* «Живой лагерь»: метки над постройками, контекстное меню, призрак стройки.
+   Только CSS. Без backdrop-filter, веб-шрифтов и теней на прокрутке. */
+#campLiveLayer, #campLiveMenu, #campLiveAim, #campLivePlace {
+  font-family: inherit;
+}
+#campLiveLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 13;
+  pointer-events: none;
+  overflow: hidden;
+}
+.campLiveTag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 168px;
+  margin: 0;
+  padding: 6px 10px 6px 12px;
+  border: 1px solid rgba(255, 186, 110, .55);
+  border-left: 3px solid var(--camp-live-tone, #d7a15a);
+  background: rgba(16, 14, 12, .9);
+  color: #f3e6d2;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+.campLiveTag b {
+  display: block;
+  max-width: 146px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.campLiveTag i {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: #e7d3b4;
+}
+.campLiveTag i::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--camp-live-tone, #d7a15a);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+.campLiveTag[data-tone="ok"] { --camp-live-tone: #7dce6a; }
+.campLiveTag[data-tone="warn"] { --camp-live-tone: #e2b15a; }
+.campLiveTag[data-tone="bad"] { --camp-live-tone: #e25b4a; }
+.campLiveTag[data-tone="idle"] { --camp-live-tone: #9aa4a8; }
+.campLiveTag:focus-visible {
+  outline: 2px solid #ffd091;
+  outline-offset: 2px;
+}
+.campLiveTag[hidden], #campLiveMenu[hidden], #campLiveAim[hidden], #campLivePlace[hidden] {
+  display: none !important;
+}
+
+#campLiveBack {
+  position: fixed;
+  inset: 0;
+  z-index: 17;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+#campLiveMenu {
+  position: fixed;
+  z-index: 18;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+#campLiveMenu button {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  min-width: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid rgba(255, 176, 96, .7);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, rgba(48, 32, 20, .96), rgba(12, 11, 10, .94));
+  color: #ffe7c4;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.05;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+#campLiveMenu button span {
+  max-width: 58px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#campLiveMenu button:disabled {
+  opacity: .45;
+}
+#campLiveMenu button:focus-visible {
+  outline: 2px solid #ffd091;
+  outline-offset: 2px;
+}
+#campLiveMenu .campLiveClose {
+  border-color: rgba(226, 91, 74, .8);
+}
+#campLiveMenu.is-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(12, 11, 10, .92);
+  border: 1px solid rgba(255, 176, 96, .45);
+  pointer-events: auto;
+}
+#campLiveMenu.is-stack button {
+  position: static;
+  width: auto;
+  min-width: 148px;
+  height: auto;
+  min-height: 48px;
+  border-radius: 6px;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+#campLiveMenu.is-stack button span { max-width: none; }
+#campLiveNote {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(12, 11, 10, .92);
+  border: 1px solid rgba(255, 176, 96, .4);
+  color: #ffd2bb;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+  text-align: center;
+}
+#campLiveMenu.is-stack #campLiveNote { position: static; }
+
+#campLiveAim {
+  position: fixed;
+  z-index: 12;
+  left: max(var(--sl), 12px);
+  right: max(var(--sr), 96px);
+  top: calc(var(--st) + 108px);
+  bottom: calc(var(--sb) + 210px);
+  margin: 0;
+  padding: 0;
+  border: 1px dashed rgba(126, 182, 255, .35);
+  background: rgba(80, 140, 200, .04);
+  color: #d5e8ff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  cursor: crosshair;
+  touch-action: none;
+  pointer-events: auto;
+}
+#campLiveAim span {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  pointer-events: none;
+  text-shadow: 0 1px 2px #000;
+}
+
+#campLivePlace {
+  position: fixed;
+  z-index: 15;
+  left: var(--sl);
+  bottom: calc(var(--sb) + 210px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(168px, 42vw);
+  pointer-events: none;
+}
+#campLivePlace button {
+  min-width: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 186, 110, .7);
+  background: rgba(20, 16, 12, .94);
+  color: #ffe7c4;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+#campLivePlace button[data-act="confirm"] {
+  border-color: #7eb6ff;
+  color: #e7f3ff;
+}
+#campLivePlace button[data-act="confirm"][data-valid="0"] {
+  border-color: #e25b4a;
+  color: #ffd0c8;
+}
+#campLivePlace button:focus-visible, #campLiveAim:focus-visible {
+  outline: 2px solid #ffd091;
+  outline-offset: 2px;
+}
+#campLivePlace small {
+  display: block;
+  min-height: 0;
+  padding: 4px 6px;
+  background: rgba(12, 11, 10, .88);
+  color: #ffd2bb;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  #campLiveAim {
+    top: calc(var(--st) + 8px);
+    bottom: calc(var(--sb) + 108px);
+    left: calc(var(--sl) + 150px);
+    right: calc(var(--sr) + 180px);
+  }
+  #campLivePlace {
+    top: calc(var(--st) + 8px);
+    bottom: auto;
+    width: min(148px, 28vw);
+  }
+  .campLiveTag { font-size: 12px; max-width: 140px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campLiveTag, #campLiveMenu button, #campLivePlace button { transition: none; }
+}
