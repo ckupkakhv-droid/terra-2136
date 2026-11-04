@@ -123,6 +123,7 @@ CHANGELOG.md        — история изменений
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
+- Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Шрифт [DejaVu](https://dejavu-fonts.github.io)
 - Библиотеки: [three.js](https://threejs.org) (MIT), [fflate](https://github.com/101arrowz/fflate) (MIT), [PeerJS](https://peerjs.com) (MIT)
 
@@ -137,6 +138,8 @@ CHANGELOG.md        — история изменений
 ## Проверка интерфейса лагеря
 
 При запущенном локальном сервере на порту 8080: `python3 tests/camp-navigation.py`. Проверке нужны Python Playwright и Chromium/Chrome (они уже есть в подготовленной облачной среде). Путь к браузеру можно задать через `TERRA_CHROMIUM`; иначе тест ищет `chromium` или `google-chrome` в PATH. Для другого адреса игры задайте `TERRA_TEST_URL`. Она создаёт чистый профиль и двух тестовых жителей через игровой API, проверяет поиск, переходы, клавиатуру и три размера экрана. Скриншоты сохраняются в `/tmp/terra-camp-navigation-qa`. Это не проверка на физическом телефоне.
+
+`python3 tests/camp-mobile.py` проверяет мобильный каркас лагеря (`play/ui/camp-mobile.*`, подключается из `camp-navigation.js`) в 390×844, 844×390, 360×740, 667×375 и 1280×800: цели касания не меньше 48 px, вкладки без обрезки и наложений, нижняя панель в портрете и рельс в альбоме, отступы safe-area, вкладка «Оборона» и точки встраивания `window.terraCampUI` для разделов-дополнений. Скриншоты — в `/tmp/terra-camp-mobile-qa`.
 
 `play/ui/` редактируется напрямую, сборщик не требуется. `scripts/apply-camp-navigation.py` документирует замену текста и подключение файлов к точной исходной версии HTML; повторное применение или другая исходная версия отклоняются. При переносе новой версии в архив нужно включать весь каталог `play/`.
 

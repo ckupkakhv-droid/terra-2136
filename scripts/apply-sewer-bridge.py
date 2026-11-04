@@ -2,7 +2,11 @@
 from pathlib import Path
 import hashlib,re
 root=Path(__file__).resolve().parents[1];p=root/'play/index.html';raw=p.read_bytes()
-if hashlib.sha256(raw).hexdigest()!='858fe60ec39a73b663dc0c5a915da3597afa99aefeddc414c7b6b3aaf2046cc9':
+BASELINES = {
+ '858fe60ec39a73b663dc0c5a915da3597afa99aefeddc414c7b6b3aaf2046cc9', # main 6f5aaf0, до арт-слоя
+ '39463103ffc3c49e92a68d503e3795cbcf13de5f51e8523f2985e4f62fba054c', # main 23484d1, проверен хук ориентиров PR #13
+}
+if hashlib.sha256(raw).hexdigest() not in BASELINES:
  raise SystemExit('Unsupported baseline; review the bundle before adapting this bridge')
 s=raw.decode();assert s.count('rot();})();')==1
 s=s.replace('rot();})();','rot();window.TERRA_SEWER_BRIDGE={Chunk:Ie,shapes:L,Mesh:$t,Sphere:Hc,Material:vn,Group:Pi,bosses:vi,weapons:Tt,grades:ai,WeaponBuilder:ld};})();')
