@@ -64,6 +64,8 @@ with sync_playwright() as p:
         assert search.bounding_box()['height'] >= 44
         page.screenshot(path=str(out / (name + '.png')))
     assert page.evaluate('JSON.stringify(game.p.camp)') == before, 'Browsing mutated camp state'
+    # На телефоне подвал скрыт (кнопка «В игру» в панели вкладок, см. tests/camp-mobile.py); здесь — настольный путь.
+    page.set_viewport_size({'width':1280,'height':800})
     page.locator('#campPanel .panelFoot button').click()
     expect(page.locator('#campPanel')).not_to_be_visible()
     assert page.evaluate('game.state') == 'play'
