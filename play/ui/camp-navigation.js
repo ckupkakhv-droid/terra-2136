@@ -249,3 +249,8 @@
 { const base = document.currentScript?.src || new URL('ui/', location.href);
   const s = document.createElement('script'); s.src = new URL('camp-dossier.js', base).href; document.head.append(s);
   const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-dossier.css', base).href; document.head.append(l); }
+
+// «Живой лагерь»: метки, контекстное меню и чертёж постройки — play/ui/camp-live.*.
+{ const base = document.currentScript?.src || new URL('ui/', location.href);
+  const s = document.createElement('script'); s.src = new URL('camp-live.js', base).href; document.head.append(s);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-live.css', base).href; document.head.append(l); }
