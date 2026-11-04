@@ -170,6 +170,8 @@ def two_sided(m):
     return m
 
 # ---------- colouring & export ----------
+NOISE_SCALE = 1.0  # small props (held items) raise this so noise/rust detail scales with them
+
 def shade(mesh, salt=0):
     P = np.array(mesh.P); N = np.array(mesh.N); mats = mesh.M; n = len(P)
     C = np.zeros((n, 3)); MT = np.zeros(n, dtype=np.int64)
@@ -178,18 +180,18 @@ def shade(mesh, salt=0):
     for m, idx in uniq.values():
         idx = np.array(idx); p = P[idx]; col = np.tile(m.col, (len(idx), 1))
         sd = m.seed + salt
-        nz = fbm(p * 0.9, sd); col *= (1 + m.var * (nz[:, None] - 0.5) * 2)
+        nz = fbm(p * 0.9 * NOISE_SCALE, sd); col *= (1 + m.var * (nz[:, None] - 0.5) * 2)
         # per-face centroid for mt patches
         tri_c = p.reshape(-1, 3, 3).mean(axis=1)
         mtv = np.full(len(idx) // 3, m.mt)
         if m.rust > 0:
-            rv = fbm(p * np.array([1.1, 0.7, 1.1]), sd + 5)
+            rv = fbm(p * NOISE_SCALE * np.array([1.1, 0.7, 1.1]), sd + 5)
             k = np.clip((rv - (1 - m.rust)) / 0.18, 0, 1)[:, None]
             col = col * (1 - k) + m.rustcol * (0.75 + 0.5 * nz[:, None]) * k
-            rc = fbm(tri_c * np.array([1.1, 0.7, 1.1]), sd + 5)
+            rc = fbm(tri_c * NOISE_SCALE * np.array([1.1, 0.7, 1.1]), sd + 5)
             mtv = np.where(rc > 1 - m.rust + 0.06, m.rustmt, mtv)
         if m.streak > 0:
-            st = fbm(p * np.array([2.6, 0.18, 2.6]), sd + 9)
+            st = fbm(p * NOISE_SCALE * np.array([2.6, 0.18, 2.6]), sd + 9)
             col *= (1 - m.streak * np.clip(st - 0.35, 0, 1)[:, None] * 1.6)
         if m.dirt > 0:
             g = np.clip(1 - p[:, 1] / 1.2, 0, 1)[:, None] * m.dirt

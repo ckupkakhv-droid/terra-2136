@@ -49,6 +49,21 @@ with sync_playwright() as p:
     expect(page.locator('#moscowSignalAction')).to_be_hidden()
     assert page.evaluate('document.activeElement.id') == 'c'
     page.wait_for_function('game.enemies.some(e=>e.moscowScout) && game.world.scene.getObjectByName("moscowScoutVisual")', timeout=90000)
+    # Observe real native render submissions, not just the separate drone mesh.
+    page.evaluate('''() => {
+      window.scoutRenderAudit={frames:0,submitted:0,skinned:false};
+      for(const vat of Object.values(game.vats)) {
+        const update=vat.update;
+        vat.update=function(actors,...args) {
+          scoutRenderAudit.frames++;
+          scoutRenderAudit.submitted+=actors.filter(e=>e.moscowScout).length;
+          scoutRenderAudit.skinned ||= !!game.enemies.find(e=>e.moscowScout)?.inst;
+          return update.call(this,actors,...args);
+        };
+      }
+    }''')
+    page.wait_for_function('scoutRenderAudit.frames>=12')
+    assert page.evaluate('scoutRenderAudit.submitted===0 && !scoutRenderAudit.skinned')
     page.screenshot(path=str(out/'scout-portrait.png'))
     print('Scout projection:', page.evaluate('''() => {
       const v=game.world.scene.getObjectByName('moscowScoutVisual').position.clone().project(game.cam);

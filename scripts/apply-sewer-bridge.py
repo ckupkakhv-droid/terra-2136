@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib,re
 root=Path(__file__).resolve().parents[1];p=root/'play/index.html';raw=p.read_bytes()
 BASELINES = {
+ 'ae8a59c4aa149c7707becb638a4f693b8a5e7d56d5d0072dcaf5119d0f481746', # main 7b3a4f1, проверены хуки held PR #15
  '858fe60ec39a73b663dc0c5a915da3597afa99aefeddc414c7b6b3aaf2046cc9', # main 6f5aaf0, до арт-слоя
  '39463103ffc3c49e92a68d503e3795cbcf13de5f51e8523f2985e4f62fba054c', # main 23484d1, проверен хук ориентиров PR #13
 }
