@@ -87,8 +87,18 @@ jobs:
           set -euo pipefail
           # Never replace files on an already published release.
           gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft' | grep -Fx true
-          gh release edit "$RELEASE_TAG" --target "$SOURCE_REF"
-          gh release upload "$RELEASE_TAG" terra.html SHA256SUMS.txt --clobber
+          if ! output=$(gh release edit "$RELEASE_TAG" --target "$SOURCE_REF" 2>&1); then
+            printf '%s\n' "$output"
+            while IFS= read -r line; do printf '::error::%s\n' "${line//%/%25}"; done <<< "$output"
+            echo '::error::Не удалось привязать черновик к исходному коммиту.'
+            exit 1
+          fi
+          if ! output=$(gh release upload "$RELEASE_TAG" terra.html SHA256SUMS.txt --clobber 2>&1); then
+            printf '%s\n' "$output"
+            while IFS= read -r line; do printf '::error::%s\n' "${line//%/%25}"; done <<< "$output"
+            echo '::error::Не удалось загрузить вложения в черновик релиза.'
+            exit 1
+          fi
 
       - name: Publish verified release
         shell: bash

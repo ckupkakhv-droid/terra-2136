@@ -269,3 +269,13 @@ body:has(#sewerRecording) #touch{visibility:hidden!important}
   .terminalDeck { padding:7px 3px 3px; }
   .terminalScreenFooter { margin-top:12px; }
 }
+
+/* Non-interactive travel overlay; native transition retains ownership. */
+.metroTransition { position:fixed; inset:0; z-index:37; display:grid; place-items:end center;
+  padding:0 16px max(14vh, var(--sb)); pointer-events:none;
+  background:linear-gradient(180deg,#050807ee 0%,transparent 24%,transparent 67%,#050807f0 100%);
+  animation:metroTransitionFrame 1.05s ease both; }
+.metroTransition span { padding:7px 16px; border-left:2px solid #bb7651; color:#e1cfaa;
+  font:600 11px/1.4 system-ui,sans-serif; letter-spacing:.24em; text-shadow:0 2px 8px #000; }
+@keyframes metroTransitionFrame { 0%{opacity:0} 25%,65%{opacity:1} 100%{opacity:0} }
+@media(prefers-reduced-motion:reduce){.metroTransition{animation:none;opacity:0}}
