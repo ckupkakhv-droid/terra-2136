@@ -5,6 +5,10 @@ export const RAPHAEL_BOSS = 'sewer_raphael';
 export const RAPHAEL_MODEL = 'sewer_raphael_model';
 export const SAI_WEAPON = 'sewer_sai';
 
+// Register the external model before the native window.load asset pass.
+globalThis.TERRA_ASSETS ??= {};
+globalThis.TERRA_ASSETS.sewer_mutant = 'url:assets/sewer/mutant.glb';
+
 export function registerSewerContent(bridge = globalThis.TERRA_SEWER_BRIDGE) {
   if (!bridge?.bosses || !bridge?.weapons?.katana || typeof bridge.WeaponBuilder !== 'function') return false;
   if (bridge.WeaponBuilder) bridge.makeSaiGeometry=()=>makeSaiGeometry(bridge);

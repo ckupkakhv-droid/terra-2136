@@ -17,7 +17,7 @@ with sync_playwright() as p:
     page.goto(os.environ.get('TERRA_TEST_URL', 'http://127.0.0.1:8080/play/'), timeout=90000)
     page.locator('#mNew').click()
     page.locator('#skip').click()
-    page.wait_for_function('game.sewers && game.glb.mutant')
+    page.wait_for_function('game.sewers && game.glb.sewer_mutant')
     page.evaluate('game.p.x=12;game.p.z=-10;game.camT=null')
     page.locator('#sewerAction').click()
     page.wait_for_function('game.dg?.sewer && !game.dungeonTransition')
@@ -55,6 +55,14 @@ with sync_playwright() as p:
         if(!cameraQA.show())throw Error('Native subject camera was not acquired');
     }''')
     page.wait_for_function('cameraQA.probe.camera === cameraQA.recording.camera.camera')
+    assert page.evaluate('''() => {
+        const e=cameraQA.subject, meshes=[];
+        e.inst.root.traverse(n=>{if(n.isMesh)meshes.push(n);});
+        return meshes.length===1 && meshes[0].isSkinnedMesh &&
+            meshes[0].skeleton.bones.length===53 && !!meshes[0].material.map &&
+            !!meshes[0].material.normalMap && e.sc===1.05 &&
+            ['idle','walk','run','attack','attack2','hit','death','scream','emerge'].every(k=>!!e.inst.A[k]);
+    }'''), 'Authored model, texture/normal map, skeleton or clips missing'
     expect(page.locator('#hud')).not_to_be_visible(timeout=30000)
     assert page.evaluate('cameraQA.before === JSON.stringify(cameraQA.snapshot())'), 'Native follow camera changed in modal'
     assert page.evaluate('cameraQA.lights().length===1 && cameraQA.lights()[0].isPointLight && !cameraQA.lights()[0].castShadow')
@@ -70,6 +78,8 @@ with sync_playwright() as p:
     page.locator('#recordingSkip').click()
     expect(page.locator('#sewerRecording')).to_have_count(0, timeout=30000)
     expect(page.locator('#hud')).to_be_visible(timeout=30000)
+    page.wait_for_function('!!cameraQA.subject.inst._rim')
+    assert page.evaluate('cameraQA.subject.inst.mats.every(m=>!!m.normalMap && !!m.map)'), 'Native boss rim lost textures'
     assert page.evaluate('game.state === "play" && game.post.render === cameraQA.recordingRender && !cameraQA.recording.camera.active')
     assert page.evaluate('cameraQA.lights().length===0'), 'Cinematic light survived skip'
     assert page.evaluate('cameraQA.finished') == 1

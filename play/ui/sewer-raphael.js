@@ -1,5 +1,5 @@
-/* Native mutant stand-in for Raphael. The separate pool keeps his equipment
- * out of ordinary enemies; a future art asset can replace this pool key.
+/* Raphael uses the external art asset in a private pool, with the native
+ * mutant decoration retained only as a fallback if the asset fails to load.
  * Victory and rewards belong to the protected native persistence flow.
  */
 export const RAPHAEL_ID = 'sewer_raphael';
@@ -13,13 +13,16 @@ export function installRaphael(game, bridge) {
   const nativeUpdate = game.enemyUpdate;
   const nativeSync = game.syncInst;
   const nativeRemove = game.removeEnemy;
+  const nativeRim = game.bossRim;
+  let authoredModel = false;
   const singlePlayer = () => !game._coopGuest && !game.net?.role;
   const sameExpedition = state => game.p === state.player && game.dg === state.dungeon &&
     game.dg?.key === state.key && game.dg?.sewer === true && game.world.inDungeon && singlePlayer();
 
   function ensurePool() {
     if (game.glb?.[RAPHAEL_MODEL]) return true;
-    const source = game.glb?.mutant;
+    authoredModel = !!game.glb?.sewer_mutant;
+    const source = game.glb?.sewer_mutant || game.glb?.mutant;
     if (!source?.make || !source?.release) return false;
     game.glb[RAPHAEL_MODEL] = Object.assign(Object.create(Object.getPrototypeOf(source)), source, {free: []});
     return true;
@@ -36,6 +39,7 @@ export function installRaphael(game, bridge) {
     const inst = enemy.inst;
     if (!inst || inst._sewerRaphaelDecorated) return;
     inst._sewerRaphaelDecorated = true;
+    if (authoredModel) return; // Shell, band and sai are already skinned into this GLB.
     for (const material of inst.mats) material.color?.setHex(0x89a565);
     const root = inst.root;
     const sphere = new bridge.Sphere(1, 12, 8);
@@ -174,6 +178,21 @@ export function installRaphael(game, bridge) {
     if (owned.has(enemy)) decorate(enemy);
     return result;
   };
+  game.bossRim = function(enemy) {
+    if (!owned.has(enemy) || !authoredModel) return nativeRim.call(this, enemy);
+    // Native rim converts Standard to Phong and drops the imported normal map.
+    const surfaces = [];
+    enemy.inst.root.traverse(node => {
+      if (node.isMesh && node.material?.normalMap) surfaces.push({node,
+        normalMap:node.material.normalMap, normalScale:node.material.normalScale.clone(),
+        alphaTest:node.material.alphaTest});
+    });
+    const result = nativeRim.call(this, enemy);
+    for (const {node,normalMap,normalScale,alphaTest} of surfaces) {
+      Object.assign(node.material,{normalMap,normalScale,alphaTest,needsUpdate:true});
+    }
+    return result;
+  };
   game.removeEnemy = function(index) {
     const enemy = this.enemies[index];
     const result = nativeRemove.call(this, index);
@@ -201,6 +220,7 @@ export function installRaphael(game, bridge) {
       if (existing) return existing;
       const enemy = game.spawnEnemy(null, x, z, {boss: RAPHAEL_ID, force: 1, lvl: Math.max(1, game.p.level || 1)});
       if (!enemy) return null;
+      if (authoredModel) { enemy.sc = 1.05; enemy.def = {...enemy.def,h:1.8}; }
       game.bossInit(enemy); enemy.revive = false;
       owned.set(enemy, {player: game.p, dungeon: game.dg, key: game.dg.key, phase: 'chase', left: 0, dashCooldown: 3});
       game.bossE = enemy;
