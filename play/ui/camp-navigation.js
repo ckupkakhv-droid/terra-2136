@@ -240,3 +240,7 @@
   if (document.readyState === 'complete') start();
   else window.addEventListener('load', start, {once: true});
 })();
+
+// Мобильный каркас лагеря: play/ui/camp-mobile.* (HUD и логика выше не меняются).
+{ const s = document.createElement('script'); s.src = new URL('camp-mobile.js', document.currentScript?.src || new URL('ui/', location.href)).href; document.head.append(s);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-mobile.css', document.currentScript?.src || new URL('ui/', location.href)).href; document.head.append(l); }
