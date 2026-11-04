@@ -86,3 +86,71 @@
   #objT { display: none; }
   .objectiveShortTitle { display: block; }
 }
+
+/* Defense console: tactile commands and a clear equipment/action hierarchy. */
+#campPanel [data-defense-turrets] {
+  --defense-edge: #8d7956;
+  --defense-command: #ecd6a7;
+  --defense-recess: #101a17;
+}
+#campPanel [data-defense-turrets] .campItemCard {
+  grid-template-columns: 44px minmax(0, 1fr);
+  border-radius: 3px;
+  background: linear-gradient(120deg, #28332c, #141d19 65%);
+  box-shadow: inset 0 1px #e9d5a015, 0 3px 8px #0003;
+}
+#campPanel [data-defense-turrets] .campItemCard__icon {
+  width: 44px; height: 44px; border-radius: 3px;
+  background: radial-gradient(ellipse at top, #354034, var(--defense-recess));
+}
+#campPanel [data-defense-turrets] .campItemCard__actions {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px;
+  padding-top: 9px; margin-top: 2px;
+  border-top: 1px solid #b4a17b30;
+}
+#campPanel [data-defense-turrets] :is(.campPrimaryAction, .campInfoButton) {
+  appearance: none; min-width: 48px; min-height: 48px; margin: 0;
+  padding: 10px 14px; border: 1px solid var(--defense-edge); border-radius: 3px;
+  background: linear-gradient(#4b4931, #2e3327);
+  box-shadow: inset 0 1px #fbe2ab26, inset 0 -2px #0004;
+  color: var(--defense-command); font: inherit; font-size: 13px; font-weight: 600;
+  line-height: 1.35; white-space: normal; overflow-wrap: anywhere;
+  touch-action: manipulation; cursor: pointer;
+}
+#campPanel [data-defense-turrets] .campPrimaryAction { flex: 1 1 120px; }
+#campPanel [data-defense-turrets] .campInfoButton {
+  flex: 0 0 48px; margin-left: auto; padding: 8px;
+  background: var(--defense-recess); border-color: #637163; color: #c5cdb9;
+}
+#campPanel [data-defense-turrets] .defenseWide .campPrimaryAction { flex-grow: 0; }
+#campPanel [data-defense-turrets] :is(.campPrimaryAction, .campInfoButton):focus-visible {
+  outline: 2px solid #ffdaa0; outline-offset: 2px;
+}
+@media (hover: hover) {
+  #campPanel [data-defense-turrets] :is(.campPrimaryAction, .campInfoButton):hover:not(:disabled) {
+    border-color: #e6c58a; background: #50523a; color: #fff0cb;
+  }
+}
+#campPanel [data-defense-turrets] :is(.campPrimaryAction, .campInfoButton):active:not(:disabled) {
+  background: #202a21; box-shadow: inset 0 2px 5px #0008;
+}
+#campPanel [data-defense-turrets] :is(.campPrimaryAction, .campInfoButton):disabled {
+  background: #202823; border-color: #4f594e; color: #a3ab99;
+  box-shadow: none; cursor: default;
+}
+#campPanel [data-defense-turrets] .defenseStat {
+  border-radius: 2px; border-width: 0 0 1px; border-color: var(--defense-edge);
+  background: linear-gradient(#253028, #152019); padding: 9px 10px;
+}
+#campPanel [data-defense-turrets] .defenseStat b { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+#campPanel [data-defense-turrets] .campStatusBadge { border-radius: 2px; }
+#campPanel [data-defense-turrets] .campMeter[data-kind="ammo"] { grid-template-columns: minmax(0,1fr) 48px; }
+#campPanel [data-defense-turrets] .campMeter[data-kind="ammo"]::before { display: none; }
+#campPanel [data-defense-turrets] .campMeter[data-kind="ammo"] > i {
+  height: 8px; border-radius: 1px; background: #070e0b; box-shadow: 0 0 0 1px #61735c55;
+}
+#campPanel [data-defense-turrets] .campMeter > span { text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  #campPanel [data-defense-turrets] .defenseWide .campPrimaryAction { flex-grow: 1; }
+}
