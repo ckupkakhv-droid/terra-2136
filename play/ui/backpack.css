@@ -489,3 +489,18 @@
   #inv.bp #invBody.bp-swap { animation: none; }
   #inv.bp .equipmentStat dd { transition: none; }
 }
+
+/* Сообщение пустой категории занимает всю сетку, а не одну карточку. */
+#inv.bp .grid > .cnt:only-child {
+  grid-column: 1 / -1;
+  min-width: 0;
+  line-height: 1.45;
+}
+@media (max-width: 800px) and (orientation: portrait) {
+  #inv.bp #invBody.equipmentBody > .invTools,
+  #inv.bp #invBody.equipmentBody > .invList,
+  #inv.bp #invBody.equipmentBody > .invDetail {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}

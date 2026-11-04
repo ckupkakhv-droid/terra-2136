@@ -135,6 +135,9 @@ with sync_playwright() as p:
     page.wait_for_timeout(250)
     armed = page.locator('[data-equipment-weapon="0"]')
     expect(armed).not_to_contain_text('Пусто')
+    back = page.locator('[data-inv-back]')
+    if back.count() and back.first.is_visible():
+        back.first.click()
     page.locator('[data-gear="armor"]').click()
     page.locator(f'.tile[data-armor="{ids["a"]}"]').hover()
     expect(page.locator('#bpTip')).to_contain_text('Броня')

@@ -19,14 +19,17 @@ with sync_playwright() as p:
     page.keyboard.press('KeyI')
     page.wait_for_function('game.ui.equipmentPreview?.inst')
     for name,w,h,dpr in [('desktop',1280,800,.75),('portrait',390,844,1.1),('landscape',844,390,2)]:
+        if os.environ.get('TERRA_PREVIEW_CASE') and os.environ['TERRA_PREVIEW_CASE'] != name:
+            continue
         page.set_viewport_size({'width':w,'height':h})
+        page.locator('#invBody').evaluate('el => el.scrollTop = 0')
         page.wait_for_timeout(200)
         result = page.evaluate('''dpr => {
           const p=game.ui.equipmentPreview,r=game.ren;
           r.setPixelRatio(dpr);
           const state=()=>({viewport:r.getViewport(p.target.viewport.clone()).toArray(),
             scissor:r.getScissor(p.target.scissor.clone()).toArray(),test:r.getScissorTest(),
-            alpha:r.getClearAlpha(),auto:r.autoClear,pixelRatio:r.getPixelRatio()});
+            alpha:r.getClearAlpha(),color:r.getClearColor({copy:c=>[c.r,c.g,c.b]}),auto:r.autoClear,pixelRatio:r.getPixelRatio()});
           const target=r.getRenderTarget(), before=JSON.stringify(state());
           p.draw();
           const restored=target===r.getRenderTarget()&&before===JSON.stringify(state());
@@ -42,6 +45,13 @@ with sync_playwright() as p:
         assert result['span']>.5,result
         print(name,dpr,result,flush=True)
         page.screenshot(path=str(out/(name+'.png')))
+        empty = page.locator('#inv .grid > .cnt:only-child').first
+        empty.scroll_into_view_if_needed()
+        width = empty.evaluate('el => ({actual:el.getBoundingClientRect().width, available:el.parentElement.clientWidth})')
+        assert width['actual'] >= width['available'] * .95, width
+        visible = empty.evaluate('''el => {const a=el.getBoundingClientRect(),b=el.closest('.invList').getBoundingClientRect(); return a.top>=b.top && a.bottom<=b.bottom;}''')
+        assert visible, 'Текст обрезан сжатым списком'
+        page.screenshot(path=str(out/(name+'-empty-category.png')))
     page.keyboard.press('Escape')
     page.wait_for_function("game.state==='play'")
     page.wait_for_timeout(300)
