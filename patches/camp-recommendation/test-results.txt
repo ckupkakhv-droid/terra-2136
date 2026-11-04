@@ -1,0 +1,32 @@
+✔ highest effective productivity wins, not highest raw skill/profession (1.486531ms)
+✔ never considers people rejected by the native availability validator (1.013999ms)
+✔ selection does not mutate any camp data (0.369417ms)
+✔ ties stay stable after serialization/reordered residents (0.217378ms)
+✔ construction uses build efficiency and preserves target in the explicit request (0.223126ms)
+✔ no assignment when the selected task is blocked or unknown (0.17902ms)
+✔ invalid effectiveness and dead residents fail closed (0.233753ms)
+✔ selection request cannot silently switch when the camp later changes (0.157738ms)
+✔ legacy/incomplete resident data cannot break the recommendation panel (0.328375ms)
+✔ actual baseline reason code protects companion, manual/automatic rest, injury, courier, cargo and jobs (1.752803ms)
+✔ actual productivity formula ranks health and work traits rather than raw level (0.298059ms)
+✔ actual warehouse-specific restrictions remain in force (0.383108ms)
+✔ existing native async handler absorbs repeated taps and preserves named request (1.897721ms)
+✔ existing native handler refuses stale detached (0.624342ms)
+✔ existing native handler refuses stale view-changed (0.528016ms)
+✔ existing native handler refuses stale player-changed (0.587716ms)
+✔ existing native handler refuses stale state-changed (0.534616ms)
+✔ existing native handler does not commit when save-session activation fails (1.556607ms)
+✔ existing native handler reports uncertain storage without retrying (0.931234ms)
+✔ renders explicit name and zero assignment cost using text nodes (1.603307ms)
+✔ click forwards only displayed resident and task to the existing handler (0.984164ms)
+✔ unavailable action does not dispatch: {"pending":true} (0.246271ms)
+✔ unavailable action does not dispatch: {"available":false} (0.193371ms)
+✔ no candidate means no assignment button (0.274794ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 266.134315

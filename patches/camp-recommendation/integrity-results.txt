@@ -1,0 +1,2 @@
+PASS: full runtime syntax; baseline unchanged; exact reversible additions; wrong baseline/overwrite rejected
+Added bytes: 4624

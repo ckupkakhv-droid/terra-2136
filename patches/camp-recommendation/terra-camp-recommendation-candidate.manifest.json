@@ -1,0 +1,11 @@
+{
+  "status": "local_candidate_not_published",
+  "baseline_file": "terra-scout-class-20261104.html",
+  "baseline_sha256": "b4e07d6cf5d370a812463f4a1f609275eb6e756a7c623afddf1bf629ce6d6550",
+  "output_file": "terra-camp-recommendation-candidate.html",
+  "output_sha256": "bfcfd5a4c1ec80426c5bb4374228c340c11648859ea54eab7fa63f80fd32ccce",
+  "change": "Read-only best-free-resident recommendation; existing guarded assignment handler reused",
+  "save_schema_changed": false,
+  "runtime_dependencies_added": [],
+  "asset_or_license_changes": false
+}
