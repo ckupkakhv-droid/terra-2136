@@ -16,26 +16,26 @@
   const BACKPACK_R = 30;                           // пустая турель берёт из рюкзака героя рядом (как раньше)
   const TYPES = {
     pkm: {
-      key: 'turretB', name: 'Спарка ПКМ', short: 'ПКМ', model: 'turret-pkm.glb', ammo: 'a545', lvlReq: 3,
+      key: 'turretB', name: 'Спарка ПКМ', short: 'ПКМ', model: 'turrets.glb', ammo: 'a545', lvlReq: 3,
       cost: null, // родная стоимость turretB
       range: [13, 15, 17], cd: [0.6, 0.5, 0.42], dmg: [18, 21, 25], mag: [60, 90, 120], carry: 60,
-      proj: 'tracer', speed: 70, scale: 0.68, muzzle: [0, 1.75, 1.95],
+      proj: 'tracer', speed: 70, scale: 1, muzzle: [0, 1.2, 1.3], root: 'pkm',
       up: [null, { scrap: 10, chem: 4 }, { scrap: 18, chem: 8, cloth: 2 }],
       about: 'Пулемётная спарка. Ровный урон по одиночным целям, 5.45 со склада.'
     },
     nail: {
-      key: 'dNail', name: 'Гвоздомёт', short: 'Гвозди', model: 'turret-nail.glb', ammo: 'nails', lvlReq: 3,
+      key: 'dNail', name: 'Гвоздомёт', short: 'Гвозди', model: 'turrets.glb', ammo: 'nails', lvlReq: 3,
       cost: { scrap: 16, wood: 8 },
       range: [10, 11, 12], cd: [0.35, 0.3, 0.26], dmg: [9, 11, 13], mag: [40, 60, 80], carry: 40, slow: 0.7,
-      proj: 'nail', speed: 38, scale: 0.7, muzzle: [0, 1.35, 2.0],
+      proj: 'nail', speed: 38, scale: 1, muzzle: [0, 1.14, 1.52], root: 'nail',
       up: [null, { scrap: 8, wood: 6 }, { scrap: 14, wood: 8, chem: 2 }],
       about: 'Пневматика на гвоздях: дешёвый боеприпас, замедляет цель.'
     },
     flame: {
-      key: 'dFlame', name: 'Огнемёт «Пропан»', short: 'Газ', model: 'turret-flame.glb', ammo: 'gas', lvlReq: 5,
+      key: 'dFlame', name: 'Огнемёт «Пропан»', short: 'Газ', model: 'turrets.glb', ammo: 'gas', lvlReq: 5,
       cost: { scrap: 18, chem: 10 },
       range: [6, 6.5, 7], cd: [0.25, 0.25, 0.25], dmg: [8, 10, 12], mag: [6, 8, 10], carry: 3, burn: 1 / 16, cone: 0.62,
-      proj: 'flame', scale: 0.62, muzzle: [0, 1.15, 1.0],
+      proj: 'flame', scale: 1, muzzle: [0, 1.0, 1.05], root: 'flame',
       up: [null, { scrap: 10, chem: 6 }, { scrap: 16, chem: 10, cell: 1 }],
       about: 'Конус огня по группе. 1 баллон газа — 4 секунды огня.'
     }
@@ -139,8 +139,10 @@
     const loader = new ctx.G();
     ctx.M && loader.setMeshoptDecoder(ctx.M);
     const load = (file) => new Promise((res) => loader.load(ASSET + file, (g) => res(g.scene), undefined, () => res(null)));
-    // материалы как у построек лагеря (Lambert): дешевле на телефоне и без пересвета от окружения
-    const matte = (sc) => {
+    // Ящик подносчика — Lambert, как раньше. Турели оставляют PBR из glTF
+    // (альбедо, нормаль, шероховатость/металл, AO). Металл в атласе умеренный:
+    // без карты окружения высокий metalness гасит цвет.
+    const lambertize = (sc) => {
       if (!sc || !ctx.L) return sc;
       const cache = new Map();
       sc.traverse((m) => {
@@ -151,11 +153,34 @@
       });
       return sc;
     };
-    Promise.all([...Object.entries(TYPES).map(([dk, t]) => load(t.model).then((sc) => { S.tmpl[dk] = matte(sc); })),
-      load('ammo-crate.glb').then((sc) => { S.crate = sc; })]).then(() => { S.dirty = true; if (game) game.baseDirty = true; });
+    const dress = (sc) => {
+      if (!sc) return sc;
+      sc.traverse((m) => {
+        if (!m.isMesh || !m.material) return;
+        const src = m.material;
+        if (src.isMeshStandardMaterial && (src.map || src.normalMap || src.metalnessMap)) {
+          src.envMapIntensity = 0.22;
+          return;
+        }
+        if (ctx.L) m.material = new ctx.L({ color: src.color, map: src.map || null });
+      });
+      return sc;
+    };
+    const files = [...new Set(Object.values(TYPES).map((t) => t.model))];
+    Promise.all([
+      ...files.map((file) => load(file).then((sc) => {
+        if (!sc) return;
+        for (const [dk, t] of Object.entries(TYPES)) {
+          if (t.model !== file) continue;
+          const root = t.root ? sc.getObjectByName(t.root) : sc;
+          if (root) S.tmpl[dk] = dress(root);
+        }
+      })),
+      load('ammo-crate.glb').then((sc) => { S.crate = lambertize(sc); })
+    ]).then(() => { S.dirty = true; if (game) game.baseDirty = true; });
   }
-  /* Турели рисуются InstancedMesh-ами: по одному на (вид, деталь, материал). 18 турелей трёх видов —
-   * не больше 18 вызовов отрисовки вместо ~6 на каждую турель. */
+  /* Турели рисуются InstancedMesh-ами: по одному на (вид, деталь). Три вида × основание,
+   * ствол и два уровня накладок — 12 вызовов на все 18 турелей, один общий материал. */
   function buildInst(dk, cap) {
     const old = S.inst[dk];
     if (old) for (const pt of old.parts) { pt.im.removeFromParent(); pt.im.dispose?.(); }
@@ -165,12 +190,19 @@
     const parts = [];
     src.traverse((m) => {
       if (!m.isMesh) return;
-      let gun = false;
-      for (let a = m; a; a = a.parent) if (a.name === 'gun') gun = true;
+      let gun = false, tier = 1;
+      for (let a = m; a; a = a.parent) {
+        // GLTFLoader дописывает _1/_2, если в одном файле несколько узлов gun/lv2
+        const tag = (a.name || '').replace(/_\d+$/, '');
+        if (tag === 'gun') gun = true;
+        if (tag === 'lv2') tier = 2;
+        if (tag === 'lv3') tier = 3;
+      }
       const im = new ctx.I(m.geometry, m.material, cap);
-      im.count = 0; im.frustumCulled = false; im.castShadow = true; im.receiveShadow = true; im.name = 'defense-' + dk;
+      im.count = 0; im.frustumCulled = false; im.castShadow = true; im.receiveShadow = true;
+      im.name = 'defense-' + dk + (gun ? '-gun' : '') + (tier > 1 ? '-lv' + tier : '');
       game.scene.add(im);
-      parts.push({ im, local: m.matrixWorld.clone(), gun });
+      parts.push({ im, local: m.matrixWorld.clone(), gun, tier });
     });
     return (S.inst[dk] = { parts, cap, n: 0 });
   }
@@ -179,7 +211,7 @@
   function writeInst(v) {
     const I = S.inst[v.dk];
     if (!I || v.slot == null) return;
-    const t = TYPES[v.dk], sc = t.scale * (1 + 0.06 * (v.lvl - 1));
+    const t = TYPES[v.dk], sc0 = t.scale * (1 + 0.06 * (v.lvl - 1));
     const lift = I.parts[0]?.im.matrixWorld.elements[13] - (I.parts[0]?.im.position.y || 0) || 0;
     const y = (ctx.Y ? ctx.Y(v.o.x, v.o.z) : 0) - lift;
     const a = M1(), b = M2();
@@ -187,6 +219,7 @@
       const yaw = pt.gun ? v.gunYaw : v.baseYaw;
       a.makeRotationY(yaw);
       if (pt.gun && v.kick > 0) { b.makeTranslation(0, 0, -0.18 * v.kick); a.multiply(b); }
+      const sc = (pt.tier || 1) <= v.lvl ? sc0 : 0; // lv2/lv3 — бронелисты и короба улучшения
       b.makeScale(sc, sc, sc); a.premultiply(b);
       // порядок: T · S · R · (kick) · local
       a.elements[12] = v.o.x; a.elements[13] = y; a.elements[14] = v.o.z;
