@@ -123,6 +123,7 @@ CHANGELOG.md        — история изменений
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
+- Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Шрифт [DejaVu](https://dejavu-fonts.github.io)
 - Библиотеки: [three.js](https://threejs.org) (MIT), [fflate](https://github.com/101arrowz/fflate) (MIT), [PeerJS](https://peerjs.com) (MIT)
