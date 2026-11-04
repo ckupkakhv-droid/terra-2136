@@ -1,0 +1,506 @@
+/* Рюкзак: оформление поверх штатной разметки. Логика инвентаря не здесь.
+   Бумага, тёмный металл и штампы — тот же язык, что у штабного стола.
+   Без веб-шрифтов, backdrop-filter и бесконечных теней. */
+#inv.bp {
+  --bp-brass: #e4c48f;
+  --bp-edge: #8d7956;
+  --bp-ink: #f4dfbe;
+  --bp-muted: #c2b29b;
+  --bp-recess: #101614;
+  --bp-up: #8fce9a;
+  --bp-down: #e08b7a;
+  --bp-paper: #1a221e;
+}
+
+#inv.bp .win {
+  background:
+    linear-gradient(180deg, rgba(255, 220, 170, .05), transparent 72px),
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 255, 255, .015) 22px 23px),
+    radial-gradient(ellipse at 0 0, rgba(70, 52, 32, .55), transparent 46%),
+    linear-gradient(165deg, #1c2622 0%, #121816 42%, #0c100e 100%);
+  border-color: var(--bp-edge);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .45), 0 18px 48px rgba(0, 0, 0, .45);
+}
+#inv.bp h2 span {
+  letter-spacing: .14em;
+  font-size: 15px;
+}
+#inv.bp .x {
+  min-width: 44px;
+  min-height: 44px;
+}
+#inv.bp :is(button, [role="button"], summary):focus-visible {
+  outline: 2px solid #f6cb83;
+  outline-offset: 2px;
+}
+
+/* Вкладки — штампы. На широком экране подписи не режутся. */
+@media (orientation: portrait), (min-height: 521px) {
+  #inv.bp .tabs {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+  #inv.bp.gamePanel .tabs button {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+    width: auto;
+    min-width: 44px;
+    padding-inline: 10px;
+  }
+  #inv.bp.gamePanel .tabs button span {
+    white-space: nowrap;
+  }
+}
+#inv.bp .tabs button {
+  border: 1px dashed #8a7350;
+  background: linear-gradient(#24302a, #141a17);
+  color: var(--bp-muted);
+  clip-path: none;
+  border-radius: 2px;
+}
+#inv.bp .tabs button.on {
+  border-style: solid;
+  border-color: var(--bp-brass);
+  color: #fff6e4;
+  background: linear-gradient(#4a4030, #2a2418);
+  box-shadow: inset 0 0 0 1px rgba(228, 196, 143, .35);
+}
+#inv.bp #invBody.bp-swap {
+  animation: bpSwap .22s ease;
+}
+@keyframes bpSwap {
+  from { opacity: .42; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Экипировка: манекен слева, карточки справа. */
+#inv.bp #invBody.equipmentBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, .82fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px 12px;
+  align-content: stretch;
+  align-items: stretch;
+  min-height: 100%;
+}
+#inv.bp #invBody.equipmentBody > .equipmentSheet {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+  border: 1px solid var(--bp-edge);
+  border-radius: 3px;
+  background:
+    radial-gradient(ellipse at 50% 36%, rgba(70, 88, 78, .35), transparent 60%),
+    linear-gradient(180deg, #1b2622, #101614);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .35);
+}
+#inv.bp #invBody.equipmentBody > .invTools {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+}
+#inv.bp #invBody.equipmentBody > .invList {
+  grid-column: 2;
+  grid-row: 2;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid rgba(116, 96, 73, .55);
+  border-radius: 3px;
+  background: rgba(14, 18, 16, .72);
+}
+#inv.bp #invBody.equipmentBody > .invDetail {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--bp-edge);
+  border-radius: 3px;
+  background: rgba(16, 22, 20, .92);
+}
+
+#inv.bp .equipmentDoll {
+  flex: 1 1 auto;
+  min-height: 420px;
+  grid-template-columns: 84px minmax(0, 1fr) 84px;
+  gap: 8px;
+  align-items: stretch;
+}
+#inv.bp .equipmentSlotsLeft,
+#inv.bp .equipmentSlotsRight {
+  justify-content: space-between;
+  gap: 6px;
+}
+#inv.bp .equipmentPreview {
+  min-height: 420px;
+  height: auto;
+  overflow: hidden;
+  border-radius: 3px;
+  touch-action: none;
+  cursor: grab;
+  background:
+    radial-gradient(ellipse at 50% 88%, rgba(0, 0, 0, .62), transparent 46%),
+    radial-gradient(ellipse at 50% 84%, rgba(198, 161, 90, .32), transparent 34%),
+    radial-gradient(ellipse at 50% 38%, rgba(92, 114, 102, .5), transparent 62%),
+    linear-gradient(#1c2823, #0e1412);
+}
+#inv.bp .equipmentPreview:active { cursor: grabbing; }
+/* Холст и отступ 52px под кнопки поворота задаёт visual-fixes.css.
+   Здесь его не переопределяем: кадр куклы считается по этому прямоугольнику. */
+#inv.bp .equipmentRotate {
+  z-index: 2;
+  bottom: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  border-color: var(--bp-edge);
+  background: rgba(16, 20, 18, .88);
+  color: var(--bp-ink);
+}
+#inv.bp .equipmentPreviewStatus {
+  z-index: 1;
+  pointer-events: none;
+}
+
+#inv.bp .equipmentSlot,
+#inv.bp .equipmentWeapon {
+  position: relative;
+  min-width: 44px;
+  min-height: 64px;
+  padding: 4px;
+  border: 1px solid var(--slot-color, #6d6254);
+  border-radius: 3px;
+  background: linear-gradient(180deg, #2a332e, #141c18 70%);
+  box-shadow: inset 0 1px rgba(255, 236, 200, .08);
+  color: var(--bp-ink);
+}
+#inv.bp .equipmentSlot.is-empty,
+#inv.bp .equipmentWeapon.is-empty {
+  border-style: dashed;
+  border-color: #6a6256;
+  background: rgba(16, 20, 18, .55);
+  color: var(--bp-muted);
+}
+#inv.bp .equipmentSlot.is-empty .equipmentSlotIcon,
+#inv.bp .equipmentWeapon.is-empty > span[aria-hidden="true"] {
+  opacity: .72;
+  font-size: 26px;
+}
+#inv.bp .equipmentSlot.is-empty .equipmentSlotIcon .gi,
+#inv.bp .equipmentWeapon.is-empty .gi {
+  width: 26px;
+  height: 26px;
+}
+#inv.bp .bp-clip {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+#inv.bp .equipmentSlot[aria-pressed="true"],
+#inv.bp .equipmentWeapon[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 1px var(--bp-brass);
+  background: #3c3828;
+}
+#inv.bp .bp-fit {
+  box-shadow: inset 0 0 0 2px #f0d7a2, 0 0 0 1px rgba(240, 215, 162, .45);
+  background: #34392a;
+}
+#inv.bp .bp-hot {
+  outline: 2px solid var(--bp-brass);
+  outline-offset: 1px;
+}
+#inv.bp .equipmentSlot small,
+#inv.bp .equipmentWeapon small {
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+#inv.bp .equipmentWeapons {
+  gap: 6px;
+  margin-top: 8px;
+}
+#inv.bp .equipmentWeapon { min-height: 64px; }
+
+/* Характеристики — сетка с полосками. */
+#inv.bp .equipmentStats {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(141, 121, 86, .55);
+}
+#inv.bp .equipmentStats h3 {
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--bp-brass);
+}
+#inv.bp .equipmentStats dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+#inv.bp .equipmentStat {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  column-gap: 6px;
+  row-gap: 1px;
+  min-width: 0;
+  padding: 4px 6px 5px;
+  background: var(--bp-recess);
+  border: 1px solid rgba(109, 98, 84, .65);
+  border-radius: 2px;
+}
+#inv.bp .equipmentStat .bp-ico {
+  grid-row: 1 / span 2;
+  width: 18px;
+  height: 18px;
+  align-self: center;
+  color: var(--bp-brass);
+}
+#inv.bp .equipmentStat dt {
+  min-width: 0;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+#inv.bp .equipmentStat dd {
+  font-variant-numeric: tabular-nums;
+  transition: color .2s linear;
+}
+#inv.bp .equipmentStat.bp-up dd { color: var(--bp-up); }
+#inv.bp .equipmentStat.bp-down dd { color: var(--bp-down); }
+#inv.bp .bp-bar {
+  grid-column: 1 / -1;
+  height: 6px;
+  margin-top: 2px;
+  border: 1px solid #3c3222;
+  background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(60, 50, 34, .45) 9px 10px);
+  position: relative;
+}
+#inv.bp .bp-bar i {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  width: calc((100% - 2px) * var(--v, 0));
+  background: repeating-linear-gradient(115deg, #c6a15a 0 2px, transparent 2px 5px);
+}
+
+/* Чипы, шкала места, карточки. */
+#inv.bp .invChips button {
+  border: 1px dashed #8a7350;
+  border-radius: 2px;
+  background: #17201c;
+  color: var(--bp-muted);
+}
+#inv.bp .invChips button[aria-pressed="true"] {
+  border-style: solid;
+  border-color: var(--bp-brass);
+  color: #fff6e4;
+  background: #3a3424;
+}
+#inv.bp .bag-cap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-bottom: 8px;
+  color: var(--bp-ink);
+}
+#inv.bp .bp-meter {
+  flex: 1;
+  height: 8px;
+  border: 1px solid #6a5a40;
+  background: #101614;
+  position: relative;
+}
+#inv.bp .bp-meter i {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  width: calc((100% - 2px) * var(--p, 0) / 100);
+  background: repeating-linear-gradient(115deg, #d7b56a 0 3px, transparent 3px 6px);
+}
+#inv.bp .grid {
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+}
+#inv.bp .tile {
+  min-height: 104px;
+  aspect-ratio: auto;
+  padding: 6px;
+  border-width: 1px;
+  border-left-width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(165deg, #2a332e, #141c18 68%);
+  clip-path: none;
+}
+#inv.bp .tile .nm { font-size: 11px; }
+#inv.bp .tile.bp-drag { opacity: .55; }
+#inv.bp .invHint,
+#inv.bp h4 {
+  color: var(--bp-brass);
+  letter-spacing: .06em;
+}
+#inv.bp h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+#inv.bp .det,
+#inv.bp .sk,
+#inv.bp .br,
+#inv.bp .sktHead {
+  background: linear-gradient(90deg, #241c14, #17201c);
+  border-color: rgba(141, 121, 86, .7);
+  border-left: 3px solid #b58b55;
+}
+#inv.bp .sk { min-height: 44px; }
+#inv.bp .circuitClass {
+  background: linear-gradient(#24302a, #141a17);
+  border-color: var(--bp-edge);
+  color: var(--bp-ink);
+}
+#inv.bp .circuitClass small { color: var(--bp-muted); }
+#inv.bp .circuitClass button {
+  background: linear-gradient(#4b4931, #2e3327);
+  border-color: var(--bp-edge);
+  color: #ecd6a7;
+}
+#inv.bp .invCompare {
+  border: 1px solid rgba(141, 121, 86, .7);
+  border-left: 3px solid var(--bp-brass);
+  background: #141c18;
+  border-radius: 2px;
+}
+#inv.bp .invCompare .bp-delta.up { color: var(--bp-up); }
+#inv.bp .invCompare .bp-delta.down { color: var(--bp-down); }
+
+#bpTip {
+  position: fixed;
+  z-index: 45;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 16px));
+  padding: 8px 10px;
+  pointer-events: none;
+  color: var(--bp-ink, #f4dfbe);
+  background: rgba(14, 16, 14, .94);
+  border: 1px solid #8d7956;
+  border-left: 3px solid #e4c48f;
+  border-radius: 2px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .45);
+  font: 12px/1.35 "Segoe UI", Roboto, sans-serif;
+}
+#bpTip[hidden] { display: none; }
+#bpTip b { display: block; margin-bottom: 2px; }
+#bpTip small { display: block; color: #c2b29b; margin-bottom: 4px; }
+#bpTip div { font-variant-numeric: tabular-nums; }
+#bpTip .up { color: #8fce9a; }
+#bpTip .down { color: #e08b7a; }
+#bpTip .same { color: #c2b29b; }
+
+@media (hover: hover) {
+  #inv.bp .equipmentSlot:hover,
+  #inv.bp .equipmentWeapon:hover,
+  #inv.bp .tile:hover {
+    border-color: #e6c58a;
+  }
+}
+
+/* Телефон, портрет. Манекен целиком, цели не меньше 44px. */
+@media (max-width: 800px) and (orientation: portrait) {
+  #inv.bp #invBody.equipmentBody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+    min-height: 0;
+  }
+  #inv.bp #invBody.equipmentBody > .equipmentSheet {
+    flex: 0 0 auto;
+    height: auto;
+    overflow: visible;
+  }
+  #inv.bp .equipmentDoll { flex: 0 0 auto; }
+  #inv.bp #invBody.equipmentBody > .equipmentSheet,
+  #inv.bp #invBody.equipmentBody > .invTools,
+  #inv.bp #invBody.equipmentBody > .invList,
+  #inv.bp #invBody.equipmentBody > .invDetail {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  #inv.bp .equipmentDoll,
+  #inv.bp .equipmentPreview {
+    min-height: min(460px, 58dvh);
+  }
+  #inv.bp .equipmentDoll { grid-template-columns: 76px minmax(0, 1fr) 76px; }
+  #inv.bp .equipmentSlot,
+  #inv.bp .equipmentWeapon { min-height: 56px; }
+  #inv.bp #invBody.equipmentBody.showDetail > .equipmentSheet { display: none; }
+}
+
+@media (max-width: 720px) {
+  #inv.bp #invBody.equipmentBody.showDetail > .equipmentSheet { display: none; }
+}
+
+/* Телефон, альбом. Манекен в левой колонке, ничего не прячется за overflow. */
+@media (orientation: landscape) and (max-height: 520px) {
+  #inv.bp #invBody.equipmentBody {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.05fr) minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
+  }
+  #inv.bp .equipmentSheet {
+    max-height: none;
+    overflow: visible;
+  }
+  #inv.bp .equipmentDoll,
+  #inv.bp .equipmentPreview {
+    min-height: 200px;
+    height: auto;
+  }
+  #inv.bp .equipmentDoll { grid-template-columns: 64px minmax(0, 1fr) 64px; }
+  #inv.bp .equipmentSlot,
+  #inv.bp .equipmentWeapon {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  #inv.bp .equipmentStats dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #inv.bp .equipmentWeapons {
+    display: flex;
+    overflow-x: auto;
+    touch-action: pan-x;
+  }
+  #inv.bp .equipmentWeapon { flex: 0 0 76px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #inv.bp #invBody.bp-swap { animation: none; }
+  #inv.bp .equipmentStat dd { transition: none; }
+}
+
+/* Сообщение пустой категории занимает всю сетку, а не одну карточку. */
+#inv.bp .grid > .cnt:only-child {
+  grid-column: 1 / -1;
+  min-width: 0;
+  line-height: 1.45;
+}
+@media (max-width: 800px) and (orientation: portrait) {
+  #inv.bp #invBody.equipmentBody > .invTools,
+  #inv.bp #invBody.equipmentBody > .invList,
+  #inv.bp #invBody.equipmentBody > .invDetail {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}

@@ -1,0 +1,53 @@
+/* Подтверждение класса — отдельная плашка, не ячейка сетки. */
+.circuitClass > .classConfirm {
+  flex: 1 0 100%;
+  width: auto;
+  min-width: 0;
+  margin: 8px 0 2px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #2a2218, #16130f);
+  border: 1px solid #d7a15a;
+  border-radius: 8px;
+  color: #ffe7c4;
+  align-self: stretch;
+}
+.circuitClass > .classConfirm .classConfirmText {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #ffe7c4;
+  flex: none;
+  min-width: 0;
+  width: auto;
+}
+.circuitClass .classConfirmActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: none !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+.circuitClass .classConfirmActions button {
+  flex: 1 1 200px;
+  margin: 0;
+}
+
+/* Превью экипировки: вся фигура от головы до стоп, кнопки не наезжают. */
+.equipmentPreview canvas {
+  inset: 0 0 52px;
+  height: calc(100% - 52px);
+}
+@media (max-width: 900px), (orientation: portrait) {
+  .equipmentDoll {
+    grid-template-columns: 56px minmax(0, 1fr) 56px;
+    min-height: min(70dvh, 560px);
+  }
+  .equipmentPreview { min-height: min(70dvh, 560px); }
+  #inv .equipmentSlot { min-height: 52px; padding: 4px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .equipmentDoll, .equipmentPreview { min-height: calc(100dvh - 128px); }
+  .equipmentDoll { grid-template-columns: 52px minmax(0, 1fr) 52px; }
+}
