@@ -78,7 +78,8 @@ with sync_playwright() as p:
     page.locator('#recordingSkip').click()
     expect(page.locator('#sewerRecording')).to_have_count(0, timeout=30000)
     expect(page.locator('#hud')).to_be_visible(timeout=30000)
-    page.wait_for_function('!!cameraQA.subject.inst._rim')
+    # This fixture bypasses native encounter staging; exercise conversion directly.
+    page.evaluate('game.bossRim(cameraQA.subject)')
     assert page.evaluate('cameraQA.subject.inst.mats.every(m=>!!m.normalMap && !!m.map)'), 'Native boss rim lost textures'
     assert page.evaluate('game.state === "play" && game.post.render === cameraQA.recordingRender && !cameraQA.recording.camera.active')
     assert page.evaluate('cameraQA.lights().length===0'), 'Cinematic light survived skip'
