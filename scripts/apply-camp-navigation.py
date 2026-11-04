@@ -15,5 +15,8 @@ s = s[:start] + '<link rel="stylesheet" href="ui/camp-navigation.css">\n<script 
 old = 'Цена приказа: 0 ресурсов.'
 assert s.count(old) == 1
 s = s.replace(old, 'Назначение бесплатно. Строительство и снабжение расходуют ресурсы по обычным правилам.')
+job_hook = 'A.append(C)}i.append(A,b)'
+assert s.count(job_hook) == 1
+s = s.replace(job_hook, 'C.dataset.residentJob=E,' + job_hook)
 assert len(s.encode()) < len(raw), 'Keep the large HTML from growing'
 path.write_text(s)

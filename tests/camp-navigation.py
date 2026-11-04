@@ -4,17 +4,21 @@ No personal save files are loaded. Screenshots go outside the checkout.
 """
 from pathlib import Path
 import os
+import shutil
 from playwright.sync_api import sync_playwright, expect
 
 out = Path(os.environ.get('TERRA_QA_OUTPUT', '/tmp/terra-camp-navigation-qa'))
 out.mkdir(parents=True, exist_ok=True)
 with sync_playwright() as p:
-    browser = p.chromium.launch(executable_path='/usr/bin/chromium', args=['--use-angle=swiftshader', '--enable-unsafe-swiftshader'])
+    chromium = os.environ.get('TERRA_CHROMIUM') or shutil.which('chromium') or shutil.which('google-chrome')
+    if not chromium:
+        raise SystemExit('Set TERRA_CHROMIUM to an installed Chromium/Chrome executable.')
+    browser = p.chromium.launch(executable_path=chromium, args=['--use-angle=swiftshader', '--enable-unsafe-swiftshader'])
     page = browser.new_page(viewport={'width': 1280, 'height': 800})
     page.set_default_timeout(60000)
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
-    page.goto('http://127.0.0.1:8080/play/', wait_until='load', timeout=90000)
+    page.goto(os.environ.get('TERRA_TEST_URL', 'http://127.0.0.1:8080/play/'), wait_until='load', timeout=90000)
     page.locator('#mNew').click()
     page.locator('#skip').click()
     expect(page.locator('#hud')).to_be_visible()
