@@ -116,9 +116,11 @@ CHANGELOG.md        — история изменений
 Персонажи и игра — команда «Терры». В игре используются материалы сторонних авторов; права на них принадлежат авторам, условия — по их лицензиям:
 
 - [Kenney](https://kenney.nl) — CC0
+  - Оборона лагеря: ящик подносчика `box` из [Survival Kit 2.0](https://kenney.nl/assets/survival-kit) — Kenney, CC0 1.0, `play/assets/defense/ammo-crate.glb`.
 - [OpenGameArt](https://opengameart.org) — CC0
 - [game-icons.net](https://game-icons.net) — CC BY 3.0
 - [Quaternius](https://quaternius.com) ([itch.io](https://quaternius.itch.io))
+  - Оборона лагеря: модели турелей из [Turret Pack (March 2020)](https://opengameart.org/content/lowpoly-steampunk-turrets) — Quaternius, CC0 1.0. Gun_8 → «Спарка ПКМ», Gun_3 → «Гвоздомёт», Long_1 → «Огнемёт «Пропан»»; перекрашены и сжаты, `play/assets/defense/`.
 - [Mixamo](https://www.mixamo.com) — анимации
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)
@@ -135,6 +137,12 @@ CHANGELOG.md        — история изменений
 ---
 
 > **Ранний доступ.** ТЕРРА в активной разработке. Наличие функции не значит, что её баланс, графика и стабильность окончательные. Спасибо, что играете и пишете нам!
+
+## Проверка обороны лагеря
+
+При запущенном сервере: `python3 tests/defense-turrets.py`. Тест делает «старое» сохранение с турелью без новых полей (на сборке из `TERRA_BASELINE_URL`, если она на том же адресе, иначе на текущей), загружает его, ставит Гвоздомёт и Огнемёт, назначает двух подносчиков (одного кнопкой во вкладке «Оборона»), ждёт доставку со склада, проверяет стрельбу, подписи видов в полосках прочности, возврат при сносе (своя цена вида и улучшений), блок `camp.defense` из более новой версии, сохранение/загрузку и нагрузку 18 турелей + 30 врагов. Скриншоты — в `TERRA_QA_OUTPUT` (по умолчанию `/tmp/terra-defense-qa`). Код — `play/ui/defense.js`, обвязка бандла — одноразовый `scripts/apply-defense-hook.py` (уже применён; правки ищет по якорям, повторный запуск ничего не меняет), модели — `play/assets/defense/`.
+
+`python3 tests/defense-save.py` проверяет защищённую запись приказов `window.terraDefense`: для каждого приказа (`upgrade`, `repair`, `reload`, `assign`, `setPriority`, `deposit`) подменяет `localStorage.setItem` на QuotaExceededError и ждёт `{ok:false, reason:'save-failed'}` без изменения рюкзака, склада, турелей и сейва, затем повтор и холодную загрузку новой страницы с тем же localStorage; отдельно — отказ всех записей, доставку подносчиком при отказе записи (ни потери, ни дубля) и сообщение во вкладке «Оборона». Скриншоты — в `TERRA_QA_OUTPUT` (по умолчанию `/tmp/terra-defense-save-qa`).
 
 ## Проверка интерфейса лагеря
 
