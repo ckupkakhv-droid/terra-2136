@@ -34,6 +34,7 @@
     'Шанс крита': 'M12 3l2.2 5.6L20 11l-5.8 2.4L12 19l-2.2-5.6L4 11l5.8-2.4z',
   };
 
+  const DOUBLE_TAP_MS = 380;
   const statMem = new Map();
   let tip;
   let tipTimer = 0;
@@ -372,7 +373,7 @@ function hookPreview() {
         try { this.inst.mixer.update(dt || 0.016); } catch (err) { /* клип недоступен — остаётся кадр */ }
       }
       const userYaw = this.yaw || 0;
-      // Кадр считает штатный draw: поза модели, 3–97 перцентиль, аспект окна.
+      // Кадр считает штатный draw: полные границы позы модели, аспект окна.
       // Размер хоста не подменяем — иначе собьём этот расчёт.
       if (!reduced() && !this._bpDrag) this.yaw = userYaw + Math.sin(now / 900) * 0.045;
       if (this.scene && !this._bpLit) {
@@ -396,7 +397,7 @@ function hookPreview() {
     const inv = document.getElementById('inv');
     const root = document.getElementById('invBody');
     if (!inv || !root || inv.classList.contains('hidden')) return;
-    inv.classList.add('bp');
+    if (!inv.classList.contains('bp')) inv.classList.add('bp');
     paintSlots(root);
     paintMeter(root);
     paintStats(root);
@@ -439,7 +440,7 @@ function hookPreview() {
       event.preventDefault();
       const key = tile.dataset.w ? 'w' + tile.dataset.w : 'a' + tile.dataset.armor;
       const now = performance.now();
-      if (pending && pending.key === key && now - pending.t < 380) {
+      if (pending && pending.key === key && now - pending.t < DOUBLE_TAP_MS) {
         clearTimeout(pending.timer);
         pending = null;
         if (!quickEquip(tile)) replay(tile);
@@ -452,7 +453,7 @@ function hookPreview() {
         timer: setTimeout(() => {
           pending = null;
           if (tile.isConnected) replay(tile);
-        }, 280),
+        }, DOUBLE_TAP_MS),
       };
     }, true);
 
