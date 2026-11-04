@@ -7,6 +7,7 @@
 Узлы: base / lv2 / lv3 и группа gun — как ждёт play/ui/defense.js
 (ствол крутится отдельно, детали lv2/lv3 видны с соответствующего уровня).
 
+Зависимости: NumPy, Pillow; шрифт DejaVu Sans по пути FONT ниже.
 Запуск: python3 tools/art/turret_gen.py
 """
 import io, json, math, os, struct
@@ -405,6 +406,9 @@ def build_pkm():
     for y in (0.08, 0.28, 0.46):
         t.cyl('base', y, y + 0.028, 0.355, 0.355, 12, 'iron', caps=False)
     t.cyl('base', 0.54, 0.60, 0.30, 0.16, 10, 'iron')  # горловина
+    # Непрерывная ось соединяет горловину, погон и короб стволов. При отдаче
+    # короб остаётся над этой опорой; детали не висят над бочкой отдельно.
+    t.cyl('base', 0.58, 1.02, 0.065, 0.065, 8, 'iron')
     t.cyl('base', 0.78, 0.86, 0.22, 0.22, 10, 'olive')  # погон
     t.cyl('base', 0.86, 0.90, 0.10, 0.10, 8, 'iron')
     # тренога
@@ -852,7 +856,7 @@ def _to_indexed(mesh):
     UV = np.stack(mesh.UV).astype(np.float32)
     N /= np.linalg.norm(N, axis=1, keepdims=True) + 1e-8
     T = np.zeros_like(P)
-    W = np.ones(len(P), np.float32)
+    B = np.zeros_like(P)
     for i in range(0, len(P), 3):
         p0, p1, p2 = P[i:i + 3]
         u0, u1, u2 = UV[i:i + 3]
@@ -865,19 +869,37 @@ def _to_indexed(mesh):
         else:
             t = (dp1 * duv2[1] - dp2 * duv1[1]) / det
             b = (dp2 * duv1[0] - dp1 * duv2[0]) / det
-        w = 1.0 if np.dot(np.cross(N[i], t), b) >= 0 else -1.0
         T[i:i + 3] = t
-        W[i:i + 3] = w
+        B[i:i + 3] = b
     T -= N * np.sum(N * T, axis=1, keepdims=True)
-    T /= np.linalg.norm(T, axis=1, keepdims=True) + 1e-8
+    lengths = np.linalg.norm(T, axis=1, keepdims=True)
+    missing = lengths[:, 0] < 1e-8
+    if np.any(missing):
+        # UVs on small caps can collapse to one atlas coordinate. The fixed
+        # +X fallback above then vanishes on a cap whose normal is also +/-X.
+        # Pick the least aligned axis so every exported tangent has a stable,
+        # nonzero direction in the surface plane, including those caps.
+        normals = N[missing]
+        axes = np.eye(3, dtype=np.float32)[np.argmin(np.abs(normals), axis=1)]
+        T[missing] = np.cross(axes, normals)
+        lengths = np.linalg.norm(T, axis=1, keepdims=True)
+    if np.any(lengths < 1e-8) or not np.all(np.isfinite(T)):
+        raise ValueError('Cannot export a finite surface tangent')
+    T /= lengths
+    # Smooth bag normals and mirrored atlas faces can have different handedness
+    # at each corner. Compute it from the final surface tangent, not one normal
+    # before orthogonalization/fallback, and keep those frames across indexing.
+    W = np.where(np.sum(np.cross(N, T) * B, axis=1) < 0, -1, 1).astype(np.float32)
     key = {}
     idx = []
     P2, N2, UV2, T2, Ws = [], [], [], [], []
     qp = np.round(P, 4)
     qn = np.round(N, 3)
     qu = np.round(UV, 4)
+    qt = np.round(T, 4)
     for i in range(len(P)):
-        k = (qp[i, 0], qp[i, 1], qp[i, 2], qn[i, 0], qn[i, 1], qn[i, 2], qu[i, 0], qu[i, 1])
+        k = (qp[i, 0], qp[i, 1], qp[i, 2], qn[i, 0], qn[i, 1], qn[i, 2], qu[i, 0], qu[i, 1],
+             qt[i, 0], qt[i, 1], qt[i, 2], W[i])
         j = key.get(k)
         if j is None:
             j = len(P2)
@@ -941,7 +963,6 @@ def export_glb(turrets, images):
         ip = acc(push(P, 34962), 5126, len(P), 'VEC3', {'min': P.min(0).tolist(), 'max': P.max(0).tolist()})
         inn = acc(push(N, 34962), 5126, len(N), 'VEC3')
         iuv = acc(push(UV, 34962), 5126, len(UV), 'VEC2')
-        iuv2 = acc(push(UV, 34962), 5126, len(UV), 'VEC2')  # TEXCOORD_2 = uv2 для aoMap
         it = acc(push(Tan, 34962), 5126, len(Tan), 'VEC4')
         itype = 5123 if len(idx) < 65535 and len(P) < 65535 else 5125
         idata = idx.astype(np.uint16 if itype == 5123 else np.uint32)
@@ -949,7 +970,8 @@ def export_glb(turrets, images):
         meshes.append({
             'name': name,
             'primitives': [{
-                'attributes': {'POSITION': ip, 'NORMAL': inn, 'TEXCOORD_0': iuv, 'TEXCOORD_2': iuv2, 'TANGENT': it},
+                # Every material map uses glTF's default TEXCOORD_0, including AO.
+                'attributes': {'POSITION': ip, 'NORMAL': inn, 'TEXCOORD_0': iuv, 'TANGENT': it},
                 'indices': ii,
                 'material': 0,
             }],
@@ -985,7 +1007,6 @@ def export_glb(turrets, images):
     images_json = [{'mimeType': mime, 'bufferView': bv} for bv, (_blob, mime) in zip(image_views, images)]
     textures = [{
         'sampler': 0,
-        'source': i,
         'extensions': {'EXT_texture_webp': {'source': i}},
     } for i in range(len(images))]
     material = {
@@ -1005,6 +1026,7 @@ def export_glb(turrets, images):
         'asset': {'version': '2.0', 'generator': 'terra tools/art/turret_gen.py',
                   'extras': {'muzzle': {k: list(v) for k, v in MUZZLE.items()}}},
         'extensionsUsed': ['EXT_texture_webp'],
+        'extensionsRequired': ['EXT_texture_webp'],
         'scene': 0,
         'scenes': [{'name': 'turrets', 'nodes': root_ids}],
         'nodes': nodes,
