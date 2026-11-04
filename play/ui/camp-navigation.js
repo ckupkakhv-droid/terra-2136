@@ -3,7 +3,6 @@
   function start() {
     const panel = document.getElementById('campPanel');
     if (!panel) return;
-    import('./sewers.js').then(module => module.installSewers(window.game)).catch(error => console.error('[Terra sewers]', error));
     const body = panel.querySelector('#campBody');
     const tabs = panel.querySelector('#campTabs');
     let query = '';

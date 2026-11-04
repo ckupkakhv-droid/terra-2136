@@ -91,10 +91,19 @@
 #sewerAction[hidden] { display:none; }
 #sewerMap { z-index:35; }
 #sewerMap .win { touch-action:pan-y; overscroll-behavior:contain; width:min(580px,96vw); max-height:90dvh; overflow:auto; padding:16px; }
-#sewerMap h2 { display:flex; justify-content:space-between; align-items:center; font-size:18px; }
+#sewerMap h2 { position:sticky; top:0; z-index:1; background:#111b16; padding:4px 0; display:flex; justify-content:space-between; align-items:center; font-size:18px; }
 #sewerMap .x { position:static; min-width:44px; min-height:44px; }
-#sewerRoute { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(4,60px); gap:5px; }
-.sewerCell { display:grid; place-content:center; padding:5px; border:1px solid #7e957b; background:#2c3932; color:#e2cfa9; font-size:12px; overflow-wrap:anywhere; text-align:center; }
+#sewerRoute { padding:8px; background:radial-gradient(ellipse at 30% 20%,#263b32,#101c19); border:1px solid #5a6a58; border-radius:4px; }
+#sewerRoute svg { display:block; width:min(100%,360px); height:auto; max-height:none; margin:auto; }
+.sewerPipe { fill:none; stroke:#3e5548; stroke-width:17; stroke-linecap:round; }
+.sewerPipeExplored { fill:none; stroke:#839b7d; stroke-width:3; }
+.sewerJunction { fill:#1a2923; stroke:#687c66; stroke-width:2; stroke-dasharray:4 3; }
+.explored .sewerJunction { stroke:#a8b891; stroke-dasharray:none; }
+.sewerPlanIcon { fill:#e4c48f; font-size:22px; }
+.sewerPlanLabel { fill:#d3cfb6; font-size:16px; }
+.sewerPlayer { fill:none; stroke:#ffca74; stroke-width:3; }
+.sewerLegend { color:#c5b995; font-size:11px!important; line-height:1.5; }
+
 #sewerMap details { border-top:1px solid #73634b; }
 #sewerMap summary { min-height:48px; padding:12px 0; cursor:pointer; }
 #sewerMap p { font-size:13px; line-height:1.5; }

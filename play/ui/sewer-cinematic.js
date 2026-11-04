@@ -1,8 +1,8 @@
 /* A staged recording, not the unfinished Raphael boss/model. No save writes. */
-export function showRecording(game, message) {
+export function showRecording(game, message, options = {}) {
   if (game.state !== 'play' || document.getElementById('sewerRecording')) return;
   const owner = game.p, previousFocus = document.activeElement;
-  const frames = [
+  const frames = options.frames || [
     ['АГИ · ПАДЕНИЕ СЕТЕЙ', 'Города гасли по одному. За приказами машин пришла эпидемия. Внизу остались только следы тех, кто пытался удержать проход.'],
     ['ПОСЛЕДНИЙ ИЗ КЛАНА', message],
     ['ЮЖНЫЙ КОЛЛЕКТОР · СЛЕД ПРОДОЛЖАЕТСЯ', 'У стены — красная ткань и две глубокие борозды. Крысы не боятся этого места. Самого охотника здесь уже нет.'],
@@ -13,6 +13,8 @@ export function showRecording(game, message) {
   root.setAttribute('aria-modal', 'true');
   root.setAttribute('aria-labelledby', 'recordingTitle');
   root.innerHTML = '<div class="recordingLetterbox"></div><div class="recordingCard scroll"><small>НАЙДЕННАЯ ЗАПИСЬ · ЮЖНЫЙ КОЛЛЕКТОР</small><h2 id="recordingTitle"></h2><p id="recordingText"></p><div class="recordingControls"><span id="recordingStep"></span><button type="button" id="recordingSkip">Пропустить</button><button type="button" id="recordingNext">Далее</button></div></div><div class="recordingLetterbox"></div>';
+  if(options.heading)root.querySelector('small').textContent=options.heading;
+  if(options.skipLabel)root.querySelector('#recordingSkip').textContent=options.skipLabel;
   const clearInput = () => {
     game.keys?.clear();
     if (game.mouse) game.mouse.down = false;
@@ -27,21 +29,28 @@ export function showRecording(game, message) {
   document.body.append(root);
   let frame=0, closed=false;
   const next=root.querySelector('#recordingNext');
+  const ownsModal = () => game.p===owner && game.state==='modal' && !root.inert &&
+    ![...document.querySelectorAll('.modal:not(.hidden)')].some(panel => panel.getClientRects().length);
   function draw() {
     root.querySelector('#recordingTitle').textContent=frames[frame][0];
     root.querySelector('#recordingText').textContent=frames[frame][1];
     root.querySelector('#recordingStep').textContent=`${frame+1} / ${frames.length}`;
-    next.textContent=frame===frames.length-1?'В тоннель':'Далее';
+    next.textContent=frame===frames.length-1?(options.finishLabel||'В тоннель'):'Далее';
   }
   function close(restore=true) {
     if(closed)return;
+    const restoreGame=restore && ownsModal();
     closed=true;clearInterval(lifecycle);window.removeEventListener('keydown',keyboard,true);root.remove();
-    if(restore && game.p===owner && game.state==='modal') {
+    if(restoreGame) {
       clearInput();game.state='play';
       if(previousFocus?.isConnected)previousFocus.focus({preventScroll:true});
+      options.onFinish?.();
     }
   }
   function keyboard(event) {
+    if(!ownsModal()) { close(false); return; }
+    // Native shortcuts (I/M/L) must not open another modal behind this one.
+    event.stopImmediatePropagation();
     if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();close();}
     else if(event.key==='Tab') {
       event.preventDefault();event.stopImmediatePropagation();
@@ -53,7 +62,7 @@ export function showRecording(game, message) {
   root.querySelector('#recordingSkip').onclick=()=>close();
   next.onclick=()=>{if(game.p!==owner)return close(false);if(++frame===frames.length)close();else draw();};
   window.addEventListener('keydown',keyboard,true);
-  const lifecycle=setInterval(()=>{if(game.p!==owner||game.state!=='modal')close(false);},100);
+  const lifecycle=setInterval(()=>{if(!ownsModal())close(false);},100);
   draw();next.focus();
   return {close};
 }
