@@ -1,7 +1,8 @@
 import { showRecording } from './sewer-cinematic.js';
 import { SEWER_KEY } from './sewer-register.js';
 
-// This clue is derived from existing durable progress; listening never writes a save.
+// The clue is derived from existing durable progress. The one-time toast stores
+// optional player.trace and uses the normal save; no other profile fields change.
 export function installMoscowSignal(game, onSignal = () => {}, isBusy = () => false) {
   const button = document.createElement('button');
   button.id = 'moscowSignalAction';
@@ -9,8 +10,6 @@ export function installMoscowSignal(game, onSignal = () => {}, isBusy = () => fa
   button.textContent = 'Прочитать перехват';
   button.hidden = true;
   document.body.append(button);
-  let announcedPlayer = null;
-
   const eligible = () => !!game.p?.alive && !!game.defeated?.[SEWER_KEY] &&
     game.p.routeTransit?.stage === 2 && !game._coopGuest && !game.net?.role;
   function nearby() {
@@ -47,10 +46,12 @@ export function installMoscowSignal(game, onSignal = () => {}, isBusy = () => fa
     });
   });
   return Object.freeze({ eligible, update() {
+    // Optional player.trace survives load and respawn. Older builds ignore it.
     if (eligible() && game.state === 'play' && !game.world?.inDungeon &&
-        !game.dungeonTransition && announcedPlayer !== game.p) {
-      announcedPlayer = game.p;
+        !game.dungeonTransition && game.p.trace !== 1) {
+      game.p.trace = 1;
       game.ui.toast('Новый след: Московский перехват в журнале подземной карты');
+      try { game.save?.(); } catch { /* the flag stays on the player for the next successful save */ }
     }
     button.hidden = !nearby();
   } });
