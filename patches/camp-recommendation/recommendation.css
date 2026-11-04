@@ -1,0 +1,21 @@
+/* Same camp material/palette; no additional screen, sticky HUD or camera input. */
+#campPanel .residentRecommendation {
+  display: grid; gap: 6px; min-width: 0; margin: 8px 0 12px; padding: 10px;
+  border: 1px solid #8b9b6b; border-left: 3px solid #b7ca91;
+  border-radius: 5px; background: rgba(44, 49, 34, .65); color: var(--panel-ink);
+}
+#campPanel .residentRecommendation strong,
+#campPanel .residentRecommendation small { overflow-wrap: anywhere; }
+#campPanel .residentRecommendation small { line-height: 1.4; color: var(--panel-muted); }
+#campPanel .residentRecommendAction {
+  min-height: 48px; width: 100%; padding: 10px 12px; white-space: normal;
+  overflow-wrap: anywhere; text-align: left; touch-action: manipulation;
+}
+#campPanel .residentRecommendationReasons summary {
+  min-height: 44px; display: flex; align-items: center; cursor: pointer;
+  font-size: 12px; line-height: 1.4;
+}
+#campPanel .residentRecommendationReasons ul {
+  margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.5;
+  overflow-wrap: anywhere;
+}
