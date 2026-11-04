@@ -70,7 +70,31 @@
   const magMax = (o) => Math.round(TYPES[dkOf(o)].mag[clampLvl(o.lvl) - 1] * (isTech() ? 1.25 : 1));
   const magOf = (o) => Math.max(0, num(o.mag, 0));
   const dmgOf = (o) => TYPES[dkOf(o)].dmg[clampLvl(o.lvl) - 1] * (isTech() ? 1.1 : 1);
-  // Башни не сканируются заново на каждую турель: список обновляется вместе с базой.
+  // Состав базы: тип, вид турели, клетка и поворот. Длина массива и сама ссылка
+  // не меняются при замене на месте, переносе и загрузке сейва с тем же числом построек.
+  function baseSame(base) {
+    const prev = S.baseRows;
+    const n = base ? base.length : 0;
+    if (!prev || prev.length !== n || S.baseRef !== base) return false;
+    for (let i = 0; i < n; i++) {
+      const o = base[i], r = prev[i];
+      if (!o) { if (r) return false; continue; }
+      if (!r || r[0] !== (o.t || '') || r[1] !== (o.dk || '') || r[2] !== o.x || r[3] !== o.z || r[4] !== (o.r || 0) || r[5] !== (o.lvl || 0)) return false;
+    }
+    return true;
+  }
+  function rememberBase(base) {
+    const n = base ? base.length : 0;
+    const rows = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const o = base[i];
+      rows[i] = o ? [o.t || '', o.dk || '', o.x, o.z, o.r || 0, o.lvl || 0] : null;
+    }
+    S.baseRows = rows;
+    S.baseRef = base;
+    S.baseCount = n;
+  }
+  // Башни не сканируются заново на каждую турель: список обновляется вместе с составом базы.
   function cacheTowers() {
     const B = ctx.B.defense;
     const list = [];
@@ -615,8 +639,9 @@
   function step(dt) {
     onSession();
     if (!S.pool) S.pool = makePool();
-    if (S.dirty || S.baseRef !== game.p.base || S.baseCount !== game.p.base?.length) {
-      S.baseRef = game.p.base; S.baseCount = game.p.base?.length;
+    const base = game.p.base;
+    if (S.dirty || !baseSame(base)) {
+      rememberBase(base);
       S.turretList = turrets();
       cacheTowers();
       syncViews();
@@ -777,7 +802,13 @@
       const res = campRes(); if (!res) return no('no-camp');
       return tx('deposit', { mutate: () => { inv[item] -= put; res[item] = (res[item] || 0) + put; return { item, amount: put }; } });
     },
-    _debug: () => ({ ms: +(S.ms || 0).toFixed(3), msMax: +(S.msMax || 0).toFixed(2), lastMs: S.lastMs == null ? null : +S.lastMs.toFixed(3), trips: S.trips.size, pool: S.pool?.list.length || 0, poolMax: S.pool?.n || 0, views: S.views.size, searches: S.searches || 0, losFast: S.losFast || 0, losFull: S.losFull || 0, mismatch: S.mismatch || 0, stats: { ...S.stats } })
+    _debug: () => ({
+      ms: +(S.ms || 0).toFixed(3), msMax: +(S.msMax || 0).toFixed(2), lastMs: S.lastMs == null ? null : +S.lastMs.toFixed(3),
+      trips: S.trips.size, pool: S.pool?.list.length || 0, poolMax: S.pool?.n || 0, views: S.views.size,
+      slots: (S.turretList || []).map((o) => ({ t: o.t, dk: dkOf(o), x: o.x, z: o.z, r: o.r || 0, lvl: o.lvl || 0 })),
+      towers: (S.towers || []).map((h) => ({ t: h.t, x: h.x, z: h.z })),
+      searches: S.searches || 0, losFast: S.losFast || 0, losFull: S.losFull || 0, mismatch: S.mismatch || 0, stats: { ...S.stats }
+    })
   };
   window.terraDefense = api;
 
