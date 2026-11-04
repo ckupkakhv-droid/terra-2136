@@ -1,11 +1,11 @@
 """Lab runtime integration: native collision, asset sharing and expedition cleanup."""
 import os
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 out=Path(os.environ.get('TERRA_QA_OUTPUT','/tmp/terra-lab-qa'));out.mkdir(exist_ok=True)
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
- page=b.new_page(viewport={'width':1280,'height':800});page.set_default_timeout(60000)
+ page=b.new_page(viewport={'width':1280,'height':800},has_touch=True);page.set_default_timeout(60000)
  errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto(os.environ.get('TERRA_TEST_URL','http://127.0.0.1:8110/play/'),timeout=120000)
  page.locator('#mNew').click();page.locator('#skip').click();page.wait_for_function('game.sewers && game.glb.sewer_lab')
@@ -27,6 +27,21 @@ with sync_playwright() as p:
  assert audit['vatBlocked'] and audit['north'] and audit['east'] and audit['center'],audit
  page.wait_for_timeout(700);page.screenshot(path=str(out/'lab-desktop.png'))
  page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(700);page.screenshot(path=str(out/'lab-portrait.png'))
+ page.evaluate('const r=game.dg.ch.rooms[2];game.p.x=r.x-4.8;game.p.z=r.z-4;for(const e of game.enemies)e.dmg=0')
+ expect(page.locator('#sewerAction')).to_have_text('Прочитать терминал [E]',timeout=30000)
+ before=page.evaluate('JSON.stringify({pumps:game.sewers.pumps,def:game.defeated,inv:game.p.inv,quest:game.p.routeTransit})')
+ page.keyboard.press('e');expect(page.locator('#recordingTitle')).to_have_text('ПОСЛЕДНЯЯ СМЕНА')
+ expect(page.locator('#hud')).not_to_be_visible()
+ page.locator('#recordingNext').tap();expect(page.locator('#recordingTitle')).to_have_text('ПРИКАЗ AGI')
+ page.screenshot(path=str(out/'terminal-portrait.png'))
+ page.keyboard.press('Escape');expect(page.locator('#sewerRecording')).to_have_count(0)
+ expect(page.locator('#sewerAction')).to_have_text('Прочитать терминал [E]',timeout=30000)
+ page.locator('#sewerAction').tap();expect(page.locator('#recordingTitle')).to_have_text('ПОСЛЕДНЯЯ СМЕНА')
+ page.locator('#recordingSkip').tap();expect(page.locator('#sewerRecording')).to_have_count(0)
+ assert page.evaluate('JSON.stringify({pumps:game.sewers.pumps,def:game.defeated,inv:game.p.inv,quest:game.p.routeTransit})')==before
+ page.evaluate('window.terminalSegHit=game.world.segHit;game.world.segHit=()=>0')
+ expect(page.locator('#sewerAction')).to_be_hidden(timeout=30000)
+ page.evaluate('game.world.segHit=window.terminalSegHit;delete window.terminalSegHit')
  page.evaluate('const r=game.dg.ch.rooms[6];game.p.x=r.x;game.p.z=r.z')
  page.wait_for_function('!labFirst.visible && labFirst.children.filter(n=>n.isLight).every(n=>!n.visible)')
  page.evaluate('game.exitDungeon()');page.wait_for_function('!game.dg && !game.dungeonTransition && !labFirst.parent')

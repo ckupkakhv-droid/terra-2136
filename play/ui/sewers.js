@@ -6,7 +6,7 @@ import { showRecording } from './sewer-cinematic.js';
 import { installMoscowSignal } from './moscow-signal.js';
 import { installMoscowScout } from './moscow-scout.js';
 import { installSewerNavigation } from './sewer-navigation.js';
-import { buildSewerLab } from './sewer-lab.js';
+import { buildSewerLab, LAB_TERMINAL } from './sewer-lab.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
  */
@@ -158,17 +158,39 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     }
   },true);
   let nearby=null;
+  function nearTerminal() {
+    if (!active() || !lab?.parent || !lab.visible) return false;
+    const c=center(2),x=c.x+LAB_TERMINAL.x,z=c.z+LAB_TERMINAL.z;
+    return Math.hypot(game.p.x-x,game.p.z-z)<2.2 &&
+      game.world.segHit(game.p.x,game.p.z,x,z,1.8)<0;
+  }
   function useAction() {
     if(game.state!=='play'||game.dungeonTransition||!nearby)return false;
     if(nearby==='entry') {if(!game.world.inDungeon&&Math.hypot(game.p.x-ENTRANCE.x,game.p.z-ENTRANCE.z)<2.6)game.useEntrance({...ENTRANCE});return true;}
     if(!active())return false;
+    if(nearby==='terminal') {
+      if (!nearTerminal()) return false;
+      showRecording(game,'',{
+        heading:'ОБЪЕКТ 7 · АВАРИЙНЫЙ ТЕРМИНАЛ',skipLabel:'Закрыть',finishLabel:'Отойти от терминала',
+        frames:[
+          ['ПОСЛЕДНЯЯ СМЕНА','На тусклом экране остался журнал российского филиала Ambrala: «Объект 7 · НИИ „Полынь“». Статус гермозоны — нарушен. Рядом с клавиатурой засохли следы бирюзового раствора.'],
+          ['ПРИКАЗ AGI',LORE[1][1]],
+          ['ЧУЖОЙ СЛЕД','Архив заканчивается записью дежурного: «Кто-то вскрыл нижний шлюз двумя клинками. Не стрелять в крыс. Если услышите шаги — уйдите с лотка». Сначала включите оба насоса; охотник скрывается за водосбросом.'],
+        ],
+      });
+      return true;
+    }
     const i=nearby,c=center(i);
     if(Math.hypot(game.p.x-(c.x+4),game.p.z-c.z)>2.6)return false;
     pumps.add(i);game.ui.toast('Насос включён · давление снижено');return true;
   }
-  action.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();useAction();});
+  action.addEventListener('pointerdown',e=>{
+    e.stopPropagation();
+    // Reading opens a modal on completed activation, after the touch releases.
+    if(nearby!=='terminal'){e.preventDefault();useAction();}
+  });
   action.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key))e.stopPropagation();});
-  action.addEventListener('click',e=>{if(e.detail===0)useAction();});
+  action.addEventListener('click',e=>{e.stopPropagation();if(e.detail===0||nearby==='terminal')useAction();});
   const interact=game.interact;game.interact=function(...args){return useAction()||interact.apply(this,args);};
   const dungeonUpdate=game.dungeonUpdate;
   game.dungeonUpdate=function(dt) {
@@ -216,6 +238,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     if(game.state==='play'&&!game.dungeonTransition){
       if(!game.world.inDungeon&&Math.hypot(game.p.x-ENTRANCE.x,game.p.z-ENTRANCE.z)<2.6){nearby='entry';action.textContent='Спуститься · канализация [E]';}
       if(active())for(const i of [1,3]){const c=center(i);if(!pumps.has(i)&&Math.hypot(game.p.x-c.x-4,game.p.z-c.z)<2.6){nearby=i;action.textContent='Включить насос [E]';}}
+      if(nearTerminal()){nearby='terminal';action.textContent='Прочитать терминал [E]';}
     }
     if(action.hidden!==(nearby===null))action.hidden=nearby===null;
   }

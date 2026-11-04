@@ -1,5 +1,6 @@
 /* Static kit in chamber 2. Source geometry/materials remain loader-owned;
  * the expedition owns only its cloned scene nodes and two unshadowed lights. */
+export const LAB_TERMINAL = Object.freeze({x:-6,z:-4});
 export function buildSewerLab(chunk, game, bridge) {
   const source = game.glb?.sewer_lab?.src, room = chunk.rooms?.[2];
   const names = ['vault_4m','bulkhead','hermodoor','vat','vat_broken','lab_table','crate_bio','growth_cluster','lamp_cage'];
@@ -20,7 +21,8 @@ export function buildSewerLab(chunk, game, bridge) {
   // Sealed archive door against an already collidable exterior wall.
   put('hermodoor',bulkhead.position.x+1.17,7.8,Math.PI);
   for (const z of [-5,5]) { put('vat',6,z,-Math.PI/2); block(6,z,1.1,1.1,2.7); }
-  put('lab_table',-6,-4,Math.PI/2); block(-6,-4,.9,1.9,1.5);
+  put('lab_table',LAB_TERMINAL.x,LAB_TERMINAL.z,Math.PI/2);
+  block(LAB_TERMINAL.x,LAB_TERMINAL.z,.9,1.9,1.5);
   put('crate_bio',-5.5,5); block(-5.5,5,.9,.7,.65);
   put('crate_bio',5,6); block(5,6,.9,.7,.65);
   put('vat_broken',-6.1,1,Math.PI/2); block(-6.1,1,1.8,2.1,1.5);
