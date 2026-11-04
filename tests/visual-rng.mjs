@@ -3,6 +3,11 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const html = fs.readFileSync(new URL('../play/index.html', import.meta.url), 'utf8');
+// Terrain classification drives placement and collision, not merely appearance.
+assert(html.includes('Ds.wl=o.k>.03?n-1.05:-99'), 'native water bounds preserved');
+assert(html.includes('if(C>-50&&R<C){let P=this.w'), 'native water/cliff collision branch preserved');
+assert(html.includes('(!this.touchSeen||window.TERRA_CAMP_GHOST_AIM)'), 'camp touch aim preserved');
+assert(html.includes('c=s<1?(i.aimY??1.15)-i.y'), 'drone target height preserved');
 const patch = fs.readFileSync(new URL('../play/art/visual-fixes.js', import.meta.url), 'utf8');
 const between = (a, b) => { const start = html.indexOf(a); assert(start >= 0, a); const end = html.indexOf(b, start); assert(end > start, b); return html.slice(start, end); };
 const primitive = {p: [0, 0, 0, 1, 0, 0, 0, 0, 1], n: [0, 1, 0, 0, 1, 0, 0, 1, 0]};

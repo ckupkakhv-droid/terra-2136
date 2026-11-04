@@ -1,6 +1,11 @@
 /* One optional surface encounter. The native player modules and save schema are
- * untouched: the scout has its own model instance and encounter lifetime. */
+ * untouched: the scout has its own model instance and encounter lifetime.
+ * Wrappers capture the previous enemyUpdate/killEnemy/fxHit/sfx.mob/modShot and
+ * call through for every other actor, so an earlier or later wrapper stays in
+ * the chain. defense.js does not wrap those methods: it wraps moduleUpdate. */
+const SCOUT_HOVER = 1.65;
 export function installMoscowScout(game) {
+  if (game._moscowScoutInstalled) return game._moscowScoutInstalled;
   let enemy = null, visual = null, owner = null, world = null, origin = null, rotors = [];
   let pending = false, spentPlayer = null, phase = 'search', left = 0, aim = null, clock = 0;
   let retry = 0, remaining = 0;
@@ -62,7 +67,9 @@ export function installMoscowScout(game) {
       return false;
     }
     enemy = scout; visual = model; origin = spot; rotors = modelRotors; enemy.moscowScout = true;
-    enemy.def = {...enemy.def,h:2.3,name:'Разведчик AGI'}; enemy.name='Разведчик AGI';
+    // def.h matches the visible body. 2.3 put numbers and any height-based aim above the model.
+    enemy.aimY = SCOUT_HOVER;
+    enemy.def = {...enemy.def,h:SCOUT_HOVER,name:'Разведчик AGI'}; enemy.name='Разведчик AGI';
     enemy.r = .8; enemy.sc = 1; enemy.hp = enemy.maxHp = 90;
     enemy.revive = false; enemy.xp = 0;
     visual.position.set(spot.x,(window.TERRA_H?.(spot.x,spot.z)||0)+1.65,spot.z);
@@ -97,7 +104,17 @@ export function installMoscowScout(game) {
     const x=origin.x+Math.cos(clock*.6), z=origin.z+Math.sin(clock*.6);
     if (!world.collide({x,z},.5)) { enemy.x=x; enemy.z=z; }
     const floor=window.TERRA_H?.(enemy.x,enemy.z)||0;
-    visual.position.set(enemy.x,floor+1.65+Math.sin(clock*2)*.12,enemy.z);
+    enemy.aimY = SCOUT_HOVER + Math.sin(clock*2)*.12;
+    if (enemy.def) enemy.def.h = enemy.aimY;
+    visual.position.set(enemy.x,floor+enemy.aimY,enemy.z);
+    if (enemy.flash > 0) enemy.flash = Math.max(0, enemy.flash - Math.min(dt,.1)*6);
+    const flash = enemy.flash || 0;
+    visual.traverse(node => {
+      if (!node.isMesh || !node.userData?.scoutMaterial) return;
+      for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+        material?.emissive?.setRGB(.3+flash*.7,.035+flash*.25,.02);
+      }
+    });
     visual.rotation.y=Math.atan2(game.p.x-enemy.x,game.p.z-enemy.z);
     for (const rotor of rotors) rotor.rotation.y += dt*10;
     left -= Math.min(dt,.1);
@@ -133,14 +150,46 @@ export function installMoscowScout(game) {
   };
   if (typeof originalHit === 'function') game.fxHit = function(target,...args) {
     if (target !== enemy) return originalHit.call(this,target,...args);
-    // Reuse the native metal sparks without changing the actor's combat type.
-    game.sfx?.impactHit?.(target,'metal');
-    return originalHit.call(this,{...target,boss:'moloh',bt:{armorOff:false}},...args);
+    // Metal sparks need a moloh read, but writes (flinch and similar) must hit the real actor.
+    const previousHeight = target.def?.h;
+    if (target.def && Number.isFinite(target.aimY)) target.def.h = target.aimY / .6;
+    const view = new Proxy(target, {
+      get(obj, key, receiver) {
+        if (key === 'boss') return 'moloh';
+        if (key === 'bt') return {...(obj.bt || {}), armorOff: false};
+        const value = Reflect.get(obj, key, receiver);
+        return typeof value === 'function' ? value.bind(obj) : value;
+      },
+      set(obj, key, value) {
+        obj[key] = value;
+        return true;
+      },
+    });
+    try {
+      game.sfx?.impactHit?.(target,'metal');
+      return originalHit.call(this, view, ...args);
+    } finally {
+      if (target.def && previousHeight !== undefined) target.def.h = previousHeight;
+    }
   };
+  if (typeof game.modShot === 'function') {
+    const originalShot = game.modShot;
+    game.modShot = function(origin, target, ...args) {
+      const before = this.bullets?.length || 0;
+      const result = originalShot.call(this, origin, target, ...args);
+      if (target === enemy && Number.isFinite(target?.aimY)) {
+        const aim = (window.TERRA_H?.(target.x, target.z) || 0) + target.aimY;
+        for (let i = before; i < (this.bullets?.length || 0); i++) {
+          if (this.bullets[i]?.moduleVisual) this.bullets[i].moduleVisual.aimY = aim;
+        }
+      }
+      return result;
+    };
+  }
   if (typeof originalMobSound === 'function') game.sfx.mob = function(target,...args) {
     if (target !== enemy) return originalMobSound.call(this,target,...args);
   };
-  return Object.freeze({
+  const api = Object.freeze({
     start() {
       if (spentPlayer === game.p || enemy || pending || game.state !== 'play' || !game.p?.alive ||
           game.world.inDungeon || game.dungeonTransition || game._coopGuest || game.net?.role) return false;
@@ -154,4 +203,6 @@ export function installMoscowScout(game) {
     get engaged() { return pending || (!!enemy && !enemy.dead); },
     get active() { return !!enemy && !enemy.dead; },
   });
+  game._moscowScoutInstalled = api;
+  return api;
 }

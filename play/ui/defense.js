@@ -70,9 +70,49 @@
   const magMax = (o) => Math.round(TYPES[dkOf(o)].mag[clampLvl(o.lvl) - 1] * (isTech() ? 1.25 : 1));
   const magOf = (o) => Math.max(0, num(o.mag, 0));
   const dmgOf = (o) => TYPES[dkOf(o)].dmg[clampLvl(o.lvl) - 1] * (isTech() ? 1.1 : 1);
-  const towerBonus = (o) => {
+  // Состав базы: тип, вид турели, клетка и поворот. Длина массива и сама ссылка
+  // не меняются при замене на месте, переносе и загрузке сейва с тем же числом построек.
+  function baseSame(base) {
+    const prev = S.baseRows;
+    const n = base ? base.length : 0;
+    if (!prev || prev.length !== n || S.baseRef !== base) return false;
+    for (let i = 0; i < n; i++) {
+      const o = base[i], r = prev[i];
+      if (!o) { if (r) return false; continue; }
+      if (!r || r[0] !== (o.t || '') || r[1] !== (o.dk || '') || r[2] !== o.x || r[3] !== o.z || r[4] !== (o.r || 0) || r[5] !== (o.lvl || 0)) return false;
+    }
+    return true;
+  }
+  function rememberBase(base) {
+    const n = base ? base.length : 0;
+    const rows = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const o = base[i];
+      rows[i] = o ? [o.t || '', o.dk || '', o.x, o.z, o.r || 0, o.lvl || 0] : null;
+    }
+    S.baseRows = rows;
+    S.baseRef = base;
+    S.baseCount = n;
+  }
+  // Башни не сканируются заново на каждую турель: список обновляется вместе с составом базы.
+  function cacheTowers() {
     const B = ctx.B.defense;
-    return game.p.base.some((h) => ctx.Li[h.t]?.tower && Math.hypot(h.x - o.x, h.z - o.z) < B.towerRadius) ? B.towerBonus : 0;
+    const list = [];
+    const base = game.p?.base || [];
+    for (let i = 0; i < base.length; i++) if (ctx.Li[base[i].t]?.tower) list.push(base[i]);
+    S.towers = list;
+    S.towerRad = B?.towerRadius || 0;
+    S.towerBonusV = B?.towerBonus || 0;
+  }
+  const towerBonus = (o) => {
+    if (!S.towers) cacheTowers();
+    const rad = S.towerRad;
+    if (!rad) return 0;
+    for (let i = 0; i < S.towers.length; i++) {
+      const h = S.towers[i];
+      if (Math.hypot(h.x - o.x, h.z - o.z) < rad) return S.towerBonusV;
+    }
+    return 0;
   };
   const rangeOf = (o) => TYPES[dkOf(o)].range[clampLvl(o.lvl) - 1] + towerBonus(o);
   const campRes = () => (game.p.camp && (game.p.camp.res = game.p.camp.res || {}));
@@ -168,7 +208,11 @@
       let gun = false;
       for (let a = m; a; a = a.parent) if (a.name === 'gun') gun = true;
       const im = new ctx.I(m.geometry, m.material, cap);
-      im.count = 0; im.frustumCulled = false; im.castShadow = true; im.receiveShadow = true; im.name = 'defense-' + dk;
+      // Тень стволов на среднем и низком (телефон) не отбрасываем: в карту теней не кладём
+      // ~2 тыс. треугольников на турель. На высоком качестве — как раньше, все части.
+      im.count = 0; im.frustumCulled = false; im.castShadow = false; im.receiveShadow = true; im.name = 'defense-' + dk;
+      // A model may finish loading after the player has entered a dungeon.
+      im.visible = !game.world?.inDungeon;
       game.scene.add(im);
       parts.push({ im, local: m.matrixWorld.clone(), gun });
     });
@@ -176,7 +220,13 @@
   }
   const M1 = () => S.m1 || (S.m1 = new ctx.D());
   const M2 = () => S.m2 || (S.m2 = new ctx.D());
-  function writeInst(v) {
+  function applyCastShadows() {
+    const high = game.qk === 'high';
+    if (S.shadowHigh === high) return;
+    S.shadowHigh = high;
+    for (const I of Object.values(S.inst)) for (const pt of I.parts) pt.im.castShadow = high;
+  }
+  function writeInst(v, gunsOnly) {
     const I = S.inst[v.dk];
     if (!I || v.slot == null) return;
     const t = TYPES[v.dk], sc = t.scale * (1 + 0.06 * (v.lvl - 1));
@@ -184,6 +234,8 @@
     const y = (ctx.Y ? ctx.Y(v.o.x, v.o.z) : 0) - lift;
     const a = M1(), b = M2();
     for (const pt of I.parts) {
+      // Основание и «mid» не крутятся за целью: их матрица пишется при сборке и при смене высоты земли.
+      if (gunsOnly && !pt.gun) continue;
       const yaw = pt.gun ? v.gunYaw : v.baseYaw;
       a.makeRotationY(yaw);
       if (pt.gun && v.kick > 0) { b.makeTranslation(0, 0, -0.18 * v.kick); a.multiply(b); }
@@ -217,6 +269,8 @@
     }
     S.views = next;
     S.dirty = false;
+    S.shadowHigh = undefined;
+    applyCastShadows();
   }
   function patchGeo() {
     if (game._defenseGeo) return;
@@ -258,7 +312,9 @@
     const P = S.pool;
     if (!P) { game.hurtEnemy(target, dmg, { wt: 'turret' }); return; }
     if (P.list.length >= P.n) P.list.shift();
-    const dx = target.x - from.x, dz = target.z - from.z, dy = 1.1 - from.y, d = Math.hypot(dx, dy, dz) || 1;
+    // Обычная цель — грудь наземного врага (1.1). Разведчик задаёт aimY над землёй.
+    const aimY = Number.isFinite(target.aimY) ? target.aimY : 1.1;
+    const dx = target.x - from.x, dz = target.z - from.z, dy = aimY - from.y, d = Math.hypot(dx, dy, dz) || 1;
     const sp = kind === 'nail' ? TYPES.nail.speed : TYPES.pkm.speed;
     P.list.push({ kind, x: from.x, y: from.y, z: from.z, vx: (dx / d) * sp, vy: (dy / d) * sp, vz: (dz / d) * sp, t: d / sp, target, dmg, slow });
   }
@@ -285,6 +341,7 @@
       list[w++] = b;
     }
     list.length = w;
+    const kinds = P.kinds || (P.kinds = []);
     for (let i = 0; i < w; i++) {
       const b = list[i], len = b.kind === 'nail' ? 0.35 : 1.1, th = b.kind === 'nail' ? 0.05 : 0.04;
       const yaw = Math.atan2(b.vx, b.vz);
@@ -292,11 +349,101 @@
       m.scale(P.v.set(th, th, len));
       m.setPosition(b.x, b.y + (ctx.Y ? ctx.Y(b.x, b.z) : 0) - lift, b.z);
       mesh.setMatrixAt(i, m);
-      mesh.setColorAt(i, P.col.set(b.kind === 'nail' ? 0xb8b8b0 : 0xffd27a));
+      if (kinds[i] !== b.kind) {
+        kinds[i] = b.kind;
+        mesh.setColorAt(i, P.col.set(b.kind === 'nail' ? 0xb8b8b0 : 0xffd27a));
+        P.colorDirty = true;
+      }
     }
     mesh.count = w;
-    mesh.instanceMatrix.needsUpdate = true;
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    mesh.instanceMatrix.needsUpdate = w > 0;
+    if (P.colorDirty && mesh.instanceColor) { mesh.instanceColor.needsUpdate = true; P.colorDirty = false; }
+  }
+
+  /* ---------- цели: одна сетка на тик, тот же «ближайший», что nearestEnemy ---------- */
+  const CELL = 4;
+  function rebuildEnemyGrid() {
+    const enemies = game.enemies || [];
+    const g = new Map();
+    for (let i = 0; i < enemies.length; i++) {
+      const e = enemies[i];
+      if (!e || e.dead || !Number.isFinite(e.x) || !Number.isFinite(e.z)) continue;
+      const k = Math.floor(e.x / CELL) + ',' + Math.floor(e.z / CELL);
+      let b = g.get(k);
+      if (!b) g.set(k, (b = []));
+      b.push(e, i);
+    }
+    S.grid = g;
+  }
+  function gridNearest(x, z, R) {
+    const g = S.grid;
+    if (!g) return game.nearestEnemy(x, z, R);
+    let best = null, bestD = R, bestI = 1e9;
+    const reach = Math.ceil(R / CELL);
+    const c0 = Math.floor(x / CELL), c1 = Math.floor(z / CELL);
+    for (let ix = c0 - reach; ix <= c0 + reach; ix++) {
+      for (let iz = c1 - reach; iz <= c1 + reach; iz++) {
+        const b = g.get(ix + ',' + iz);
+        if (!b) continue;
+        for (let n = 0; n < b.length; n += 2) {
+          const e = b[n];
+          if (e.dead) continue;
+          const a = Math.hypot(e.x - x, e.z - z);
+          const idx = b[n + 1];
+          if (a < bestD || (best && a === bestD && idx < bestI)) { bestD = a; best = e; bestI = idx; }
+        }
+      }
+    }
+    return best;
+  }
+  function pickEnemy(x, z, R) {
+    const e = gridNearest(x, z, R);
+    S.searches = (S.searches || 0) + 1;
+    if (window.TERRA_PERF_AUDIT) {
+      const exact = game.nearestEnemy(x, z, R);
+      if (exact !== e) S.mismatch = (S.mismatch || 0) + 1;
+    }
+    return e;
+  }
+  // Прямая пустая по клеткам мира — тот же ответ, что segHit === -1, без шага 0.35 м.
+  function losBlocked(x, z, ex, ez) {
+    const w = game.world;
+    if (!w?.segHit) return false;
+    const h = 2.7;
+    if (typeof w.query === 'function') {
+      // solidAt samples with a 0.01 m margin; keep grazing hits in the slow path.
+      const margin = .01;
+      const any = w.query(Math.min(x, ex)-margin, Math.min(z, ez)-margin,
+        Math.max(x, ex)+margin, Math.max(z, ez)+margin, (s) => s.h >= h);
+      if (!any) { S.losFast = (S.losFast || 0) + 1; return false; }
+    }
+    S.losFull = (S.losFull || 0) + 1;
+    return w.segHit(x, z, ex, ez, h) >= 0;
+  }
+  function eachEnemyIn(x, z, R, fn) {
+    const g = S.grid;
+    if (!g) {
+      for (const en of game.enemies || []) {
+        if (!en || en.dead) continue;
+        const dx = en.x - x, dz = en.z - z, d = Math.hypot(dx, dz);
+        if (d <= R && d >= 0.01) fn(en, dx, dz, d);
+      }
+      return;
+    }
+    const reach = Math.ceil(R / CELL);
+    const c0 = Math.floor(x / CELL), c1 = Math.floor(z / CELL);
+    for (let ix = c0 - reach; ix <= c0 + reach; ix++) {
+      for (let iz = c1 - reach; iz <= c1 + reach; iz++) {
+        const b = g.get(ix + ',' + iz);
+        if (!b) continue;
+        for (let n = 0; n < b.length; n += 2) {
+          const en = b[n];
+          if (en.dead) continue;
+          const dx = en.x - x, dz = en.z - z, d = Math.hypot(dx, dz);
+          if (d <= R && d >= 0.01) fn(en, dx, dz, d);
+        }
+      }
+    }
   }
 
   /* ---------- стрельба ---------- */
@@ -320,9 +467,9 @@
     if (r.cd > 0) return;
     if (o.hp != null && o.hp <= 0) return;
     const R = rangeOf(o);
-    const e = game.nearestEnemy(o.x, o.z, R);
+    const e = pickEnemy(o.x, o.z, R);
     if (!e) return;
-    if (game.world.segHit && game.world.segHit(o.x, o.z, e.x, e.z, 2.7) >= 0) return;
+    if (losBlocked(o.x, o.z, e.x, e.z)) return;
     const need = t.proj === 'flame' ? t.burn : 1;
     if (!takeAmmo(o, need)) return;
     r.cd = t.cd[lv - 1];
@@ -334,13 +481,10 @@
     const mz = t.muzzle[2] * s, from = { x: o.x + sn * mz, y: t.muzzle[1] * s, z: o.z + c * mz };
     if (t.proj === 'flame') {
       const dmg = dmgOf(o);
-      for (const en of game.enemies || []) {
-        if (en.dead) continue;
-        const dx = en.x - o.x, dz = en.z - o.z, d = Math.hypot(dx, dz);
-        if (d > R || d < 0.01) continue;
+      eachEnemyIn(o.x, o.z, R, (en, dx, dz, d) => {
         const a = Math.acos(Math.max(-1, Math.min(1, (dx * sn + dz * c) / d)));
         if (a <= t.cone) game.hurtEnemy(en, dmg, { wt: 'turret', dot: true });
-      }
+      });
       if (near && game.pA) {
         const k = FLAME_PARTS[qkey()];
         for (let i = 0; i < k; i++) {
@@ -356,17 +500,26 @@
   }
   function animateViews(dt) {
     const hide = !!game.world?.inDungeon;
-    for (const I of Object.values(S.inst)) for (const pt of I.parts) pt.im.visible = !hide;
+    if (hide !== S.hidden) {
+      S.hidden = hide;
+      for (const I of Object.values(S.inst)) for (const pt of I.parts) pt.im.visible = !hide;
+    }
     if (hide) return;
     const p = game.p;
     for (const v of S.views.values()) {
-      if (Math.hypot(p.x - v.o.x, p.z - v.o.z) > FAR) continue;
+      if (Math.hypot(p.x - v.o.x, p.z - v.o.z) > FAR) { v.groundY = null; continue; }
+      const y = ctx.Y ? ctx.Y(v.o.x, v.o.z) : 0;
+      const yMoved = v.groundY == null || Math.abs(v.groundY - y) > 0.01;
+      if (yMoved) v.groundY = y;
       const d = ((v.yaw - v.gunYaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-      if (Math.abs(d) < 1e-3 && v.kick <= 0 && !v.fresh) continue;
-      v.gunYaw += d * Math.min(1, dt * 10);
-      v.kick = Math.max(0, v.kick - dt * 8);
-      v.fresh = false;
-      writeInst(v);
+      const spin = Math.abs(d) >= 1e-3 || v.kick > 0 || v.fresh;
+      if (!spin && !yMoved) continue;
+      if (spin) {
+        v.gunYaw += d * Math.min(1, dt * 10);
+        v.kick = Math.max(0, v.kick - dt * 8);
+        v.fresh = false;
+      }
+      writeInst(v, !yMoved);
     }
   }
 
@@ -467,21 +620,43 @@
     if (isFuture() !== !!S.future) setFuture(isFuture());
     if (S.future) return;
     const t0 = performance.now();
-    try { step(dt); } finally { const ms = performance.now() - t0; S.ms = S.ms == null ? ms : S.ms * 0.95 + ms * 0.05; S.msMax = Math.max(S.msMax || 0, ms); }
+    const mark = !!window.TERRA_PERF;
+    if (mark) performance.mark('terra-defense-start');
+    try { step(dt); } finally {
+      const ms = performance.now() - t0;
+      S.lastMs = ms;
+      S.ms = S.ms == null ? ms : S.ms * 0.95 + ms * 0.05;
+      S.msMax = Math.max(S.msMax || 0, ms);
+      if (mark) {
+        performance.mark('terra-defense-end');
+        performance.measure('terra-defense', 'terra-defense-start', 'terra-defense-end');
+        performance.clearMarks('terra-defense-start');
+        performance.clearMarks('terra-defense-end');
+        performance.clearMeasures('terra-defense');
+      }
+    }
   }
   function step(dt) {
     onSession();
     if (!S.pool) S.pool = makePool();
-    if (S.dirty || S.baseRef !== game.p.base || S.baseCount !== game.p.base?.length) {
-      S.baseRef = game.p.base; S.baseCount = game.p.base?.length; syncViews(); emit('base');
+    const base = game.p.base;
+    if (S.dirty || !baseSame(base)) {
+      rememberBase(base);
+      S.turretList = turrets();
+      cacheTowers();
+      syncViews();
+      emit('base');
     }
+    applyCastShadows();
     const live = game.state === 'play' && !game.world?.inDungeon && !game._coopGuest && game.net?.role !== 'guest';
     if (live) {
       S.acc += dt;
       let n = 0;
       while (S.acc >= TICK && n++ < 4) {
         S.acc -= TICK;
-        for (const o of turrets()) tickTurret(o, S.views.get(idOf(o)));
+        rebuildEnemyGrid();
+        const list = S.turretList || turrets();
+        for (let i = 0; i < list.length; i++) tickTurret(list[i], S.views.get(idOf(list[i])));
       }
       S.supplyAcc += dt;
       if (S.supplyAcc >= 1) { S.supplyAcc = 0; planTrips(); }
@@ -627,7 +802,13 @@
       const res = campRes(); if (!res) return no('no-camp');
       return tx('deposit', { mutate: () => { inv[item] -= put; res[item] = (res[item] || 0) + put; return { item, amount: put }; } });
     },
-    _debug: () => ({ ms: +(S.ms || 0).toFixed(3), msMax: +(S.msMax || 0).toFixed(2), trips: S.trips.size, pool: S.pool?.list.length || 0, poolMax: S.pool?.n || 0, views: S.views.size, stats: { ...S.stats } })
+    _debug: () => ({
+      ms: +(S.ms || 0).toFixed(3), msMax: +(S.msMax || 0).toFixed(2), lastMs: S.lastMs == null ? null : +S.lastMs.toFixed(3),
+      trips: S.trips.size, pool: S.pool?.list.length || 0, poolMax: S.pool?.n || 0, views: S.views.size,
+      slots: (S.turretList || []).map((o) => ({ t: o.t, dk: dkOf(o), x: o.x, z: o.z, r: o.r || 0, lvl: o.lvl || 0 })),
+      towers: (S.towers || []).map((h) => ({ t: h.t, x: h.x, z: h.z })),
+      searches: S.searches || 0, losFast: S.losFast || 0, losFull: S.losFull || 0, mismatch: S.mismatch || 0, stats: { ...S.stats }
+    })
   };
   window.terraDefense = api;
 

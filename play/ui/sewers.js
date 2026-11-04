@@ -7,6 +7,7 @@ import { installMoscowSignal } from './moscow-signal.js';
 import { installMoscowScout } from './moscow-scout.js';
 import { installSewerNavigation } from './sewer-navigation.js';
 import { buildSewerLab, LAB_TERMINAL } from './sewer-lab.js';
+import { installMetroTransition } from './metro-entrance.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
  */
@@ -83,6 +84,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     if (descriptor?.name===ENTRANCE.name && descriptor.key==='12,-10' && descriptor.seed==='12,-10' && descriptor.theme==='metro') Object.assign(descriptor,{theme:'metro',sewer:true,flood:false,boss:null});
     return transition.call(this,descriptor,...args);
   };
+  installMetroTransition(game);
   const useEntrance=game.useEntrance;
   game.useEntrance=function(entry,...args) {
     const ours=entry?.name===ENTRANCE.name&&entry.x===ENTRANCE.x&&entry.z===ENTRANCE.z&&['metro','sewer'].includes(entry.kind);
