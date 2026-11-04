@@ -124,5 +124,317 @@
       "url": "https://dejavu-fonts.github.io"
     }
   ],
-  "note": "Образ — фанатская отсылка к Рафаэлю (TMNT) по решению владельца проекта; логотипы и ассеты франшизы не используются."
+  "note": "Образ — фанатская отсылка к Рафаэлю (TMNT) по решению владельца проекта; логотипы и ассеты франшизы не используются.",
+  "lab": {
+    "id": "sewer_lab",
+    "name": "Объект 7 · НИИ «Полынь» — набор лаборатории",
+    "file": "lab/lab_kit.glb",
+    "sha256": "953e8889a631d1a4af7e84b5944e707f3aac0da112ed7a65038c38f9ba697866",
+    "bytes": 388640,
+    "connect": "window.TERRA_ASSETS.sewer_lab='url:assets/sewer/lab/lab_kit.glb'; узлы: game.glb.sewer_lab.src.getObjectByName('vat').clone() (не make(): Ke масштабирует по высоте)",
+    "units": "meters",
+    "up": "+Y",
+    "forward": "+Z (лицо модуля смотрит в комнату)",
+    "grid_m": 4,
+    "floor_y": 0,
+    "fits": "комната 16×16 из play/ui/sewers.js (#10): 4 модуля по 4 м на сторону; стены там толщиной 0,4 м по центру границы, поэтому лицо vault_4m/bulkhead ставить на 0,2 м внутрь от границы",
+    "triangles": 6471,
+    "materials": {
+      "lab_brick": "тайл 512² + normal 512² (2×2 м)",
+      "lab_concrete": "тайл 512² (2×2 м)",
+      "lab_props": "атлас 1024² (запечён)",
+      "lab_decals": "decals 1024², alphaMode MASK",
+      "lab_glow_teal": "emissive",
+      "lab_glow_warm": "emissive ×3 (KHR_materials_emissive_strength)",
+      "lab_glass": "alphaMode BLEND, opacity 0,22"
+    },
+    "roughness_metalness": "во всех материалах уже roughness 1 / metalness 0 — как принудительно ставит игра",
+    "compression": [
+      "EXT_meshopt_compression",
+      "KHR_mesh_quantization",
+      "EXT_texture_webp",
+      "KHR_materials_emissive_strength"
+    ],
+    "nodes": {
+      "vault_4m": {
+        "triangles": 560,
+        "bbox": {
+          "min": [
+            -2.0,
+            0.0,
+            -0.45
+          ],
+          "max": [
+            2.0,
+            3.42,
+            0.9
+          ]
+        },
+        "materials": [
+          "lab_concrete",
+          "lab_brick",
+          "lab_props"
+        ],
+        "note": "стена коллектора 4 м: кирпич на бетонном цоколе, пилястры, пята свода (срезана на 3,4 м под камеру сверху), труба, кабели. Лицо +Z, задняя грань z=−0,45"
+      },
+      "bulkhead": {
+        "triangles": 818,
+        "bbox": {
+          "min": [
+            -2.0,
+            0.0,
+            -0.5
+          ],
+          "max": [
+            2.0,
+            3.4,
+            0.201
+          ]
+        },
+        "materials": [
+          "lab_concrete",
+          "lab_props",
+          "lab_decals",
+          "lab_glow_warm"
+        ],
+        "note": "бетонная переборка 4 м с круглым проёмом Ø2,1 м (центр на высоте 1,4 м), стальное кольцо, разметка, таблички RU/CN, лампа-маячок. Лицо +Z, толщина 0,5 м назад"
+      },
+      "hermodoor": {
+        "triangles": 1398,
+        "bbox": {
+          "min": [
+            -0.048,
+            0.29,
+            -0.0
+          ],
+          "max": [
+            2.28,
+            2.51,
+            0.493
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_glow_teal",
+          "lab_glass",
+          "lab_decals"
+        ],
+        "note": "круглая гермодверь Ø2,22 м: иллюминатор, штурвал, петли, табличка «ГЕРМОЗОНА / 隔离区». Начало координат — ось петель; закрыта при той же rotation, что у bulkhead, позиция = bulkhead.localToWorld(−1,17, 0, 0); открывается поворотом rotation.y на −90…−110° (в комнату)"
+      },
+      "vat": {
+        "triangles": 874,
+        "bbox": {
+          "min": [
+            -0.5,
+            0.0,
+            -0.5
+          ],
+          "max": [
+            0.5,
+            2.7,
+            0.505
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_decals",
+          "lab_glass",
+          "lab_glow_teal"
+        ],
+        "note": "колба-культиватор Ø1 м, 2,7 м: светящийся штамм, пузыри, кольцо подсветки на крышке, этикетка Ambrala «образец 01»"
+      },
+      "vat_broken": {
+        "triangles": 375,
+        "bbox": {
+          "min": [
+            -0.69,
+            -0.039,
+            -0.813
+          ],
+          "max": [
+            1.33,
+            1.471,
+            1.13
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_decals",
+          "lab_glass",
+          "lab_glow_teal"
+        ],
+        "note": "разбитая колба: осколки, лужа штамма, сорванная крышка, наросты, этикетка «образец 03»"
+      },
+      "lab_table": {
+        "triangles": 498,
+        "bbox": {
+          "min": [
+            -0.9,
+            0.0,
+            -0.4
+          ],
+          "max": [
+            0.9,
+            1.5,
+            0.4
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_glow_teal",
+          "lab_glass",
+          "lab_decals"
+        ],
+        "note": "лабораторный стол 1,8×0,8 м: терминал, штатив с пробирками, колбы, бумаги, щиток с табличкой"
+      },
+      "crate_bio": {
+        "triangles": 116,
+        "bbox": {
+          "min": [
+            -0.435,
+            0.0,
+            -0.33
+          ],
+          "max": [
+            0.435,
+            0.62,
+            0.33
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_decals"
+        ],
+        "note": "ящик 0,8×0,6×0,6 м: жёлтая этикетка «БИОМАТЕРИАЛ / 生物材料» на крышке и спереди, логотип Ambrala"
+      },
+      "growth_cluster": {
+        "triangles": 1392,
+        "bbox": {
+          "min": [
+            -0.51,
+            -0.107,
+            -0.746
+          ],
+          "max": [
+            0.639,
+            0.572,
+            0.632
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_glow_teal"
+        ],
+        "note": "грибковый нарост ~1,2 м со светящимися бирюзовыми шляпками (пол; можно перевернуть на свод/стену)"
+      },
+      "lamp_cage": {
+        "triangles": 440,
+        "bbox": {
+          "min": [
+            -0.111,
+            -0.27,
+            -0.0
+          ],
+          "max": [
+            0.111,
+            0.61,
+            0.431
+          ]
+        },
+        "materials": [
+          "lab_props",
+          "lab_glow_warm"
+        ],
+        "note": "лампа-«груша» в сетке. Начало координат — точка крепления к стене, лампа выступает в +Z и вниз; ставить на высоту ~2,6 м, PointLight в (0, −0,15, 0,32)"
+      }
+    },
+    "decals": {
+      "embedded": "текстура материала lab_decals внутри lab/lab_kit.glb (отдельного файла нет)",
+      "size": [
+        1024,
+        1024
+      ],
+      "rects_px": {
+        "object7": [
+          0,
+          0,
+          1024,
+          320
+        ],
+        "biohazard": [
+          0,
+          320,
+          512,
+          256
+        ],
+        "no_entry": [
+          512,
+          320,
+          512,
+          256
+        ],
+        "hermozone": [
+          0,
+          576,
+          512,
+          192
+        ],
+        "vat_label": [
+          512,
+          576,
+          512,
+          256
+        ],
+        "crate_label": [
+          0,
+          768,
+          512,
+          256
+        ],
+        "logo": [
+          512,
+          832,
+          192,
+          192
+        ],
+        "vat_label_03": [
+          704,
+          832,
+          320,
+          192
+        ]
+      },
+      "texts": {
+        "object7": "ОБЪЕКТ 7 · НИИ «ПОЛЫНЬ» / 第7号设施 · AMBRALA 分部 (объект № 7 · филиал Ambrala)",
+        "biohazard": "БИОЛОГИЧЕСКАЯ ОПАСНОСТЬ / 生物危害",
+        "no_entry": "ВХОД ВОСПРЕЩЁН / 禁止入内; ТОЛЬКО ДЛЯ ПЕРСОНАЛА / 仅限工作人员",
+        "hermozone": "ГЕРМОЗОНА / 隔离区 (зона изоляции)",
+        "vat_label": "AMBRALA 安布拉拉 · ШТАММ «ПОЛЫНЬ-7» / 毒株 P-7 · 样本 01 (штамм P-7, образец 01)",
+        "vat_label_03": "то же, образец 03",
+        "crate_label": "БИОМАТЕРИАЛ · ХРАНИТЬ ПРИ −20 °C / 生物材料 · 储存温度 −20 °C",
+        "logo": "логотип Ambrala (шестигранник, двойной шеврон, точка)"
+      }
+    },
+    "licenses": [
+      {
+        "part": "вся геометрия, текстуры, логотип Ambrala, таблички",
+        "author": "команда «Терры»",
+        "license": "© 2026 Команда «Терры» (см. LICENSE)",
+        "source": "tools/art/sewer_lab/"
+      },
+      {
+        "part": "шрифт надписей на табличках (растеризован в текстуру табличек)",
+        "author": "Adobe / Google — Noto Sans CJK SC Bold",
+        "license": "SIL Open Font License 1.1",
+        "url": "https://github.com/notofonts/noto-cjk"
+      },
+      {
+        "part": "знак ☣ на табличках",
+        "author": "DejaVu Sans Bold",
+        "license": "Bitstream Vera / DejaVu (свободная)",
+        "url": "https://dejavu-fonts.github.io"
+      }
+    ],
+    "note": "Ambrala, «Объект 7» и НИИ «Полынь» вымышлены; логотип собственный, не копия Umbrella. Реальных организаций и городов в надписях нет."
+  }
 }
