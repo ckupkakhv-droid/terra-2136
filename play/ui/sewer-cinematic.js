@@ -16,7 +16,9 @@ export function showRecording(game, message, options = {}) {
   root.setAttribute('role', 'dialog');
   root.setAttribute('aria-modal', 'true');
   root.setAttribute('aria-labelledby', 'recordingTitle');
+  root.dataset.presentation=options.presentation==='terminal'?'terminal':options.subject?'encounter':'recording';
   root.innerHTML = '<div class="recordingLetterbox"></div><div class="recordingCard scroll"><small>НАЙДЕННАЯ ЗАПИСЬ · ЮЖНЫЙ КОЛЛЕКТОР</small><h2 id="recordingTitle"></h2><p id="recordingText"></p><div class="recordingControls"><span id="recordingStep"></span><button type="button" id="recordingSkip">Пропустить</button><button type="button" id="recordingNext">Далее</button></div></div><div class="recordingLetterbox"></div>';
+  if(root.dataset.presentation==='terminal') root.innerHTML = '<div class="recordingCard terminalChassis"><header class="terminalHousing"><b>ПОЛЫНЬ <span>П–07</span></b><span class="terminalLeds" aria-hidden="true"><i></i><i></i><i></i></span></header><div class="terminalBezel"><div class="terminalScreen scroll"><div class="terminalScreenHeader"><small>ОБЪЕКТ 7 · ЛОКАЛЬНЫЙ АРХИВ</small><span>АВАРИЙНОЕ ПИТАНИЕ</span></div><h2 id="recordingTitle"></h2><p id="recordingText"></p><div class="terminalScreenFooter"><span>АРХИВ / <span id="recordingStep"></span></span><span class="terminalCursor" aria-hidden="true">▂</span></div></div></div><footer class="terminalDeck"><span class="terminalAssetTag">ИНВ. 07–2136<br>ГЕРМОЗОНА</span><div class="recordingControls"><button type="button" id="recordingSkip">Закрыть</button><button type="button" id="recordingNext">Далее</button></div></footer></div>';
   if(options.heading)root.querySelector('small').textContent=options.heading;
   if(options.skipLabel)root.querySelector('#recordingSkip').textContent=options.skipLabel;
   const clearInput = () => {

@@ -192,3 +192,80 @@ body:has(#sewerRecording) #touch{visibility:hidden!important}
 @media (max-width: 480px) {
   #campPanel [data-defense-turrets] .defenseWide .campPrimaryAction { flex-grow: 1; }
 }
+
+/* Archive hardware and cinematic speech have different material languages. */
+#sewerRecording[data-presentation="terminal"] {
+  --crt-ink:#b9d9a2; --crt-muted:#8fa97d; --crt-dark:#0c160e;
+  justify-content:center; align-items:center;
+  background:radial-gradient(ellipse at center,#07110973,#020504e6);
+}
+#sewerRecording .terminalChassis {
+  position:relative; width:min(760px,100%); max-height:calc(100dvh - var(--st) - var(--sb));
+  padding:18px; overflow:visible; border:2px solid #4d5448; border-radius:18px 18px 10px 10px;
+  color:#c3bba2; background:linear-gradient(115deg,#5a6051 0%,#343d33 18%,#222b25 70%,#424b3e);
+  box-shadow:inset 0 2px 2px #abb29760,inset 0 -5px 7px #111a12,0 25px 70px #000c;
+}
+.terminalChassis::before,.terminalChassis::after {
+  content:"✕"; position:absolute; bottom:9px; font:12px monospace; color:#101810;
+  width:14px; height:14px; border-radius:50%; text-align:center;
+  background:linear-gradient(135deg,#939780,#3e483d); box-shadow:0 1px #87917c;
+}
+.terminalChassis::before{left:7px}.terminalChassis::after{right:7px}
+.terminalHousing { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 8px 14px; }
+.terminalHousing b { font-size:19px; letter-spacing:.16em; color:#d7d0ba; text-shadow:0 1px #000; }
+.terminalHousing b span { display:inline-block; margin-left:12px; font:11px monospace; color:#b9baa6; }
+.terminalLeds { display:flex; gap:10px; padding:8px; border:1px solid #151e17; border-radius:3px; background:#283026; }
+.terminalLeds i { width:6px; height:6px; border-radius:50%; background:#21291d; box-shadow:inset 0 1px 3px #000; }
+.terminalLeds i:first-child { background:#b5d38b; box-shadow:0 0 7px #a9d87b88; }
+.terminalLeds i:last-child { background:#bf7947; box-shadow:0 0 5px #be633433; }
+.terminalBezel { padding:12px; border:1px solid #101810; border-radius:12px; background:linear-gradient(145deg,#141d16,#4c5547); box-shadow:inset 3px 4px 10px #000b,0 1px #808b7144; }
+.terminalScreen { position:relative; min-height:260px; max-height:52dvh; overflow:auto; touch-action:pan-y;
+  padding:20px 24px; border:1px solid #172818; border-radius:18px / 10px;
+  color:var(--crt-ink); background:radial-gradient(ellipse at 50% 15%,#263b24,#111e13 65%,#07100a);
+  box-shadow:inset 0 0 28px #000c; font:14px/1.8 "Courier New",monospace;
+}
+.terminalScreen::after { content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:repeating-linear-gradient(0deg,#0002 0px,#0002 1px,transparent 1px,transparent 4px); }
+.terminalScreenHeader { display:grid; gap:4px; padding-bottom:14px; border-bottom:1px dashed #81a36a55; }
+#sewerRecording .terminalScreenHeader small { font:10px/1.5 "Courier New",monospace; letter-spacing:.04em; color:var(--crt-muted); }
+.terminalScreenHeader>span { font-size:9px; color:#c9b27d; letter-spacing:.12em; }
+#sewerRecording .terminalScreen h2 { margin:18px 0 12px; font:700 clamp(18px,3vw,24px)/1.3 "Courier New",monospace; color:var(--crt-ink); text-shadow:0 0 9px #9ecc7733; }
+#sewerRecording .terminalScreen p { margin:0; font:inherit; color:var(--crt-ink); }
+.terminalScreenFooter { display:flex; justify-content:space-between; gap:12px; margin-top:24px; padding-top:9px; border-top:1px dashed #81a36a44; font-size:10px; color:var(--crt-muted); }
+.terminalCursor { color:#c9e8ab; }
+.terminalDeck { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:17px 10px 2px; }
+.terminalAssetTag { flex:none; padding:5px 7px; border:1px solid #a9a78b66; background:#b3af8e; color:#303b2d; font:9px/1.4 monospace; transform:rotate(-2deg); }
+.terminalDeck .recordingControls { justify-content:flex-end; }
+#sewerRecording .terminalDeck button { min-width:100px; border:1px solid #141e16; border-radius:4px;
+  background:linear-gradient(#a0a58d,#737e67 9%,#56634f 90%,#35422f); color:#eef0df;
+  box-shadow:0 4px 0 #131c14,inset 0 1px #d6dfb366; text-shadow:0 1px #263122; font:600 12px/1.3 monospace;
+}
+#sewerRecording .terminalDeck button:active { transform:translateY(2px); box-shadow:0 2px 0 #131c14,inset 0 2px 4px #0007; }
+#sewerRecording[data-presentation="encounter"] .recordingCard {
+  width:min(920px,100%); border:0; padding:16px 24px; box-shadow:none;
+  background:linear-gradient(90deg,#030705c9,#03070565,transparent)!important;
+}
+#sewerRecording[data-presentation="encounter"] .recordingCard h2 { margin:8px 0; font-size:clamp(17px,2.5vw,24px); letter-spacing:.08em; }
+#sewerRecording[data-presentation="encounter"] .recordingCard p { text-shadow:0 2px 4px #000; }
+#sewerRecording[data-presentation="encounter"] .recordingControls button { background:#0d151144; border-color:#b4a07b88; }
+@media(max-width:480px) {
+  #sewerRecording .terminalChassis { padding:12px; border-radius:12px; }
+  .terminalHousing { padding:2px 3px 10px; }
+  .terminalHousing b { font-size:16px; }
+  .terminalHousing b span { margin-left:4px; }
+  .terminalBezel { padding:8px; }
+  .terminalScreen { padding:16px; max-height:57dvh; min-height:230px; font-size:13px; line-height:1.7; }
+  .terminalDeck { gap:8px; padding:14px 3px 5px; }
+  .terminalDeck .recordingControls { gap:7px; }
+  #sewerRecording .terminalDeck button { min-width:90px; max-width:130px; padding:9px; }
+}
+@media(orientation:landscape) and (max-height:500px) {
+  #sewerRecording .terminalChassis { padding:9px 16px; }
+  .terminalHousing { padding:0 3px 5px; }
+  .terminalHousing b { font-size:14px; }
+  .terminalScreen { min-height:110px; max-height:48dvh; padding:10px 18px; font-size:13px; line-height:1.6; }
+  .terminalScreenHeader { padding-bottom:6px; }
+  #sewerRecording .terminalScreen h2 { margin:8px 0; font-size:18px; }
+  .terminalDeck { padding:7px 3px 3px; }
+  .terminalScreenFooter { margin-top:12px; }
+}
