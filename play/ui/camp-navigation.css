@@ -87,8 +87,8 @@
   .objectiveShortTitle { display: block; }
 }
 
-#sewerAction { position:fixed; z-index:25; left:50%; bottom:32%; transform:translateX(-50%); min-height:48px; max-width:calc(100vw - 24px); padding:12px 18px; background:#172821f2; border:1px solid #b3a174; color:#f1dfbd; border-radius:5px; font:inherit; }
-#sewerAction[hidden] { display:none; }
+#sewerAction, #moscowSignalAction { position:fixed; z-index:25; left:50%; bottom:32%; transform:translateX(-50%); min-height:48px; max-width:calc(100vw - 24px); padding:12px 18px; background:#172821f2; border:1px solid #b3a174; color:#f1dfbd; border-radius:5px; font:inherit; }
+#sewerAction[hidden], #moscowSignalAction[hidden] { display:none; }
 #sewerMap { z-index:35; }
 #sewerMap .win { touch-action:pan-y; overscroll-behavior:contain; width:min(580px,96vw); max-height:90dvh; overflow:auto; padding:16px; }
 #sewerMap h2 { position:sticky; top:0; z-index:1; background:#111b16; padding:4px 0; display:flex; justify-content:space-between; align-items:center; font-size:18px; }
@@ -106,6 +106,7 @@
 
 #sewerMap details { border-top:1px solid #73634b; }
 #sewerMap summary { min-height:48px; padding:12px 0; cursor:pointer; }
+#moscowRoute summary { color:#e4c48f; font-weight:600; }
 #sewerMap p { font-size:13px; line-height:1.5; }
 #sewerLayerButton { margin:0 0 8px; width:100%; min-height:44px; }
 #sewerRecording { position:fixed; inset:0; z-index:38; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(90deg,#060b09b8,#10151155,#060b09c9); padding:var(--st) var(--sr) var(--sb) var(--sl); }

@@ -3,6 +3,7 @@ import { drawSewerMap } from './sewer-map.js';
 import { installSewerReward } from './sewer-reward.js';
 import { installRaphael } from './sewer-raphael.js';
 import { showRecording } from './sewer-cinematic.js';
+import { installMoscowSignal } from './moscow-signal.js';
 import { installSewerNavigation } from './sewer-navigation.js';
 /* First sewer sector. Reuses protected native entrances and container persistence.
  * Pump state is per expedition; no new save schema or unique reward writes here.
@@ -19,6 +20,7 @@ export const LORE = [
 export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   if (!bridge?.Chunk || game.sewers) return;
   const reward=installSewerReward(game,bridge), raphael=installRaphael(game,bridge), rats=installSewerRats(game);
+  const moscowSignal=installMoscowSignal(game);
   let pumps = new Set(), currentPlayer = null, currentDungeon = null, seen = new Set(), warnedLocked=false;
   const active = () => game.dg?.sewer === true;
   const center = index => {
@@ -88,7 +90,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   game.world.scene.add(group);
   const action=document.createElement('button');action.id='sewerAction';action.type='button';action.hidden=true;document.body.append(action);
   const layer=document.createElement('section');layer.id='sewerMap';layer.className='modal hidden';layer.setAttribute('role','dialog');layer.setAttribute('aria-modal','true');layer.setAttribute('aria-label','Канализация · подземный слой');
-  layer.innerHTML='<div class="win"><h2>КАНАЛИЗАЦИЯ <button type="button" class="x" aria-label="Закрыть подземную карту">×</button></h2><p>Южный коллектор · одиночная вылазка</p><div id="sewerRoute"></div><p class="sewerHelp">Опасность: заражённые и особый охотник. Вход: 12, −10. Спускайтесь у люка на поверхности. Два насоса снижают давление воды до конца вылазки. Возврат — по лестнице в первом секторе.</p><div id="sewerJournal"></div></div>';
+  layer.innerHTML='<div class="win"><h2>КАНАЛИЗАЦИЯ <button type="button" class="x" aria-label="Закрыть подземную карту">×</button></h2><p>Южный коллектор · одиночная вылазка</p><div id="moscowRoute"></div><div id="sewerRoute"></div><p class="sewerHelp">Опасность: заражённые и особый охотник. Вход: 12, −10. Спускайтесь у люка на поверхности. Два насоса снижают давление воды до конца вылазки. Возврат — по лестнице в первом секторе.</p><div id="sewerJournal"></div></div>';
   layer.querySelector('.win').classList.add('scroll');
   const nativeMap=document.getElementById('wmap');
   nativeMap.querySelector('.win').append(layer);
@@ -103,6 +105,13 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     drawSewerMap(layer.querySelector('#sewerRoute'),CELLS,{seen,pumps,playerIndex});
     const journal=layer.querySelector('#sewerJournal');journal.replaceChildren();
     for (const [index,[title,text]] of LORE.entries()) {if(index && !seen.has([0,3,6,6][index]))continue;const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('p');s.textContent=title;p.textContent=text;d.append(s,p);journal.append(d);}
+    const moscowRoute=layer.querySelector('#moscowRoute');moscowRoute.replaceChildren();
+    if(moscowSignal.eligible()) {
+      const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('p');
+      s.textContent='Московский перехват';
+      p.textContent='Проверьте Радиопост Ноль к югу от стартовой области, в районе X≈24, Z≈124. Точное положение зависит от местности. У старого ящика можно повторно прочитать перехват.';
+      d.append(s,p);moscowRoute.append(d);
+    }
   }
   function closeMap(restoreFocus=true) {
     const context=mapContext;mapContext=null;
@@ -177,6 +186,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
   };
   function updateSurfaceUI() {
     if(!game.p)return;
+    moscowSignal.update();
     navigation.sync();
     if(currentPlayer!==game.p){currentPlayer=game.p;pumps=new Set();seen=new Set();}
     group.visible=!game.world.inDungeon&&Math.hypot(game.p.x-ENTRANCE.x,game.p.z-ENTRANCE.z)<40;
