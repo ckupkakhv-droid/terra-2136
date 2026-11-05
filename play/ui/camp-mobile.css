@@ -53,14 +53,17 @@
 #campPanel .campStatusBadge[data-tone="bad"] { color: var(--camp-bad); }
 #campPanel .campStatusBadge[data-tone="idle"] { color: var(--camp-idle); }
 #campPanel :is(.campInfoButton, .campPrimaryAction) { min-width: var(--camp-tap); min-height: var(--camp-tap); }
+#campPanel .campInfoBackdrop { position: absolute; z-index: 5; inset: 0; background: #060805a6; }
 #campPanel .campInfoSheet {
-  position: absolute; z-index: 5; left: 0; right: 0; bottom: 0; max-height: 70%; overflow: auto; overscroll-behavior: contain;
+  position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; max-height: 70%; display: flex; flex-direction: column; overflow: hidden;
   padding: 8px max(12px, var(--sr, 12px)) max(12px, var(--sb, 12px)) max(12px, var(--sl, 12px));
   border-top: 1px solid #b58b55; border-radius: 14px 14px 0 0; background: #141917; color: var(--camp-ink);
 }
-#campPanel .campInfoSheet > header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#campPanel .campInfoSheet > header { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 8px; }
+#campPanel .campInfoSheet > header > strong { min-width: 0; overflow-wrap: anywhere; }
+#campPanel .campInfoSheet > header > button { flex-shrink: 0; }
 #campPanel .campInfoClose { min-width: var(--camp-tap); min-height: var(--camp-tap); display: grid; place-items: center; background: transparent; border: 1px solid var(--camp-line); border-radius: 10px; color: inherit; }
-#campPanel .campInfoSheet__body { line-height: 1.5; font-size: 13px; overflow-wrap: anywhere; }
+#campPanel .campInfoSheet__body { min-height: 0; overflow: auto; overscroll-behavior: contain; line-height: 1.5; font-size: 13px; overflow-wrap: anywhere; }
 #campPanel .win { position: relative; }
 
 /* ---------- Портрет телефона: вкладки внизу, «В игру» в панели под большим пальцем ---------- */

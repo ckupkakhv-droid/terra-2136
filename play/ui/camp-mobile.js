@@ -186,8 +186,20 @@
     media.addEventListener?.('change', decorate);
 
     let sheet = null;
+    let sheetBackdrop = null;
+    let sheetReturn = null;
+    const sheetBackground = new Map();
     function openInfo(title, content) {
-      closeInfo();
+      const origin = sheet?.contains(document.activeElement) ? sheetReturn : document.activeElement;
+      closeInfo(false);
+      const win = panel.querySelector('.win');
+      if (!win || panel.classList.contains('hidden')) return null;
+      sheetReturn = panel.contains(origin) ? origin : null;
+      sheetBackdrop = document.createElement('div');
+      sheetBackdrop.className = 'campInfoBackdrop';
+      sheetBackdrop.setAttribute('aria-hidden', 'true');
+      sheetBackdrop.addEventListener('pointerdown', event => event.stopPropagation());
+      sheetBackdrop.addEventListener('click', () => closeInfo());
       sheet = document.createElement('section');
       sheet.className = 'campInfoSheet';
       sheet.setAttribute('role', 'dialog');
@@ -211,13 +223,44 @@
       sheet.append(head, box);
       sheet.addEventListener('keydown', event => {
         if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeInfo(); }
+        if (event.key === 'Tab') {
+          const controls = [...sheet.querySelectorAll('button, [href], input, select, textarea, [tabindex]')]
+            .filter(node => !node.disabled && node.tabIndex >= 0 && !node.closest('[inert]') &&
+              node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden');
+          const first = controls[0], last = controls[controls.length - 1];
+          if (!first || (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first)?.focus();
+          }
+          event.stopPropagation();
+        }
       });
-      panel.querySelector('.win')?.append(sheet);
+      for (const child of win.children) {
+        sheetBackground.set(child, child.inert);
+        child.inert = true;
+      }
+      win.append(sheetBackdrop, sheet);
       close.focus({preventScroll: true});
       return sheet;
     }
-    function closeInfo() { sheet?.remove(); sheet = null; }
-    new MutationObserver(() => { if (panel.classList.contains('hidden')) closeInfo(); })
+    function closeInfo(restore = true) {
+      if (!sheet) return;
+      sheet.remove(); sheet = null;
+      sheetBackdrop?.remove(); sheetBackdrop = null;
+      for (const [node, wasInert] of sheetBackground) node.inert = wasInert;
+      sheetBackground.clear();
+      const origin = sheetReturn;
+      sheetReturn = null;
+      if (restore !== false && !panel.classList.contains('hidden')) {
+        const target = origin?.isConnected && !origin.disabled ? origin : tabs.querySelector('button.on');
+        target?.focus({preventScroll: true});
+      }
+    }
+    // Native refresh may replace the originating card. Do not keep a stale
+    // sheet or inert navigation after a section/session change.
+    panel.addEventListener('terra:camp-tab', () => closeInfo(false));
+    panel.addEventListener('terra:camp-refresh', () => closeInfo(false));
+    new MutationObserver(() => { if (panel.classList.contains('hidden')) closeInfo(false); })
       .observe(panel, {attributes: true, attributeFilter: ['class']});
 
     window.terraCampUI = Object.freeze({
