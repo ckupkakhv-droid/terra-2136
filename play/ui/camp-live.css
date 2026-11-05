@@ -1,5 +1,6 @@
 /* «Живой лагерь»: метки над постройками, контекстное меню, призрак стройки.
    Только CSS. Без backdrop-filter, веб-шрифтов и теней на прокрутке. */
+#campPanel .campLiveTarget:focus { outline: 2px solid #edc383; outline-offset: -2px; }
 #campLiveLayer, #campLiveMenu, #campLiveAim, #campLivePlace {
   font-family: inherit;
 }

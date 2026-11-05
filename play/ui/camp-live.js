@@ -375,14 +375,37 @@
     if (g.state === 'play') panel.open();
     panel.select(tab);
   }
-  function scrollTo(selector) {
-    const go = () => {
-      const node = document.querySelector(selector);
-      if (!node) return false;
-      node.scrollIntoView({ block: 'center', inline: 'nearest' });
-      return true;
-    };
-    if (!go()) requestAnimationFrame(go);
+  function openTarget(tab, selector, activate = false) {
+    const owner = session(), g = owner.game;
+    const native = g?.ui?.campPanel, root = native?.root;
+    if (!root) return;
+    openPanel(tab);
+    closeMenu();
+    const ready = () => game() === g && g.p === owner.player && g.world === owner.world &&
+      g.p?.alive && g.state === 'modal' && !g.world?.inDungeon && !g.dungeonTransition &&
+      !root.classList.contains('hidden') &&
+      native.tab === tab && (!window.terraCampUI || window.terraCampUI.tab === tab);
+    // Let the native section and its progressive enhancements finish first.
+    requestAnimationFrame(() => {
+      if (!ready()) return;
+      const node = root.querySelector(selector);
+      if (!node || node.closest('[inert]')) return;
+      if (activate && root.querySelector('#residentSearchInput')?.value) {
+        root.querySelector('.residentSearch button')?.click();
+      }
+      // Clearing search also updates the dossier's filtered paging order.
+      requestAnimationFrame(() => {
+        if (!ready() || !node.isConnected || !root.contains(node) || node.disabled ||
+            node.closest('[inert]') || !node.getClientRects().length) return;
+        if (activate) node.click();
+        else {
+          if (!node.hasAttribute('tabindex')) node.tabIndex = -1;
+          node.classList.add('campLiveTarget');
+          node.focus({ preventScroll: true });
+          node.scrollIntoView({ block: 'center', inline: 'nearest' });
+        }
+      });
+    });
   }
   function tell(result) {
     if (result?.ok) { closeMenu(); return; }
@@ -396,7 +419,7 @@
     if (item.kind === 'settler') {
       const run = (job, detail) => () => tell(g.camp?.assign?.(item.id, job, detail));
       return [
-        { label: 'Дело', run: () => { openPanel('settlers'); scrollTo(`[data-resident="${CSS.escape(item.id)}"]`); closeMenu(); } },
+        { label: 'Дело', run: () => openTarget('settlers', `[data-resident="${CSS.escape(item.id)}"]`, true) },
         { label: 'Отдых', run: run('idle') },
         { label: 'Дерево', run: run('gather:wood') },
         { label: 'Вода', run: run('gather:water') },
@@ -406,7 +429,7 @@
       const api = window.terraDefense;
       const order = (method) => () => { const result = api?.[method]?.(item.id); tell(result); if (result?.ok) closeMenu(); };
       return [
-        { label: 'Карточка', run: () => { openPanel('defense'); closeMenu(); } },
+        { label: 'Карточка', run: () => openTarget('defense', `[data-defense-id="${CSS.escape(item.id)}"]`) },
         { label: 'Починить', run: order('repair') },
         { label: 'Зарядить', run: order('reload') },
         { label: 'Улучшить', run: order('upgrade') },
@@ -421,7 +444,7 @@
       return list;
     }
     return [
-      { label: 'Чертёж', run: () => { openPanel('build'); scrollTo(`.campCard[data-building="${CSS.escape(item.id)}"]`); closeMenu(); } },
+      { label: 'Чертёж', run: () => openTarget('build', `.campCard[data-building="${CSS.escape(item.id)}"]`) },
       { label: 'Улучшить', run: () => tell(g.camp?.upgrade?.(item.id)) },
       { label: 'Жители', run: () => { openPanel('settlers'); closeMenu(); } },
     ];
