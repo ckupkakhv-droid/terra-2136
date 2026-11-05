@@ -280,10 +280,16 @@
         const t = panel.classList.contains('hidden') ? null : tab();
         const residents = body.querySelector(':scope > .campResidents');
         const card = t === 'settlers' && residents?.querySelector(':scope > .residentIdentityHead') ? residents : null;
+        // Native resident navigation reuses this root for the list and task
+        // targets. Dossier styles hide folds that the list needs for hiring.
+        residents?.classList.toggle('dossier', !!card);
         body.classList.toggle('deskDossier', !!card);
         body.classList.toggle('deskBuild', t === 'build');
-        if (t === 'settlers' && residents && !card) {
-          listOrder = [...residents.querySelectorAll('[data-resident]')].filter(e => e.getClientRects().length).map(e => e.dataset.resident);
+        const rows = residents?.querySelector(':scope > .residentRows');
+        // Task-target screens also use campResidents; only an actual list
+        // can replace the filtered order used by previous/next dossier.
+        if (t === 'settlers' && rows) {
+          listOrder = [...rows.querySelectorAll('[data-resident]')].filter(e => e.getClientRects().length).map(e => e.dataset.resident);
         }
         if (card) dossier(card);
         if (t === 'build') blueprints();

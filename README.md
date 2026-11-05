@@ -20,7 +20,7 @@
 
 **ТЕРРА** соединяет вылазки за припасами, развитие персонажа и управление поселением. Исследуй мир с видом сверху, выбирай снаряжение, назначай выжившим работу и готовь периметр к следующей атаке.
 
-[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.13](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.13) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
+[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.14](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.14) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
 
 ## Три стороны одной экспедиции
 
