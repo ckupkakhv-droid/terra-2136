@@ -15,8 +15,26 @@ export function installMetroArchitecture(bridge) {
     s.oy=this.g.oy=this.n.oy=ground;
     s.r=()=>.5;
     try {
-    // Weathered pavement, deep shadow and descending treads: visual only.
+    // Reuse the existing textured concrete slabs when the world kit is ready.
+    // Roll back the kit batches on failure, then keep the native pavement.
+    const previousKit=this.kb, lengths={};
+    for(const [key,batches] of Object.entries(previousKit||{}))
+      lengths[key]=batches.map(batch=>Object.fromEntries(['p','n','uv','c','i'].map(k=>[k,batch[k].length])));
+    const stats=globalThis.TERRA_KITS?.stats, placed=stats?.placed;
+    try {
+      if(typeof this.kp_!=='function') throw Error('kit unavailable');
+      for(const dx of [-2.25,2.25]) for(const dz of [-1.5,1.5])
+        if(!this.kp_('slab',x+dx,z+dz,0,1,{y:ground+.13,sink:0,tint:.84,sx:.35})) throw Error('slab unavailable');
+    } catch (_) {
+      for(const [key,batches] of Object.entries(this.kb||{})) {
+        if(!lengths[key]) delete this.kb[key];
+        else batches.forEach((batch,index)=>{for(const name of ['p','n','uv','c','i'])batch[name].length=lengths[key][index][name];});
+      }
+      if(!previousKit) delete this.kb;
+      if(Number.isFinite(placed))stats.placed=placed;
+    }
     s.box(x,0,z,6,.12,7,'#575b55');
+    // Deep shadow and descending treads: visual only.
     s.box(x,.015,z+.5,4,.06,5,'#131916');
     for(let i=0;i<7;i++) {
       const zz=z+2.35-i*.7,yy=.045+i*.025;
@@ -34,14 +52,32 @@ export function installMetroArchitecture(bridge) {
     }
     s.box(x,0,z-3.3,5.6,1.1,.4,'#66695f');
     s.box(x,1.08,z-3.3,5.8,.12,.55,'#999589');
-    // The back arch is open toward the actual interaction point at z+1.5.
+    // An open arch leaves the station approach and the existing interaction
+    // point unobstructed, with no extra collision geometry.
     for(const side of [-1,1]) {
-      s.box(x+side*2.15,1.1,z-3.1,.34,2.25,.4,'#535c52');
-      s.box(x+side*2.15,3.22,z-3.1,.5,.15,.55,'#8b8e7b');
+      s.box(x+side*2.15,1.1,z-3.1,.34,1.25,.4,'#535c52');
+      s.box(x+side*2.15,2.32,z-3.1,.48,.13,.55,'#8b8e7b');
+      // Weathered face plates and drain grates, all within old collision walls.
+      s.box(x+side*2.38,.23,z+.15,.045,.17,4.9,'#454b46');
+      for(const dz of [-2.05,-1.2,-.35,.5,1.35,2.2])
+        s.box(x+side*2.30,.14,z+dz,.14,.025,.045,'#282f2d');
     }
-    s.box(x,3.27,z-3.1,4.8,.28,.5,'#777a6c');
-    s.box(x,3.42,z-3.1,5,.08,.6,'#a5a08b');
-    for(const side of [-1,1]) s.add(L.cyl5,x+side*1.45,2.75,z-3.05,.045,1.9,.045,'#776f5c');
+    // A low, segmented steel-and-concrete arch frames the entrance. Reuses
+    // chunk batches and does not add lights, textures, colliders or RNG calls.
+    const sections=10, radius=2.15, spring=2.38, rise=.98;
+    for(let i=0;i<sections;i++) {
+      const a=i*Math.PI/sections,b=(i+1)*Math.PI/sections;
+      const ax=Math.cos(a)*radius,ay=spring+Math.sin(a)*rise;
+      const bx=Math.cos(b)*radius,by=spring+Math.sin(b)*rise;
+      const dx=bx-ax,dy=by-ay,length=Math.hypot(dx,dy),angle=-Math.atan2(dx,dy);
+      s.add(L.cyl5,x+(ax+bx)/2,(ay+by)/2,z-3.09,.17,length+.025,.17,'#85867a',0,0,angle,0);
+      s.add(L.cyl5,x+(ax+bx)/2,(ay+by)/2,z-2.98,.045,length+.025,.045,'#766e5a',0,0,angle,0);
+    }
+    // Small weathered warning strips keep the opening legible at game scale.
+    for(const side of [-1,1]) {
+      s.box(x+side*1.8,.88,z-2.96,.09,.8,.025,'#c18b43');
+      for(const y of [1.02,1.28,1.54]) s.box(x+side*1.8,y,z-2.94,.1,.065,.03,'#272d29');
+    }
     // Reuse the existing red route marker and sign atlas; no new textures.
     s.add(L.cyl5,x-3.2,1.8,z+3,.16,3.6,.16,'#5a5a52');
     this.g.add(L.sph,x-3.2,3.9,z+3,.46,.46,.46,'#b84732');
