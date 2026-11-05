@@ -163,3 +163,49 @@ export function installMetroTransition(game) {
     return result;
   };
 }
+
+/* Keep ordinary metro entrances legible without a floating octahedron. The
+ * existing batch still owns all interaction and non-metro markers. A shared
+ * ring mesh is used only when the surface and its height are available; if
+ * anything fails, the original marker remains visible. */
+const markerInstallations = new WeakSet();
+export function installMetroMarkers(game) {
+  const markers=game?.markers, original=markers?.sync, base=markers?.im;
+  const ring=game?.rings?.im, scene=game?.scene;
+  if (!markers || markerInstallations.has(markers) || typeof original!=='function' ||
+      !base?.isInstancedMesh || !ring?.geometry || !ring?.material || !scene) return;
+  let instances;
+  try {
+    instances=new base.constructor(ring.geometry,ring.material,markers.max);
+    instances.count=0;instances.frustumCulled=false;
+    instances.userData.terraMetroMarkers=true;
+    scene.add(instances);
+  } catch (_) { return; }
+  let placement=null,zero=null,tint=null;
+  markers.sync=function(renderMarker) {
+    const entries=game.world?.inDungeon ? [] : (game.world?.ents||[]);
+    let count=0;
+    const result=original.call(this,(item,matrix,color)=>{
+      renderMarker(item,matrix,color);
+      if(item.k!==2 || count>=markers.max || !entries.some(e=>
+        e.kind==='metro' && !e.sewer && e.x===item.x && e.z===item.z)) return;
+      try {
+        // Metro's entry is 1.5 m ahead of the fixed-height station footprint.
+        const ground=window.TERRA_H?.(item.x,item.z-1.5);
+        if(!Number.isFinite(ground)) return;
+        if(!placement) { placement=matrix.clone();zero=game.cam.position.clone().set(0,0,0);tint=color.clone(); }
+        placement.makeScale(1.05,1,1.05).setPosition(item.x,ground+.24,item.z);
+        instances.setMatrixAt(count,placement);
+        instances.setColorAt(count,tint.setRGB(.28,.09,.025));
+        count++;
+        // Only suppress the original after the replacement is ready.
+        matrix.scale(zero);
+      } catch (_) { /* Leave the native marker intact. */ }
+    });
+    instances.count=count;
+    instances.instanceMatrix.needsUpdate=true;
+    if(instances.instanceColor)instances.instanceColor.needsUpdate=true;
+    return result;
+  };
+  markerInstallations.add(markers);
+}

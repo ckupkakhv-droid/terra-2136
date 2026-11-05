@@ -26,6 +26,32 @@ with sync_playwright() as p:
  page.wait_for_function("game.world.ents.some(e=>e.kind==='metro'&&!e.sewer)",timeout=90000)
  entry=page.evaluate("game.world.ents.find(e=>e.kind==='metro'&&!e.sewer)")
  page.evaluate('e=>{game.p.x=e.x;game.p.z=e.z+2;game.camT=null;game.p.hp=game.p.maxHp=10000}',entry)
+ page.wait_for_function("game.scene.children.some(o=>o.userData.terraMetroMarkers && o.count>0)")
+ # The ordinary station replaces just its own native marker and shares the
+ # existing ring resources; the collector and resource markers stay intact.
+ marker=page.evaluate("""e=>{
+  const g=game, batch=g.scene.children.find(o=>o.userData.terraMetroMarkers);
+  const matrix=new g.cam.matrix.constructor(),scale=i=>{g.markers.im.getMatrixAt(i,matrix);return Math.hypot(matrix.elements[0],matrix.elements[1],matrix.elements[2])};
+  const entries=g.markers.items.map((item,i)=>({item,scale:scale(i)}));
+  return {count:batch.count,shared:batch.geometry===g.rings.im.geometry && batch.material===g.rings.im.material,
+   batches:g.scene.children.filter(o=>o.userData.terraMetroMarkers).length,entries,world:g.world.ents};
+ }""",entry)
+ assert marker['count']==1 and marker['shared'] and marker['batches']==1,marker
+ station=next(m for m in marker['entries'] if m['item']['k']==2 and m['item']['x']==entry['x'] and m['item']['z']==entry['z'])
+ collector=next(m for m in marker['entries'] if m['item']['k']==2 and m['item']['x']==12 and m['item']['z']==-10)
+ assert station['scale']==0 and collector['scale']>0,marker
+ assert all(m['scale']>0 for m in marker['entries'] if m['item']['k']!=2),marker
+ # A height-provider failure must restore the native marker rather than hide it.
+ fallback_marker=page.evaluate("""e=>{
+  const g=game,old=window.TERRA_H,batch=g.scene.children.find(o=>o.userData.terraMetroMarkers);
+  try {window.TERRA_H=()=>{throw Error('simulated failure')};
+   g.markers.sync((item,m,c)=>{m.makeScale(1,1,1).setPosition(item.x,1,item.z);c.setRGB(1,1,1)});
+   const i=g.markers.items.findIndex(item=>item.k===2&&item.x===e.x&&item.z===e.z),m=new g.cam.matrix.constructor();
+   g.markers.im.getMatrixAt(i,m);return {count:batch.count,scale:Math.hypot(m.elements[0],m.elements[1],m.elements[2])};
+  } finally {window.TERRA_H=old}
+ }""",entry)
+ assert fallback_marker=={'count':0,'scale':1},fallback_marker
+ page.wait_for_function("game.scene.children.find(o=>o.userData.terraMetroMarkers).count===1")
  page.wait_for_timeout(800);page.screenshot(path=str(out/'metro-desktop.png'))
  page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(500);page.screenshot(path=str(out/'metro-portrait.png'))
  # Inspect three deterministic points of the actual camera wrapper. The scene
@@ -67,6 +93,7 @@ with sync_playwright() as p:
  page.wait_for_function('key=>game.dg?.key===key && !game.dungeonTransition',arg=result['key'],timeout=90000)
  page.wait_for_function('!document.querySelector(".metroTransition") && game.post.render===window.__meterRender')
  assert page.evaluate('game.cam===window.__nativeCamera && !!game.world.inDungeon')
+ page.wait_for_function('game.scene.children.find(o=>o.userData.terraMetroMarkers).count===0')
  assert page.evaluate('!!window.__metroTemporaryRendered'), 'Render did not use the temporary camera'
  print('Entered metro and camera restored',flush=True)
  ex=page.evaluate('''()=>{game.post.render=window.__oldMetroRender;const ok=game.exitDungeon();return {ok,state:game.state,alive:game.p.alive,transition:!!game.dungeonTransition};}''');print('Exit requested',ex,flush=True);assert ex['ok'] is True,ex;page.wait_for_function('!game.dg && !game.dungeonTransition')
