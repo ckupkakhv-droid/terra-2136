@@ -78,7 +78,8 @@ with sync_playwright() as p:
   let clock=1000,frames=[];Object.defineProperty(performance,'now',{configurable:true,value:()=>clock});
   post.render=function(scene,cam){
    const direction=cam.getWorldDirection(cam.position.clone());
-   const target=cam.position.clone().set(e.x,(window.TERRA_H?.(e.x,e.z-1.5)||0)+.7,e.z-1.5).sub(cam.position).normalize();
+   const profile=TERRA_SEWER_BRIDGE.metroProfileAt?.(e.x,e.z-1.5);
+   const target=cam.position.clone().set(e.x,profile?profile.ground-.83:(window.TERRA_H?.(e.x,e.z-1.5)||0)+.7,e.z-1.5).sub(cam.position).normalize();
    frames.push({position:cam.position.toArray(),rotation:cam.quaternion.toArray(),alignment:direction.dot(target),native:cam===g.cam});
   };
   try{

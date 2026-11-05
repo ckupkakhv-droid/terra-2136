@@ -1,9 +1,10 @@
 /* Surface architecture uses the native chunk builder and its shared instanced
  * geometries. Entries, collision and fast-travel identifiers stay native. */
+import { makeMetroDescent, buildMetroDescent, finishMetroDescents, installMetroDescentInteraction } from './metro-descent.js';
 const stationSupports = new WeakMap();
 function planStationSupport(chunk,x,z,oldGround) {
   const grid=chunk.T?.xs,ox=chunk.ox,oz=chunk.oz;
-  if(!Array.isArray(grid)||!Array.isArray(chunk.pads)||typeof chunk.terrain!=='function')return null;
+  if(chunk.inDg||!Array.isArray(grid)||!Array.isArray(chunk.pads)||typeof chunk.terrain!=='function')return null;
   const pad={x0:x-3,z0:z-3.5,x1:x+3,z1:z+3.5,y:oldGround};
   // Keep the border and its neighbouring height samples untouched, including
   // the samples used for stitched terrain normals in the next chunk.
@@ -112,7 +113,7 @@ function settlePaving(chunk,ranges) {
   }
 }
 
-function foundation(builder,x,y,z,height) {
+function foundation(builder,x,y,z,height,opening=null) {
   // A small chamfer catches light at the foundation edge without another
   // material, mesh or collider. Coordinates passed to tri are already world-space.
   const lower=[[-3,0,-3.5],[-3,0,3.5],[3,0,3.5],[3,0,-3.5]];
@@ -138,7 +139,13 @@ function foundation(builder,x,y,z,height) {
     if(builder.m)for(let i=start;i<builder.m.length;i++)builder.m[i]=6; // native concrete atlas
   }
   function quad(a,b,c,d,tone) {triangle(a,b,c,tone);triangle(a,c,d,tone);}
-  quad(...top,1);
+  if(!opening)quad(...top,1);
+  else {
+    const left=opening.left-x,right=opening.right-x,back=opening.rear-z,front=opening.front-z;
+    const deck=(a,b,c,d)=>quad([a,.12,c],[a,.12,d],[b,.12,d],[b,.12,c],1);
+    deck(-2.955,2.955,front,3.455);deck(-2.955,2.955,-3.455,back);
+    deck(-2.955,left,back,front);deck(right,2.955,back,front);
+  }
   for(let i=0;i<4;i++) {
     const next=(i+1)%4;
     quad(lower[i],lower[next],shoulder[next],shoulder[i],.84);
@@ -152,6 +159,21 @@ export function installMetroArchitecture(bridge) {
   if (!proto || installed.has(proto) || !L?.cyl5 || !L?.sph || !L?.box) return;
   const original=proto.metro;
   if (typeof original!=='function') return;
+  const prop=proto.kp;
+  if(typeof prop==='function')proto.kp=function(kind,x,z,rotation,height,collision=0,...rest) {
+    const openings=stationSupports.get(this)?.map(s=>s.descent).filter(Boolean);
+    if(kind!=='pallet'||collision>0||!openings?.length)return prop.apply(this,arguments);
+    const builder=height<1.3?this.dt:this.s,cols=this.cols.length;
+    const lengths=Object.entries(builder).filter(([,value])=>Array.isArray(value)).map(([key,value])=>[key,value.length]);
+    const result=prop.apply(this,arguments);
+    // Consume the original seeded samples, but do not leave decorative boards
+    // suspended over the opening. Props with physical collisions stay intact.
+    const c=Math.abs(Math.cos(rotation||0)),s=Math.abs(Math.sin(rotation||0));
+    const w=(c*result?.w+s*result?.d)/2,d=(s*result?.w+c*result?.d)/2;
+    if(result&&this.cols.length===cols&&openings.some(p=>x+w>p.left&&x-w<p.right&&z+d>p.rear&&z-d<p.front))
+      for(const [key,length] of lengths)builder[key].length=length;
+    return result;
+  };
   const terrain=proto.terrain;
   if(typeof terrain==='function')proto.terrain=function(...args) {
     const supports=stationSupports.get(this);
@@ -163,6 +185,8 @@ export function installMetroArchitecture(bridge) {
       }
       const result=terrain.apply(this,args);
       for(const support of added)settlePaving(this,support.paving);
+      finishMetroDescents(this,added.map(s=>s.descent).filter(Boolean),
+        supports.filter(s=>!added.includes(s)).map(s=>s.descent).filter(Boolean));
       return result;
     } finally {
       // Pads are needed only while generating terrain. Keep the native list
@@ -178,6 +202,8 @@ export function installMetroArchitecture(bridge) {
     // fills the ground edge; restore all shared builders before other scenery.
     const saved=[s.oy,this.g.oy,this.n.oy], random=s.r;
     const support=planStationSupport(this,x,z,s.Y(x,z)),ground=support?support.pad.y:s.Y(x,z);
+    const descent=support&&bridge.metroHeightVersion===1?makeMetroDescent(x,z,ground):null;
+    if(descent)support.descent=descent;
     s.oy=this.g.oy=this.n.oy=ground;
     s.r=()=>.5;
     try {
@@ -228,24 +254,27 @@ export function installMetroArchitecture(bridge) {
       if(!previousKit) delete this.kb;
       if(Number.isFinite(placed))stats.placed=placed;
     }
-    foundation(s,x,ground,z,(xx,zz)=>this.hAt(xx,zz));
-    // Deep shadow and descending treads: visual only.
+    foundation(s,x,ground,z,(xx,zz)=>this.hAt(xx,zz),descent);
+    // Build matching geometry and walking heights when the native cache adapter is present.
+    if(descent)buildMetroDescent(this,L,descent);
+    else {
     s.box(x,.015,z+.5,4,.06,5,'#131916');
     for(let i=0;i<7;i++) {
       const zz=z+2.35-i*.7,yy=.045+i*.025;
       s.box(x,yy,zz,3.75,.065,.46,i%2?'#565a50':'#62655a');
       s.box(x,yy+.037,zz-.19,3.75,.018,.035,'#989180');
     }
+    }
     // Low retaining walls have separate caps, joints and weathered edges.
     for(const side of [-1,1]) {
-      s.box(x+side*2.6,0,z,.4,1.1,7,'#6a6b5e');
+      s.box(x+side*2.6,descent?-descent.depth-.12:0,z,.4,descent?1.22+descent.depth:1.1,7,'#6a6b5e');
       s.box(x+side*2.6,1.08,z,.56,.12,7.1,'#999589');
       for(const dz of [-2.6,-.9,.9,2.6]) s.box(x+side*2.36,.63,z+dz,.045,.52,.035,'#414943');
       // Handrail stays inside the existing retaining-wall collision boundary.
       for(const dz of [-2.2,-.4,1.4,2.8]) s.add(L.cyl5,x+side*2.22,1.05,z+dz,.055,1.1,.055,'#514a3d');
       s.add(L.cyl5,x+side*2.22,1.62,z+.3,.07,5.2,.07,'#a18b66',0,Math.PI/2);
     }
-    s.box(x,0,z-3.3,5.6,1.1,.4,'#66695f');
+    s.box(x,descent?-descent.depth-.12:0,z-3.3,5.6,descent?1.22+descent.depth:1.1,.4,'#66695f');
     s.box(x,1.08,z-3.3,5.8,.12,.55,'#999589');
     // An open arch leaves the station approach and the existing interaction
     // point unobstructed, with no extra collision geometry.
@@ -298,6 +327,7 @@ export function installMetroArchitecture(bridge) {
 /* Native 650 ms transition continues to own input, fading, save and rollback.
  * A non-interactive overlay follows the existing transition; it never starts it. */
 export function installMetroTransition(game) {
+  installMetroDescentInteraction(game);
   const original=game.runDungeonTransition;
   if (typeof original!=='function') return;
   game.runDungeonTransition=function(descriptor,instant,...args) {
@@ -319,8 +349,10 @@ export function installMetroTransition(game) {
         const from=descriptor.from;
         const x=Number.isFinite(from?.x)?from.x:owner.x;
         const z=Number.isFinite(from?.z)?from.z-4.5:owner.z;
-        const sampledGround=window.TERRA_H?.(x,z);
+        const profile=globalThis.TERRA_SEWER_BRIDGE?.metroProfileAt?.(x,z);
+        const sampledGround=profile?profile.ground-.03:window.TERRA_H?.(x,z);
         const ground=Number.isFinite(sampledGround)?sampledGround:0;
+        const aimHeight=profile?ground-.8:ground+.7;
         // Keep a separate target: slerpQuaternions copies its first argument
         // before reading the second, so passing camera.quaternion as both the
         // destination and target silently cancels the camera turn.
@@ -333,7 +365,7 @@ export function installMetroTransition(game) {
           camera.position.x+=(x-camera.position.x)*move;
           camera.position.y+=(ground+2.2-camera.position.y)*move;
           camera.position.z+=(z-camera.position.z)*move;
-          camera.lookAt(x,ground+.7,z);
+          camera.lookAt(x,aimHeight,z);
           targetOrientation.copy(camera.quaternion);
           camera.quaternion.slerpQuaternions(nativeCamera.quaternion,targetOrientation,eased*.7);
           camera.updateMatrixWorld();
@@ -386,10 +418,16 @@ export function installMetroMarkers(game) {
         e.kind==='metro' && !e.sewer && e.x===item.x && e.z===item.z)) return;
       try {
         // Metro's entry is 1.5 m ahead of the fixed-height station footprint.
-        const ground=window.TERRA_H?.(item.x,item.z-1.5);
+        const profile=globalThis.TERRA_SEWER_BRIDGE?.metroProfileAt?.(item.x,item.z);
+        const ground=profile?profile.ground-.03:window.TERRA_H?.(item.x,item.z-1.5);
+        // Still sample through the native provider so a provider failure keeps
+        // the original marker. The small ring stays on the upper landing.
+        const sampled=window.TERRA_H?.(item.x,profile?profile.z+3:item.z-1.5);
+        if(!Number.isFinite(sampled))return;
         if(!Number.isFinite(ground)) return;
         if(!placement) { placement=matrix.clone();zero=game.cam.position.clone().set(0,0,0);tint=color.clone(); }
-        placement.makeScale(1.05,1,1.05).setPosition(item.x,ground+.24,item.z);
+        placement.makeScale(profile?.5:1.05,1,profile?.5:1.05)
+          .setPosition(item.x,ground+.24,profile?profile.z+3:item.z);
         instances.setMatrixAt(count,placement);
         instances.setColorAt(count,tint.setRGB(.28,.09,.025));
         count++;
