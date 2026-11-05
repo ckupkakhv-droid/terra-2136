@@ -301,3 +301,38 @@ body:has(#sewerRecording) #touch{visibility:hidden!important}
     max-width: calc(100% - 120px);
   }
 }
+
+/* Keep dungeon information readable beside, rather than beneath, touch controls. */
+@media (orientation: portrait) and (max-width: 420px) {
+  body.touchUI #prompt.dungeon-entry {
+    max-width: min(260px, 58vw);
+    bottom: calc(34% + 8px);
+  }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  body.touchUI #prompt.dungeon-entry {
+    left: calc(50% - clamp(110px, 20vw, 130px));
+    bottom: max(70px, 18vh);
+    max-width: min(260px, 41vw);
+  }
+}
+@media (orientation: landscape) and (max-height: 340px) {
+  body.touchUI #prompt.dungeon-entry {
+    left: var(--sl);
+    top: calc(50% + 12px);
+    bottom: auto;
+    transform: none;
+    max-width: min(190px, calc(50vw - 84px));
+    padding: 5px 7px;
+    line-height: 1.15;
+  }
+}
+@media (orientation: portrait) and (max-width: 420px), (orientation: landscape) and (max-height: 520px) {
+  body.touchUI #prompt.dungeon-entry .dungeon-entry-action {
+    display: inline;
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
