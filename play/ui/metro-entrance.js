@@ -1,5 +1,117 @@
 /* Surface architecture uses the native chunk builder and its shared instanced
  * geometries. Entries, collision and fast-travel identifiers stay native. */
+const stationSupports = new WeakMap();
+function planStationSupport(chunk,x,z,oldGround) {
+  const grid=chunk.T?.xs,ox=chunk.ox,oz=chunk.oz;
+  if(!Array.isArray(grid)||!Array.isArray(chunk.pads)||typeof chunk.terrain!=='function')return null;
+  const pad={x0:x-3,z0:z-3.5,x1:x+3,z1:z+3.5,y:oldGround};
+  // Keep the border and its neighbouring height samples untouched, including
+  // the samples used for stitched terrain normals in the next chunk.
+  if(pad.x0-.6<=ox+2||pad.x1+.6>=ox+46||pad.z0-.6<=oz+2||pad.z1+.6>=oz+46)return null;
+  const overlaps=p=>p.x0<pad.x1+.6&&p.x1>pad.x0-.6&&p.z0<pad.z1+.6&&p.z1>pad.z0-.6;
+  if(chunk.pads.some(overlaps))return null;
+  function covering(origin,lo,hi) {
+    const values=grid.map(v=>v+origin);
+    let first=0,last=values.length-1;
+    while(first+1<values.length&&values[first+1]<=lo)first++;
+    while(last>0&&values[last-1]>=hi)last--;
+    return values.slice(first,last+1);
+  }
+  for(const xx of covering(ox,pad.x0,pad.x1))for(const zz of covering(oz,pad.z0,pad.z1)) {
+    const height=chunk.hAt(xx,zz);
+    if(!Number.isFinite(height)||chunk.wet?.(xx,zz))return null;
+    pad.y=Math.max(pad.y,height);
+  }
+  const support={pad,overlaps,paving:[]};
+  let pending=stationSupports.get(chunk);
+  if(!pending)stationSupports.set(chunk,pending=[]);
+  pending.push(support);
+  return support;
+}
+
+function settlePaving(chunk,ranges) {
+  if(!ranges.length)return;
+  const cross=(a,b,p)=>(b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x);
+  function weights(p,[a,b,c]) {
+    const area=cross(a,b,c);
+    return [cross(b,c,p)/area,cross(c,a,p)/area,cross(a,b,p)/area];
+  }
+  function clip(polygon,triangle) {
+    const sign=Math.sign(cross(...triangle));
+    for(let edge=0;edge<3&&polygon.length;edge++) {
+      const a=triangle[edge],b=triangle[(edge+1)%3],next=[];
+      let previous=polygon.at(-1),distance=cross(a,b,previous)*sign;
+      for(const point of polygon) {
+        const current=cross(a,b,point)*sign,inside=current>=-1e-9,wasInside=distance>=-1e-9;
+        if(inside!==wasInside) {
+          const t=distance/(distance-current);
+          next.push({x:previous.x+(point.x-previous.x)*t,z:previous.z+(point.z-previous.z)*t});
+        }
+        if(inside)next.push(point);
+        previous=point;distance=current;
+      }
+      polygon=next;
+    }
+    return polygon;
+  }
+  function bounds(points) {
+    return {x0:Math.min(...points.map(p=>p.x)),x1:Math.max(...points.map(p=>p.x)),
+      z0:Math.min(...points.map(p=>p.z)),z1:Math.max(...points.map(p=>p.z))};
+  }
+  const overlaps=(a,b)=>a.x1>=b.x0&&a.x0<=b.x1&&a.z1>=b.z0&&a.z0<=b.z1;
+  const source=ranges.map(({batch,start,end})=>{
+    const triangles=[];
+    for(let i=start;i<end;i+=3) {
+      const points=batch.i.slice(i,i+3).map(v=>({x:batch.p[v*3],z:batch.p[v*3+2],
+        uv:batch.uv.slice(v*2,v*2+2),color:batch.c.slice(v*3,v*3+3)}));
+      if(Math.abs(cross(...points))>1e-10)triangles.push({points,bounds:bounds(points)});
+    }
+    return {batch,start,end,triangles};
+  });
+  const footprint=bounds(source.flatMap(r=>r.triangles.flatMap(t=>t.points))),terrain=[];
+  // Clip the existing tile triangles against the triangles actually rendered
+  // by the ground mesh. A corner-only quad can cut through a curved grid cell.
+  for(let i=0;i<chunk.tr.p.length;i+=9) {
+    const points=[0,3,6].map(o=>({x:chunk.tr.p[i+o],y:chunk.tr.p[i+o+1],z:chunk.tr.p[i+o+2],
+      normal:chunk.tr.n.slice(i+o,i+o+3)})),box=bounds(points);
+    if(overlaps(box,footprint))terrain.push({points,bounds:box});
+  }
+  const updates=[];
+  for(const range of source) {
+    const output={p:[],n:[],uv:[],c:[],i:[]};
+    for(const tile of range.triangles)for(const ground of terrain) {
+      if(!overlaps(tile.bounds,ground.bounds))continue;
+      const polygon=clip(ground.points,tile.points);
+      for(let i=1;i<polygon.length-1;i++) {
+        const triangle=[polygon[0],polygon[i],polygon[i+1]];
+        if(Math.abs(cross(...triangle))<1e-10)continue;
+        for(const point of triangle) {
+          const g=weights(point,ground.points),s=weights(point,tile.points);
+          const interpolate=(values,w,k)=>values.reduce((sum,v,i)=>sum+v[k]*w[i],0);
+          const y=ground.points.reduce((sum,v,i)=>sum+v.y*g[i],0)+.025;
+          const normal=[0,1,2].map(k=>interpolate(ground.points.map(v=>v.normal),g,k));
+          const length=Math.hypot(...normal);
+          if(!Number.isFinite(y)||!Number.isFinite(length)||length<1e-8)return;
+          output.i.push(output.p.length/3);output.p.push(point.x,y,point.z);
+          output.n.push(...normal.map(v=>v/length));
+          output.uv.push(...[0,1].map(k=>interpolate(tile.points.map(v=>v.uv),s,k)));
+          output.c.push(...[0,1,2].map(k=>interpolate(tile.points.map(v=>v.color),s,k)));
+        }
+      }
+    }
+    if(!output.i.length||![...output.p,...output.n,...output.uv,...output.c].every(Number.isFinite))return;
+    updates.push({...range,output});
+  }
+  // Commit only after every tile/LOD is ready. Keep old vertices to preserve
+  // other kit indices; degenerate their triangles and append the fitted mesh.
+  for(const {batch,start,end,output} of updates) {
+    const vertex=batch.p.length/3,first=batch.i[start];
+    for(let i=start;i<end;i++)batch.i[i]=first;
+    for(const key of ['p','n','uv','c'])batch[key].push(...output[key]);
+    batch.i.push(...output.i.map(i=>i+vertex));
+  }
+}
+
 function foundation(builder,x,y,z,height) {
   // A small chamfer catches light at the foundation edge without another
   // material, mesh or collider. Coordinates passed to tri are already world-space.
@@ -40,12 +152,32 @@ export function installMetroArchitecture(bridge) {
   if (!proto || installed.has(proto) || !L?.cyl5 || !L?.sph || !L?.box) return;
   const original=proto.metro;
   if (typeof original!=='function') return;
+  const terrain=proto.terrain;
+  if(typeof terrain==='function')proto.terrain=function(...args) {
+    const supports=stationSupports.get(this);
+    if(!supports)return terrain.apply(this,args);
+    const added=[];
+    try {
+      for(const support of supports)if(!this.pads.some(support.overlaps)) {
+        this.pads.push(support.pad);added.push(support);
+      }
+      const result=terrain.apply(this,args);
+      for(const support of added)settlePaving(this,support.paving);
+      return result;
+    } finally {
+      // Pads are needed only while generating terrain. Keep the native list
+      // used by building placement unchanged after the height grid is baked.
+      for(const {pad} of added){const i=this.pads.indexOf(pad);if(i>=0)this.pads.splice(i,1);}
+      stationSupports.delete(this);
+    }
+  };
   proto.metro=function(x,z,kind,name) {
     if(kind!=='metro') return original.call(this,x,z,kind,name);
     const s=this.s;
     // Build one level structure even on sloped terrain. The embedded pavement
     // fills the ground edge; restore all shared builders before other scenery.
-    const saved=[s.oy,this.g.oy,this.n.oy], random=s.r, ground=s.Y(x,z);
+    const saved=[s.oy,this.g.oy,this.n.oy], random=s.r;
+    const support=planStationSupport(this,x,z,s.Y(x,z)),ground=support?support.pad.y:s.Y(x,z);
     s.oy=this.g.oy=this.n.oy=ground;
     s.r=()=>.5;
     try {
@@ -63,6 +195,7 @@ export function installMetroArchitecture(bridge) {
         if(this.cols.some(c=>c.h>=.6 && xx+1.08>c.x0 && xx-1.08<c.x1 && zz+.68>c.z0 && zz-.68<c.z1))
           throw Error('approach obstructed');
         const starts=this.kb?.bld?.map(batch=>batch.p.length)||[0,0,0];
+        const indices=this.kb?.bld?.map(batch=>batch.i.length)||[0,0,0];
         const rotation=(dx<0)===(dz<5)?0:Math.PI;
         if(!this.kp_('slab',xx,zz,rotation,1,{y:0,sink:0,tint:.74+(dx>0?.04:0)-(dz>5?.02:0),sx:.72,sz:1.36/3})) throw Error('slab unavailable');
         let top=-Infinity;
@@ -83,9 +216,11 @@ export function installMetroArchitecture(bridge) {
             if(!Number.isFinite(length)||length<1e-8)throw Error('invalid paving normal');
             batch.n[i]=nx/length;batch.n[i+1]=ny/length;batch.n[i+2]=nz/length;
           }
+          if(support&&batch.i.length>indices[b])support.paving.push({batch,start:indices[b],end:batch.i.length});
         }
       }
     } catch (_) {
+      if(support)support.paving.length=0;
       for(const [key,batches] of Object.entries(this.kb||{})) {
         if(!lengths[key]) delete this.kb[key];
         else batches.forEach((batch,index)=>{for(const name of ['p','n','uv','c','i'])batch[name].length=lengths[key][index][name];});
