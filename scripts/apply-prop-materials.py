@@ -1,4 +1,4 @@
-"""Add the packed-prop material-buffer repair without editing the native bundle."""
+"""Install the prop-material repair and preserve atlas ids during native wreck rewinds."""
 from pathlib import Path
 
 p=Path(__file__).resolve().parents[1]/'play/index.html'
