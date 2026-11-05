@@ -1,0 +1,43 @@
+{
+  "case": "failed-late-model",
+  "intro": {
+    "state": "intro",
+    "inst": false
+  },
+  "first": {
+    "pose": {
+      "pool": true,
+      "inst": true,
+      "late": false
+    },
+    "pool": true,
+    "inst": true,
+    "visible": true,
+    "meshes": 1,
+    "late": false,
+    "rigParts": 0,
+    "full": false,
+    "uuid": "2a8d0dd7-a8fd-4595-ba92-15406aae5c56"
+  },
+  "session": {
+    "saved": true,
+    "loaded": true,
+    "newPlayer": true,
+    "x": 27.25,
+    "uuid": "2a8d0dd7-a8fd-4595-ba92-15406aae5c56",
+    "restored": true
+  },
+  "final": {
+    "uuid": "2a8d0dd7-a8fd-4595-ba92-15406aae5c56",
+    "visible": true,
+    "roots": 1,
+    "published": 1,
+    "late": false,
+    "finite": true,
+    "time": 0.8000000000000002
+  },
+  "errors": [],
+  "warnings": [
+    "GLB s_trader TypeError: Failed to fetch\n    at hr.loadModels (<anonymous>:4107:12416)"
+  ]
+}

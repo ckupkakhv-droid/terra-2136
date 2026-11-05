@@ -1,0 +1,41 @@
+{
+  "case": "after",
+  "intro": {
+    "state": "intro",
+    "inst": false
+  },
+  "first": {
+    "pose": {
+      "pool": true,
+      "inst": true,
+      "late": false
+    },
+    "pool": true,
+    "inst": true,
+    "visible": true,
+    "meshes": 1,
+    "late": false,
+    "rigParts": 0,
+    "full": false,
+    "uuid": "f0604fc2-9dee-4d58-8dad-8b1dd5a96d94"
+  },
+  "session": {
+    "saved": true,
+    "loaded": true,
+    "newPlayer": true,
+    "x": 27.25,
+    "uuid": "f0604fc2-9dee-4d58-8dad-8b1dd5a96d94",
+    "restored": true
+  },
+  "final": {
+    "uuid": "f0604fc2-9dee-4d58-8dad-8b1dd5a96d94",
+    "visible": true,
+    "roots": 1,
+    "published": 1,
+    "late": true,
+    "finite": true,
+    "time": 0.7834000000000017
+  },
+  "errors": [],
+  "warnings": []
+}

@@ -1,0 +1,34 @@
+{
+  "case": "before",
+  "intro": {
+    "state": "intro",
+    "inst": false
+  },
+  "first": {
+    "pose": {
+      "pool": true,
+      "inst": false,
+      "late": false
+    },
+    "pool": true,
+    "inst": false,
+    "visible": false,
+    "meshes": 0,
+    "late": false,
+    "rigParts": 6,
+    "full": false,
+    "uuid": null
+  },
+  "session": null,
+  "final": {
+    "uuid": "1936f421-7c5d-4044-ae96-022da57d4190",
+    "visible": true,
+    "roots": 1,
+    "published": 1,
+    "late": true,
+    "finite": true,
+    "time": 0.05
+  },
+  "errors": [],
+  "warnings": []
+}
