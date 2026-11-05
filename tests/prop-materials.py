@@ -13,6 +13,7 @@ with sync_playwright() as p:
   b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
   page=b.new_page(viewport={'width':1280,'height':800});page.set_default_timeout(90000)
   page.add_init_script("localStorage.setItem('terra_set',JSON.stringify({q:'med',post:false,dpr:1}))")
+  page.add_init_script('window.TERRA_ART={rockSurfacesEnabled:false}')
   errors=[];warnings=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('console',lambda m:warnings.append(m.text[:500]) if len(warnings)<80 and ('GL_INVALID_OPERATION' in m.text or 'buffer is not big enough' in m.text) else None)
   if baseline:
@@ -20,7 +21,7 @@ with sync_playwright() as p:
    html=source.read_text().replace('g.a.length=p/3*2,g.m&&(g.m.length=p/3),g.uv','g.a.length=p/3*2,g.uv')
    if offline:
     code=(root/'play/art/prop-materials.js').read_text().replace('</script','<\\/script');assert code in html;html=html.replace(code,'')
-   else:page.route('**/art/prop-materials.js',lambda r:r.fulfill(body='',content_type='application/javascript'))
+   else:page.route('**/art/prop-materials.js*',lambda r:r.fulfill(body='',content_type='application/javascript'))
    page.route(url,lambda r:r.fulfill(body=html,content_type='text/html'))
   page.goto(url,timeout=120000);page.locator('#mNew').click();page.locator('#skip').click();page.wait_for_function('game.sewers && game.state==="play"')
   report=page.evaluate('''async()=>{
