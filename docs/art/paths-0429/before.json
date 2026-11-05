@@ -1,0 +1,368 @@
+{
+  "cases": [
+    {
+      "key": "1,1,0,1.5",
+      "path": [
+        68,
+        78,
+        96,
+        78,
+        1.5
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "4ecc66a5da127a45944470bfa1f40a4ee8c2948fe4343daf1553bb957662196f"
+    },
+    {
+      "key": "1,1,0,3.2",
+      "path": [
+        68,
+        78,
+        96,
+        78,
+        3.2
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "588918bbfaf910d2a4569f1c3549f12c84874347f8d35173c17a4dd5f4e123bb"
+    },
+    {
+      "key": "1,1,1,1.5",
+      "path": [
+        48,
+        78,
+        76,
+        78,
+        1.5
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "bbf8eee7d63ce5f9dea919c5daf2463808fd947ede2ce6b0f7d4b148f334f6ed"
+    },
+    {
+      "key": "1,1,1,3.2",
+      "path": [
+        48,
+        78,
+        76,
+        78,
+        3.2
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "41fed12ff7174dcba5df05dc09c01ccdb2aad449a3bdf97dc105282fa46cee3e"
+    },
+    {
+      "key": "1,1,2,1.5",
+      "path": [
+        78,
+        68,
+        78,
+        96,
+        1.5
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "bcc5dc62cf274bb213745425cc016177f248b24201aac34fe672874f9f8460cc"
+    },
+    {
+      "key": "1,1,2,3.2",
+      "path": [
+        78,
+        68,
+        78,
+        96,
+        3.2
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "3a1099331b53e4618c50803221e6cd3f679a12c57f2568633863760491142c3d"
+    },
+    {
+      "key": "1,1,3,1.5",
+      "path": [
+        78,
+        48,
+        78,
+        76,
+        1.5
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "c9be1c67445e939bd70db8c219132274a149d419ebb4bca7529ccd8fde68fb9c"
+    },
+    {
+      "key": "1,1,3,3.2",
+      "path": [
+        78,
+        48,
+        78,
+        76,
+        3.2
+      ],
+      "geometry": "0889c043bd1b117557d5a737438df0b42b77ba5bfce81adcae6f60e82b29d6a6",
+      "metadata": "24bade441139161a6645e218ec5219020f7148653e1dc504d7558789c8e56d63"
+    },
+    {
+      "key": "-2,-1,0,1.5",
+      "path": [
+        -76,
+        -18,
+        -48,
+        -18,
+        1.5
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "a0738410df65519d8cf8c551001184613b892246dad6530c7a1cd8456116176f"
+    },
+    {
+      "key": "-2,-1,0,3.2",
+      "path": [
+        -76,
+        -18,
+        -48,
+        -18,
+        3.2
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "5be7acc754bd4f2d64c7807c8e65d13e3555505d5e4697fd5688cb5227326b56"
+    },
+    {
+      "key": "-2,-1,1,1.5",
+      "path": [
+        -96,
+        -18,
+        -68,
+        -18,
+        1.5
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "244831f27f97cda51b9e392d70ddd010aa5d941e3db71bc35d30e0c938e50cea"
+    },
+    {
+      "key": "-2,-1,1,3.2",
+      "path": [
+        -96,
+        -18,
+        -68,
+        -18,
+        3.2
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "66fdfa6778d34236693fea23fbf7ee0921d4b97f47a2f4f773ae30634d8804c0"
+    },
+    {
+      "key": "-2,-1,2,1.5",
+      "path": [
+        -66,
+        -28,
+        -66,
+        0,
+        1.5
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "2e8f21387b1a4512330f22c3896ff8b88febf18d774fb186f4a84cd79b966f99"
+    },
+    {
+      "key": "-2,-1,2,3.2",
+      "path": [
+        -66,
+        -28,
+        -66,
+        0,
+        3.2
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "67fc7df23e216d5df4d6265578b13dba386045c29d5d7fd8b545301928c858f2"
+    },
+    {
+      "key": "-2,-1,3,1.5",
+      "path": [
+        -66,
+        -48,
+        -66,
+        -20,
+        1.5
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "56545f6716e2ffe76e9d3745e8ad2a304b9e08f6dd203a899fbaf753aab2baa8"
+    },
+    {
+      "key": "-2,-1,3,3.2",
+      "path": [
+        -66,
+        -48,
+        -66,
+        -20,
+        3.2
+      ],
+      "geometry": "c5a556bfab789d1d20e362798d1ac173f11a46feb7fbd9c025b4e9e43e1f0784",
+      "metadata": "c798c36ded3905642153db3c3dde7cf3d37ebbdc86fbb4ddf4e70e4d7a3fa18f"
+    }
+  ],
+  "chunks": [
+    {
+      "key": "0,0",
+      "kind": "crash",
+      "paths": [],
+      "boundaryError": 0,
+      "emptyBoundary": "ef35f2607ce45872a94edf0e51ec020df85fffc61c8d290030a9561d9c8d9b6e",
+      "interior": "1c0529fb706c317a2f4a751070bacc4f0a776663a8828b92d8838844a35ca969",
+      "geometry": "8ec6feeaff10528e148c6742e4bf9173c2fde3e0fbfcfe29a13750e6197af41f",
+      "metadata": "460fde6c505dceaa10f7fc03fa5735e202d5d41008f916b04160d8c3137f91c8"
+    },
+    {
+      "key": "1,0",
+      "kind": "res",
+      "paths": [
+        [
+          75.12367655849084,
+          9,
+          86.23798768641427,
+          48,
+          1.5
+        ]
+      ],
+      "boundaryError": 0.7352500110864639,
+      "emptyBoundary": "a698adb89de224bbc94f3c912610789f6ee1fdfc982ea857e955ad2306e3a8bb",
+      "interior": "a126abb27aacc426c1d2473f924e75ad6ce4a0bede84c148b3054b66e6220630",
+      "geometry": "769e2620c101d2ae2f64c27489ea264d07727bf5bdcbfd9cad7cda49d43cb116",
+      "metadata": "2d5f7ad6ded6d847f29e8594f32499525caa27e761a45097f78ebd9363d6ed92"
+    },
+    {
+      "key": "-1,0",
+      "kind": "res",
+      "paths": [
+        [
+          -14.509484865237027,
+          9,
+          -4.881806458812207,
+          48,
+          1.5
+        ]
+      ],
+      "boundaryError": 0.7352500110864639,
+      "emptyBoundary": "855d1cd5fc1cca596cde4a552022c2145efd3e6e0d7c9fe3d93232f3cf32703c",
+      "interior": "6257cdc01c179cf1e5ac789c8455e1d234cff6616afeb92d5cb4c21d32fb4a86",
+      "geometry": "f0214974ceb8c9c1d447284661bc69ec9d632d947a177dc03636d8a6ca8ee763",
+      "metadata": "ac50c4e5880d021312a9a9108fdb794cdc9941200ea6e25071697f6aadae4187"
+    },
+    {
+      "key": "0,1",
+      "kind": "camp",
+      "paths": [],
+      "boundaryError": 0,
+      "emptyBoundary": "d8b4cd04623a34904eddf76d34d98af372b3daa0c28004a134b256cff6b9739a",
+      "interior": "60f19f98570a4f56c03a27de39010c99078dceac58517f21b87fef1478081933",
+      "geometry": "9db6aafd0a77e3256caf3c647b461d6786b3c34eb7da2faed6547dc0e298a081",
+      "metadata": "a4b4de4c2ce09468e11c703d71bad4626a0e29b7ca38a23c4f5173c8d302bfe6"
+    },
+    {
+      "key": "0,-1",
+      "kind": "res",
+      "paths": [
+        [
+          39.63304401934147,
+          -39,
+          44.94185591628775,
+          0,
+          1.5
+        ]
+      ],
+      "boundaryError": 0.7352500110864639,
+      "emptyBoundary": "e863d80b8e45dc6dc2af26eb834e3a19e643ab34f5ca49a5097bb863270da314",
+      "interior": "921fa92ead4d602e625897351d37484b193f749a910346800c3fc30e2fcc0b1d",
+      "geometry": "2411b65ca34ab11442edd11e4a1ac282f08a84c999819aaf55c82ec4c9bac194",
+      "metadata": "fa21edad47333e87b9f324db4aa9b281fe2a2ffb3e5ddc2e344aebe408ac4d6f"
+    },
+    {
+      "key": "1,1",
+      "kind": "res",
+      "paths": [],
+      "boundaryError": 0,
+      "emptyBoundary": "e479a6a599f7d431829511cec220d86d406a278748bbe6cecad990455d36050a",
+      "interior": "6dd38bfc46db4ddac326661715e519f24eeb99977da3286bfda5c6844517731c",
+      "geometry": "a130f5a77dbc31029e719adbbccbe6663e5243e2a0fe281ad3f868d32c88a70b",
+      "metadata": "bb5fd59d9a5ae2a0876b5956cf484071afa30974c27abf6798d176269d9bf154"
+    },
+    {
+      "key": "-1,-1",
+      "kind": "res",
+      "paths": [
+        [
+          -39,
+          -5.773998167831451,
+          0,
+          -6.848719475790858,
+          1.5
+        ]
+      ],
+      "boundaryError": 0.7352500110864639,
+      "emptyBoundary": "ef5701ce366f676a39b3c0fbd408780c42cc9d30ca72abc4ff2a5d979e818896",
+      "interior": "aa1e5105196cc832d5989efa23d07e1d94f3e095466ee14ac9c34cb8f7ace7cd",
+      "geometry": "35d9ae690d6b14ef9214c7e3d96ea8311bfe6d33fd2a136cd64ab43cb2890051",
+      "metadata": "1c715ed1f274ac15fefc8b83e24407e168e4d242b1381d20fc05a2a25ac4b601"
+    },
+    {
+      "key": "-1,1",
+      "kind": "res",
+      "paths": [
+        [
+          -31.577148917596787,
+          57,
+          -17.632729275152087,
+          96,
+          1.5
+        ]
+      ],
+      "boundaryError": 0.42353565990924835,
+      "emptyBoundary": "1a18195f0ca9cdd4c5d4ce923294e8fe704d35173888634e55f087b2dcca7f72",
+      "interior": "c5693e0715043a7de29f7d1041f253671c891babc4c8d5724839219853fd075c",
+      "geometry": "d1de3053d5953c0ec6ab0509fe2407abc8b5b7b7815e7a5be0e839c4c7f44474",
+      "metadata": "590d54975fc743687db534ae268ef7bc6d4b3905034e14d9e530a8a9476d7248"
+    },
+    {
+      "key": "1,-1",
+      "kind": "res",
+      "paths": [],
+      "boundaryError": 0,
+      "emptyBoundary": "2b5c132e41e89667e13e457b2eac2b8d6e2139e8f20f819c57661b37f8c27182",
+      "interior": "20e716818c020b9a4fe183fd7d3a8404a567791571bcc9d12ee982172f889ae9",
+      "geometry": "730ba8601c674d51807ddae5446be447ae756d415971f166f19e0dc2e88a6a0c",
+      "metadata": "dea26392a500c556e671b380694ad674b6f14178dd1aa2b3e0e705e7b0dbdebc"
+    }
+  ],
+  "seams": [
+    {
+      "point": "0,-6",
+      "a": "-1,-1",
+      "b": "0,-1",
+      "color": 0.037954822182655334,
+      "weights": 0.7352500110864639,
+      "wet": 0.07999999821186066
+    },
+    {
+      "point": "46,0",
+      "a": "0,-1",
+      "b": "0,0",
+      "color": 0.02734154462814331,
+      "weights": 0.7352500110864639,
+      "wet": 0.07999999821186066
+    },
+    {
+      "point": "-6,48",
+      "a": "-1,0",
+      "b": "-1,1",
+      "color": 0.0399496853351593,
+      "weights": 0.7352500110864639,
+      "wet": 0.07999999821186066
+    },
+    {
+      "point": "86,48",
+      "a": "1,0",
+      "b": "1,1",
+      "color": 0.033358700573444366,
+      "weights": 0.7352500110864639,
+      "wet": 0.07999999821186066
+    }
+  ],
+  "render": {
+    "calls": 2,
+    "triangles": 3364,
+    "glError": 0
+  },
+  "errors": []
+}
