@@ -1,0 +1,123 @@
+{
+  "initial": {
+    "chunks": [
+      {
+        "key": "-1,-1",
+        "physical": "d46fd7e08e6b2c2ffe4ab22a7263dc37ccdc0d38dfd7850835df2492a950835c",
+        "nativePaint": "b92558b9a0131a27ea353dde8fd41912ad40b7f4bdc5ecc929d2a04df547c401",
+        "metadata": "0a77c6034b487bf654739082c5b096bcfe6199a3f926ef7bf3ea0b4c3e634fec",
+        "renderPhysical": "338a786a93091bdf12641e35f1c06e67e52abe6c21035dff86cc266bbcd36d98",
+        "colour": "b92558b9a0131a27ea353dde8fd41912ad40b7f4bdc5ecc929d2a04df547c401"
+      },
+      {
+        "key": "-1,0",
+        "physical": "82435db4b52d1cbac186190dc2d84f12502329d2a9750060da1a7d6b67d0b2b9",
+        "nativePaint": "b0d8009bfc03ba6380d6c2471a40d4dec0e970269c89a4dd512354ef03db7f22",
+        "metadata": "a93d05d2cceba32729a8f9ace50891b9664f5163d0a1205a60b736cd802175a6",
+        "renderPhysical": "88281ceac534f3049264bc448c38e2ff6cc702ff06d0af458ffea8b62c1af7a5",
+        "colour": "b0d8009bfc03ba6380d6c2471a40d4dec0e970269c89a4dd512354ef03db7f22"
+      },
+      {
+        "key": "-1,1",
+        "physical": "80765c2d8b6ef5ae645ec9481588fc87796dccbd219807b07af8676c1106bbff",
+        "nativePaint": "6930746b51efa2cce6c0b8aad579b7684dc211cacbd6321f76d9a29219182550",
+        "metadata": "8a6667a59c6715eea096cf339a806aac8daefb1e017322dccaa1ff72def2496c",
+        "renderPhysical": "f5fa78450ae0d65e0f294fa4f12ef34a257c31a477b2a68ba21184b1f82d998b",
+        "colour": "6930746b51efa2cce6c0b8aad579b7684dc211cacbd6321f76d9a29219182550"
+      },
+      {
+        "key": "0,-1",
+        "physical": "ca095b8f8b2c5d58a406f6c1384e3d834eeb4425599544fc8db6b067186b1fc8",
+        "nativePaint": "6d8cd0cefc44f9ab96fb413be7f514ebf2caffc87fbd8749d181d2d1fbe06b37",
+        "metadata": "c9bcbbc45173d00813a9f07462fb309db89a326d5fc5955dd680106544981211",
+        "renderPhysical": "85b107d3d18eaba87fe80290f9177d98b8fc13e839b58bd41c6a46985436082a",
+        "colour": "6d8cd0cefc44f9ab96fb413be7f514ebf2caffc87fbd8749d181d2d1fbe06b37"
+      },
+      {
+        "key": "0,0",
+        "physical": "26159891d09703102c124d09bf5de36e27b83032cda6936607fc9109ce7f774a",
+        "nativePaint": "b1d0c4887359947cf801c11475891824792a266cd00e62dd0194f0b228d7ccd1",
+        "metadata": "04bc68250fa25e6eaf8cef4012806f5aaf8f4b18bb55f071f3b7f1ff4a4a5ce7",
+        "renderPhysical": "8512d841fc7350327037b35a2384f53247c6cb1fc7cbcd338bbe63f03c65dc19",
+        "colour": "b1d0c4887359947cf801c11475891824792a266cd00e62dd0194f0b228d7ccd1"
+      },
+      {
+        "key": "0,1",
+        "physical": "89ac7c5f61270b0e868768cc7c13a736a92ba132f67cf3992b283e5f03ee4b61",
+        "nativePaint": "21ebb7804f8ff8ff99df66fda36516876fcef28efcd23eca5bce187c25084498",
+        "metadata": "9cfce9e32afb4c5d3ee3ec0ec9726d8749414c1be8195893acd29dbb94bf1419",
+        "renderPhysical": "3a452e001cd074b8e0616a2f956ddc8ce7420c5aad617960108be479c706a952",
+        "colour": "21ebb7804f8ff8ff99df66fda36516876fcef28efcd23eca5bce187c25084498"
+      },
+      {
+        "key": "1,-1",
+        "physical": "01c65447bd62712d622a276d24499e9d8473c21ff6b0891df389410e40184bf4",
+        "nativePaint": "60a95727c4664862bee6fce2877057f9306a020812b373c7d5b3993e062ff89d",
+        "metadata": "c36bc0a8fdbbd6d949a095e3139c9505b265b86fa0a1ade0b9a3f87e67a1b1a2",
+        "renderPhysical": "ad49ddc691fea4936e8e89a5ba714df8fd80a6c03808d3c0705d73b7ea0a831c",
+        "colour": "60a95727c4664862bee6fce2877057f9306a020812b373c7d5b3993e062ff89d"
+      },
+      {
+        "key": "1,0",
+        "physical": "d8629b38af15453734a4d8438b4aef5b701012ddf2093e0066a2814ee92de831",
+        "nativePaint": "7cc950bac0c909ea3493b7f5f161971e483a3ab9416a3175e248e2e933e952f7",
+        "metadata": "0351fc05e6ceb891dda4affd7755cf251bd67462ae0ac93cb1dd1d07d7279cc8",
+        "renderPhysical": "d4b259281229a412675866add39505d06c170df7814af06cdde97c9684bb3c2e",
+        "colour": "7cc950bac0c909ea3493b7f5f161971e483a3ab9416a3175e248e2e933e952f7"
+      },
+      {
+        "key": "1,1",
+        "physical": "6995b709155f243691c7ffab29f889ab44952a23d1c02e4687a337a372b7eed8",
+        "nativePaint": "a9bd52bb53ba90381fcc5a75fda3bc2c7426748dbb506e2e571ff23d1ef977a8",
+        "metadata": "6662da61c2ba1c159fee7c33012dcfb4c784c23284889173046e2770a46f4a8c",
+        "renderPhysical": "82b65f944ea4525639971a5e19b01de774fa30cb19798e2261113b12383e0dde",
+        "colour": "bb910054c68203422c061b3e0f0cf082bb48b691c04ee482b5b8b20232402d94"
+      }
+    ],
+    "maxReferenceError": 0.02284654975519515,
+    "changedVertices": 0,
+    "clippedVertices": 78,
+    "checked": 45450,
+    "edgeJump": 0.022846557199954987,
+    "target": [
+      0.13128432631492615,
+      0.12018129229545593,
+      0.06638292968273163
+    ],
+    "hookIdentity": true
+  },
+  "initialStats": {
+    "chunks": 0,
+    "buckets": 0,
+    "boxes": 0,
+    "typedBytes": 0,
+    "vertices": 0,
+    "interpolated": 0,
+    "pendingRanges": 0
+  },
+  "cleanup": {
+    "stats": {
+      "chunks": 0,
+      "buckets": 0,
+      "boxes": 0,
+      "typedBytes": 0,
+      "vertices": 0,
+      "interpolated": 0,
+      "pendingRanges": 0
+    },
+    "chunks": 0,
+    "meshes": 0
+  },
+  "calls": {
+    "built": 9,
+    "unload": 0,
+    "allow": true
+  },
+  "fallback": 0,
+  "render": {
+    "calls": 2,
+    "triangles": 3364,
+    "glError": 0
+  },
+  "errors": []
+}
