@@ -33,20 +33,26 @@ with sync_playwright() as p:
   page.wait_for_function('game.sewers && game.state==="play" && game.brkM')
   report=page.evaluate('''async()=>{
    const C=TERRA_SEWER_BRIDGE.Chunk,result={cases:[],chunks:[]};
-   for(const q of ['low','high'])for(const kind of ['crate','army','chest','toolbox']) {
+   for(const q of ['low','high'])for(const kind of ['crate','army','chest','toolbox','sofa','wardrobe'])for(const angle of (['sofa','wardrobe'].includes(kind)?[0,Math.PI/2]:[0])) {
     const c=new C(1,1);c.prep();game.qk=q;
     const kit=TERRA_KITS,ready=kit.ready,failed=kit.failed;
     try {
      // Normal static crates already use native kit art; exercise the fallback
      // as well, without changing the kit's state for the world comparison.
      if(kind==='crate'||kind==='army'){kit.ready=false;kit.failed=true;}
-     c[kind==='army'?'crate':kind](90,82,...(kind==='army'?['army']:[]));
+     c[kind==='army'?'crate':kind](90,82,...(kind==='army'?['army']:['sofa','wardrobe'].includes(kind)?[angle]:[]));
     }finally{kit.ready=ready;kit.failed=failed;}
     const pos=c.s.p,norm=c.s.n,ys=pos.filter((_,i)=>i%3===1);
-    result.cases.push({q,kind,metadata:{cols:c.cols,conts:c.conts,next:[c.r(),c.r(),c.r()]},
+    let rayHeight=null;
+    if(['sofa','wardrobe'].includes(kind)) {
+     const mesh=c.s.mesh(game.brkM.crate.material),ray=new game.ray.constructor(),localX=kind==='sofa'?.88:0;
+     mesh.updateMatrixWorld();ray.ray.origin.set(90+localX*Math.cos(angle),30,82-localX*Math.sin(angle));ray.ray.direction.set(0,-1,0);
+     rayHeight=ray.intersectObject(mesh)[0]?.point.y-c.hAt(90,82);mesh.geometry.dispose();
+    }
+    result.cases.push({q,kind,angle,rayHeight,metadata:{cols:c.cols,conts:c.conts,next:[c.r(),c.r(),c.r()]},
      triangles:pos.length/9,finite:[...pos,...norm,...c.s.c].every(Number.isFinite),
      normals:norm.every((_,i)=>i%3||Math.abs(Math.hypot(...norm.slice(i,i+3))-1)<1e-5),
-     top:Math.max(...ys)-c.hAt(90,82)});
+     top:Math.max(...ys)-c.hAt(90,82),plainVertices:c.s.m?.filter(v=>v===0).length||0});
    }
    game.qk='low';
    for(const [cx,cz] of [[0,0],[1,1],[2,1]]) {
@@ -68,6 +74,9 @@ with sync_playwright() as p:
     assert new['metadata']==old['metadata'],(old,new)
     assert new['triangles']>old['triangles'] and new['triangles']<=600,(old,new)
     assert abs(new['top']-old['top'])<.25,(old,new)
+    if new['kind']=='sofa':assert new['plainVertices']>0,'Fabric inherited a masonry texture'
+    if new['kind'] in ['sofa','wardrobe']:
+     assert abs(new['rayHeight']-(.735 if new['kind']=='sofa' else 2.07))<1e-5,('Missing outward-facing roof',new)
    assert report['chunks']==reports[0]['chunks'],report
    assert report['dynamic']['triangles']<=600
    assert abs(report['dynamic']['bounds'][0][1])<1e-6,'Crate base floats above its native anchor'
@@ -99,6 +108,18 @@ with sync_playwright() as p:
   }''')
   page.add_style_tag(content='body > :not(canvas) {visibility:hidden!important}')
   page.screenshot(path=str(out/('before.png' if baseline else 'after.png')))
+  page.evaluate('''()=>{
+   for(const node of game.scene.children)if(!node.isLight)node.visible=false;
+   const c=new TERRA_SEWER_BRIDGE.Chunk(1,1);c.prep();c.anc=1;c.setOY(0);
+   c.sofa(88.2,82,0);c.sofa(90.5,81.8,Math.PI/2);c.wardrobe(92.6,82,0);
+   c.s.add(TERRA_SEWER_BRIDGE.shapes.box,90,-4,82,16,8,12,'#474a40',0,0,0,0);
+   const material=[...game.world.chunks.values()].flatMap(c=>c.meshes).find(m=>m.geometry?.attributes.mt&&m.material?.vertexColors)?.material;
+   if(!material)throw Error('Native static material not found');
+   game.scene.add(c.s.mesh(material));
+   __salvageCamera.position.set(90,6,90);__salvageCamera.lookAt(90,.65,82);__salvageCamera.zoom=1.4;__salvageCamera.updateProjectionMatrix();
+   game.post.render(game.scene,__salvageCamera,0);
+  }''')
+  page.screenshot(path=str(out/('furniture-before.png' if baseline else 'furniture-after.png')))
   if not baseline:
    page.set_viewport_size({'width':390,'height':844})
    page.evaluate('game.resize();__salvageCamera.aspect=390/844;__salvageCamera.zoom=.9;__salvageCamera.updateProjectionMatrix();game.post.render(game.scene,__salvageCamera,0)')
