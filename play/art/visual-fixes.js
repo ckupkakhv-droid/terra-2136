@@ -62,23 +62,26 @@
     mat.onBeforeCompile = function (shader, renderer) {
       if (prev) prev.call(this, shader, renderer);
       if (shader.vertexShader.indexOf('vPuddle') === -1) {
-        shader.vertexShader = 'attribute vec2 aux;\nvarying float vPuddle;\n' + shader.vertexShader;
+        shader.vertexShader = 'attribute vec2 aux;\nvarying float vPuddle;\nvarying float vShore;\n' + shader.vertexShader;
         shader.vertexShader = shader.vertexShader.replace(
           'vWP=(modelMatrix*vec4(transformed,1.0)).xyz;',
-          'vWP=(modelMatrix*vec4(transformed,1.0)).xyz;vPuddle=aux.x;'
+          'vWP=(modelMatrix*vec4(transformed,1.0)).xyz;vPuddle=aux.x;vShore=aux.y;'
         );
       }
       if (shader.fragmentShader.indexOf('vPuddle') === -1) {
-        shader.fragmentShader = 'varying float vPuddle;\n' + shader.fragmentShader;
+        shader.fragmentShader = 'varying float vPuddle;\nvarying float vShore;\n' + shader.fragmentShader;
         shader.fragmentShader = shader.fragmentShader.replace(
           'gl_FragColor.rgb+=vec3(.03,.05,.05)*smoothstep(.6,1.,s);',
           'gl_FragColor.rgb+=vec3(.04,.07,.07)*smoothstep(.55,1.,s);' +
-          'if(vPuddle>0.001){float e=smoothstep(0.2,0.98,vPuddle);gl_FragColor.a*=mix(0.58,0.0,e);gl_FragColor.rgb*=vec3(0.62,0.82,0.78);}'
+          'if(vPuddle>0.001){float e=smoothstep(0.2,0.98,vPuddle);gl_FragColor.a*=mix(0.58,0.0,e);gl_FragColor.rgb*=vec3(0.62,0.82,0.78);}' +
+          // River triangles encode shoreline coverage as 2..3 in aux.y;
+          // keep even the lightest part visible because collision cells stay unchanged.
+          'if(vShore>1.5){float shore=smoothstep(0.0,1.0,clamp(vShore-2.0,0.0,1.0));gl_FragColor.a*=mix(0.48,1.0,shore);}'
         );
       }
     };
     mat.customProgramCacheKey = function () {
-      return (prevKey ? prevKey() : 'water') + '-puddle1';
+      return (prevKey ? prevKey() : 'water') + '-puddle-shore1';
     };
     mat.needsUpdate = true;
   }
