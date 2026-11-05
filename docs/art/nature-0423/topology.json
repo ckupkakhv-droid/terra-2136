@@ -1,0 +1,182 @@
+[
+  {
+    "name": "qn_commontree_1",
+    "before": 900,
+    "after": 892,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      1.336812338558957e-05,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_commontree_2",
+    "before": 900,
+    "after": 888,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      -1.0909111658111215e-05
+    ]
+  },
+  {
+    "name": "qn_commontree_3",
+    "before": 900,
+    "after": 892,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      -3.028992066780726e-05,
+      -3.028992066780726e-05
+    ]
+  },
+  {
+    "name": "qn_commontree_4",
+    "before": 900,
+    "after": 899,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      3.182048133263985e-05
+    ]
+  },
+  {
+    "name": "qn_commontree_5",
+    "before": 899,
+    "after": 882,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      1.4053671310345331e-05
+    ]
+  },
+  {
+    "name": "qn_pine_1",
+    "before": 900,
+    "after": 893,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      -2.5207032449543477e-05
+    ]
+  },
+  {
+    "name": "qn_pine_2",
+    "before": 900,
+    "after": 895,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      5.134423180586762e-05,
+      -2.567211590293381e-05
+    ]
+  },
+  {
+    "name": "qn_pine_3",
+    "before": 962,
+    "after": 955,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_pine_4",
+    "before": 900,
+    "after": 881,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      4.582924302667379e-05,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_pine_5",
+    "before": 899,
+    "after": 878,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      3.0362597149279384e-05,
+      -1.5181298574639692e-05
+    ]
+  },
+  {
+    "name": "qn_deadtree_1",
+    "before": 1240,
+    "after": 1234,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      3.310733805927965e-05
+    ]
+  },
+  {
+    "name": "qn_deadtree_2",
+    "before": 1340,
+    "after": 1330,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      -4.009827071179946e-05,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_deadtree_3",
+    "before": 1074,
+    "after": 1074,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_deadtree_4",
+    "before": 1092,
+    "after": 1090,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_deadtree_5",
+    "before": 1080,
+    "after": 1050,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      0.0,
+      0.0
+    ]
+  },
+  {
+    "name": "qn_twistedtree_1",
+    "before": 1517,
+    "after": 1110,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      1.9637644812464713e-05,
+      -1.9637644812464713e-05
+    ]
+  },
+  {
+    "name": "qn_twistedtree_2",
+    "before": 1414,
+    "after": 1182,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      2.2370308190584185e-05,
+      -2.2370308190584185e-05
+    ]
+  },
+  {
+    "name": "qn_twistedtree_3",
+    "before": 1554,
+    "after": 1530,
+    "openBarkEdges": 0,
+    "rootOffset": [
+      3.755508616566658e-05,
+      -3.755508616566658e-05
+    ]
+  }
+]

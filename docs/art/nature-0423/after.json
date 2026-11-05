@@ -1,0 +1,145 @@
+{
+  "chunks": [
+    {
+      "key": "0,0",
+      "meta": "460fde6c505dceaa10f7fc03fa5735e202d5d41008f916b04160d8c3137f91c8"
+    },
+    {
+      "key": "1,0",
+      "meta": "2d5f7ad6ded6d847f29e8594f32499525caa27e761a45097f78ebd9363d6ed92"
+    },
+    {
+      "key": "-1,0",
+      "meta": "ac50c4e5880d021312a9a9108fdb794cdc9941200ea6e25071697f6aadae4187"
+    },
+    {
+      "key": "0,1",
+      "meta": "a4b4de4c2ce09468e11c703d71bad4626a0e29b7ca38a23c4f5173c8d302bfe6"
+    },
+    {
+      "key": "0,-1",
+      "meta": "fa21edad47333e87b9f324db4aa9b281fe2a2ffb3e5ddc2e344aebe408ac4d6f"
+    },
+    {
+      "key": "1,1",
+      "meta": "bb5fd59d9a5ae2a0876b5956cf484071afa30974c27abf6798d176269d9bf154"
+    },
+    {
+      "key": "-1,-1",
+      "meta": "1c715ed1f274ac15fefc8b83e24407e168e4d242b1381d20fc05a2a25ac4b601"
+    },
+    {
+      "key": "-1,1",
+      "meta": "590d54975fc743687db534ae268ef7bc6d4b3905034e14d9e530a8a9476d7248"
+    },
+    {
+      "key": "1,-1",
+      "meta": "dea26392a500c556e671b380694ad674b6f14178dd1aa2b3e0e705e7b0dbdebc"
+    }
+  ],
+  "firstModel": 892,
+  "models": [
+    {
+      "name": "qn_commontree_1",
+      "triangles": 892
+    },
+    {
+      "name": "qn_commontree_2",
+      "triangles": 888
+    },
+    {
+      "name": "qn_commontree_3",
+      "triangles": 892
+    },
+    {
+      "name": "qn_commontree_4",
+      "triangles": 899
+    },
+    {
+      "name": "qn_commontree_5",
+      "triangles": 882
+    },
+    {
+      "name": "qn_pine_1",
+      "triangles": 893
+    },
+    {
+      "name": "qn_pine_2",
+      "triangles": 895
+    },
+    {
+      "name": "qn_pine_3",
+      "triangles": 955
+    },
+    {
+      "name": "qn_pine_4",
+      "triangles": 881
+    },
+    {
+      "name": "qn_pine_5",
+      "triangles": 878
+    },
+    {
+      "name": "qn_deadtree_1",
+      "triangles": 1234
+    },
+    {
+      "name": "qn_deadtree_2",
+      "triangles": 1330
+    },
+    {
+      "name": "qn_deadtree_3",
+      "triangles": 1074
+    },
+    {
+      "name": "qn_deadtree_4",
+      "triangles": 1090
+    },
+    {
+      "name": "qn_deadtree_5",
+      "triangles": 1050
+    },
+    {
+      "name": "qn_twistedtree_1",
+      "triangles": 1110
+    },
+    {
+      "name": "qn_twistedtree_2",
+      "triangles": 1182
+    },
+    {
+      "name": "qn_twistedtree_3",
+      "triangles": 1530
+    }
+  ],
+  "render": {
+    "calls": 3,
+    "triangles": 37122,
+    "error": 0
+  },
+  "fall": {
+    "matrix": [
+      0.9739103404770812,
+      -0.061036596274476995,
+      -0.21857077258188534,
+      0,
+      0.1806764523420853,
+      0.7913337361079187,
+      0.5840778524020245,
+      0,
+      0.1373123020012917,
+      -0.6083300518737419,
+      0.7817159840417724,
+      0,
+      15.927729419063166,
+      0.08346650555683255,
+      11.76636885903919,
+      1
+    ],
+    "flags": 2676,
+    "vertices": 2676,
+    "shadows": true,
+    "error": 0
+  },
+  "errors": []
+}

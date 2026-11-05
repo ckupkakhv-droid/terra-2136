@@ -20,7 +20,7 @@
 
 **ТЕРРА** соединяет вылазки за припасами, развитие персонажа и управление поселением. Исследуй мир с видом сверху, выбирай снаряжение, назначай выжившим работу и готовь периметр к следующей атаке.
 
-[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.22](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.22) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
+[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.23](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.23) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
 
 ## Три стороны одной экспедиции
 
@@ -29,6 +29,8 @@
 | Заросшие районы России, пять поясов опасности, метро и подземелья. Радиация, споры, огонь и затопленные проходы. | Жители с профессиями, навыками и состоянием. Работы, хозяйство, строительство и снабжение обороны. | Ближний бой, огнестрел, метательное оружие. Редкое снаряжение, крафт, заточка, навыки, таланты и ранги. |
 
 ## Обновления линии 0.4
+
+**Цельный лес.** Восемнадцать вариантов лиственных деревьев, сосен и сухостоя получили цельные стволы и ветви со скошенными рёбрами. Основания совпадают с центром прежних коллизий, кроны учитывают радиус скрытия при рубке. Число треугольников не выросло, архив окружения стал меньше.
 
 **Лесная крона.** Крупные пластины листвы получили отдельные силуэты листьев и хвойных побегов. Листья видны с обеих сторон, в том числе при падении дерева; маска действует и в тенях.
 
@@ -156,7 +158,7 @@ python3 scripts/build-offline.py
   - Оборона лагеря: ящик подносчика `box` из [Survival Kit 2.0](https://kenney.nl/assets/survival-kit) — Kenney, CC0 1.0, `play/assets/defense/ammo-crate.glb`.
 - [OpenGameArt](https://opengameart.org) — CC0
 - [game-icons.net](https://game-icons.net) — CC BY 3.0
-- [Quaternius](https://quaternius.com) ([itch.io](https://quaternius.itch.io)) — модели и анимации CC0 (мутант коллекторов, см. ниже)
+- [Quaternius](https://quaternius.com) ([itch.io](https://quaternius.itch.io)) — модели и анимации CC0 (мутант коллекторов, см. ниже). Цельные деревья линии 0.4.23: LowPoly Nature Pack, CC0 1.0; [источники, лицензия и обработка](tools/art/nature/README.md). Применены упрощение с сохранением замкнутой поверхности, фаски и подгонка к игровым габаритам.
 - [Mixamo](https://www.mixamo.com) — анимации
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)

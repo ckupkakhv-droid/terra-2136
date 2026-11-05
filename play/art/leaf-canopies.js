@@ -20,23 +20,29 @@ if(vTerraLeaf>.5){
  else uv=vTerraLeafP.xy+vTerraLeafP.z*vec2(.27,.41);
  uv*=8.;float footprint=max(length(dFdx(uv)),length(dFdy(uv)));
  if(footprint<1.2){
-  vec2 cell=floor(uv);vec3 h=fract(vec3(cell.xyx)*.1031);h+=dot(h,h.yzx+33.33);
-  float seed=fract((h.x+h.y)*h.z);vec2 turn=normalize(vec2(seed-.5,fract(seed*17.73)-.5)+vec2(.001));
-  vec2 q=fract(uv)-.5; q=mat2(turn.x,-turn.y,turn.y,turn.x)*q;
-  q+=vec2(fract(seed*7.37)-.5,fract(seed*11.17)-.5)*.035;
-  float width=.32*max(0.,1.-pow(abs(q.y)/.48,2.));
-  float field=max(abs(q.y)-.48,abs(q.x)-width);
-  if(vTerraLeaf>1.5){
-   // A dense tapered sprig preserves the mass of conifers. Thin isolated
-   // needles on these coarse cards would make the whole crown transparent.
-   float sprig=.47*pow(max(0.,1.-abs(q.y)/.52),.35);
-   sprig-=.035*(.5+.5*cos(q.y*58.+q.x*8.));
-   field=max(abs(q.y)-.5,abs(q.x)-sprig);
+  // Union neighbouring leaves instead of clipping one leaf to each square.
+  // Jitter, rotation and size break the visible lattice on closed canopies.
+  vec2 base=floor(uv);float field=9.,seed=0.,vein=0.;
+  for(int y=0;y<2;y++)for(int x=0;x<2;x++){
+   vec2 cell=base+vec2(float(x),float(y));
+   vec3 h=fract(vec3(cell.xyx)*.1031);h+=dot(h,h.yzx+33.33);
+   float s=fract((h.x+h.y)*h.z),size=.82+.3*fract(s*29.17);
+   vec2 turn=normalize(vec2(s-.5,fract(s*17.73)-.5)+vec2(.001));
+   vec2 center=cell+vec2(fract(s*7.37)-.5,fract(s*11.17)-.5)*.36;
+   vec2 q=(uv-center)/size;q=mat2(turn.x,-turn.y,turn.y,turn.x)*q;
+   float width=.44*max(0.,1.-pow(abs(q.y)/.60,2.));
+   float f=max(abs(q.y)-.60,abs(q.x)-width);
+   if(vTerraLeaf>1.5){
+    float sprig=.47*pow(max(0.,1.-abs(q.y)/.52),.35);
+    sprig-=.035*abs(fract(q.y*9.+q.x)*2.-1.);
+    f=max(abs(q.y)-.5,abs(q.x)-sprig);
+   }
+   f*=size;
+   if(f<field){field=f;seed=s;vein=1.-smoothstep(.008,.025,abs(q.x));}
   }
   float aa=clamp(footprint*.7,.008,.15),coverage=1.-smoothstep(-aa,aa,field);
   float detail=1.-smoothstep(.55,1.2,footprint);
   if(mix(1.,coverage,detail)<.5)discard;
-  float vein=1.-smoothstep(.008,.025,abs(q.x));
   diffuseColor.rgb*=mix(1.,.91+seed*.14+vein*.045,detail);
  }
 }
@@ -59,7 +65,7 @@ if(vTerraLeaf>.5){
       shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>',
         (frontOnly?'if(!gl_FrontFacing&&vTerraLeaf<.5)discard;\n':'')+fragment+'\n#include <alphatest_fragment>');
     };
-    material.customProgramCacheKey=()=>key()+'-terra-leaf-canopies-1';
+    material.customProgramCacheKey=()=>key()+'-terra-leaf-canopies-2';
     material.needsUpdate=true;materials.add(material);
   }
   function applyMesh(result) {
@@ -99,7 +105,7 @@ if(vTerraLeaf>.5){
           edges=points.map((p,j)=>Math.hypot(...p.map((v,k)=>v-points[(j+1)%3][k]))),
           u=points[1].map((v,k)=>v-points[0][k]),v=points[2].map((v,k)=>v-points[0][k]),
           area=Math.hypot(u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0])*.5;
-        const card=Math.min(...edges)>Math.max(...edges)*.18&&area>height*height*(bush?.0008:.0015)&&
+        const card=!name.startsWith('qn_twistedtree_')&&Math.min(...edges)>Math.max(...edges)*.18&&area>height*height*(bush?.0008:.0015)&&
           (bush||points.reduce((sum,p)=>sum+p[1],0)/3>minY+height*.32);
         if(card||(g>r*1.06&&g>b*1.1))flags.fill(name.startsWith('qn_pine')?2:1,i,i+3);
       }
