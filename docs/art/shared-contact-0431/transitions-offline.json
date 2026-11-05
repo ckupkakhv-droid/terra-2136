@@ -1,0 +1,114 @@
+{
+  "transitions": {
+    "before": {
+      "stats": {
+        "chunks": 9,
+        "buckets": 158,
+        "boxes": 12,
+        "typedBytes": 352572,
+        "vertices": 45450,
+        "interpolated": 78,
+        "pendingRanges": 6
+      },
+      "colour": "3284595b296ca95bbca8ba92cbdc3cab47440bd51883a3322aaa5f819f14869c",
+      "keys": [
+        "-1,-1",
+        "-1,0",
+        "-1,1",
+        "0,-1",
+        "0,0",
+        "0,1",
+        "1,-1",
+        "1,0",
+        "1,1"
+      ]
+    },
+    "duringSurface": {
+      "chunks": 12,
+      "buckets": 224,
+      "boxes": 21,
+      "typedBytes": 469920,
+      "vertices": 60588,
+      "interpolated": 78,
+      "pendingRanges": 9
+    },
+    "surfaceRollback": {
+      "chunks": 9,
+      "buckets": 158,
+      "boxes": 12,
+      "typedBytes": 352572,
+      "vertices": 45450,
+      "interpolated": 78,
+      "pendingRanges": 6
+    },
+    "duringDungeon": {
+      "chunks": 9,
+      "buckets": 158,
+      "boxes": 12,
+      "typedBytes": 352572,
+      "vertices": 45450,
+      "interpolated": 78,
+      "pendingRanges": 6
+    },
+    "entryRollback": {
+      "chunks": 9,
+      "buckets": 158,
+      "boxes": 12,
+      "typedBytes": 352572,
+      "vertices": 45450,
+      "interpolated": 78,
+      "pendingRanges": 6
+    },
+    "returned": {
+      "chunks": 9,
+      "buckets": 158,
+      "boxes": 12,
+      "typedBytes": 352572,
+      "vertices": 45450,
+      "interpolated": 78,
+      "pendingRanges": 6
+    },
+    "hooksPreserved": true,
+    "ownersPreserved": true
+  },
+  "loot": {
+    "key": "0,-3,10",
+    "items": [
+      {
+        "id": "food",
+        "n": 2
+      },
+      {
+        "id": "water",
+        "n": 1
+      }
+    ],
+    "inventory": [
+      {
+        "id": "food",
+        "n": 2
+      },
+      {
+        "id": "water",
+        "n": 1
+      }
+    ],
+    "saved": true,
+    "owner": true
+  },
+  "restored": {
+    "looted": true,
+    "owner": true,
+    "stats": {
+      "chunks": 10,
+      "buckets": 198,
+      "boxes": 17,
+      "typedBytes": 391752,
+      "vertices": 50496,
+      "interpolated": 78,
+      "pendingRanges": 6
+    },
+    "glError": 0
+  },
+  "errors": []
+}
