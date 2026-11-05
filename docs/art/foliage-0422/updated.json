@@ -1,0 +1,104 @@
+{
+  "trees": [
+    {
+      "kind": "rbirch",
+      "data": "f312c2d2a2fa975b848992db5781f49fc96d9fe8759f9563574f26f8bce828c6",
+      "vertices": 3120,
+      "flags": 3120,
+      "bytes": 1,
+      "broad": 3120,
+      "needles": 0
+    },
+    {
+      "kind": "poplar",
+      "data": "ef8e3628d1b59fa310a2356248bf35e45550ba2ca6eedd989fdedaf12ea3d853",
+      "vertices": 5460,
+      "flags": 5460,
+      "bytes": 1,
+      "broad": 5460,
+      "needles": 0
+    },
+    {
+      "kind": "maple",
+      "data": "db8501ee34099f3f3723d23663ed685313dc8d943b5a35c56a0ebf757560f9ab",
+      "vertices": 2700,
+      "flags": 2700,
+      "bytes": 1,
+      "broad": 1551,
+      "needles": 0
+    },
+    {
+      "kind": "pine",
+      "data": "48d4f1689bb65bf81d406af0e85cdae4098ac4ab6105906baf3e00e554620c6d",
+      "vertices": 2886,
+      "flags": 2886,
+      "bytes": 1,
+      "broad": 0,
+      "needles": 147
+    },
+    {
+      "kind": "willow",
+      "data": "6ad9978db80b0b9972035929a02a73c5f15bb504561c5d45bcc3472edff11857",
+      "vertices": 4602,
+      "flags": 0,
+      "bytes": 0,
+      "broad": 0,
+      "needles": 0
+    },
+    {
+      "kind": "qbush",
+      "data": "d6112b88c3ea1294f2a1865e52f0a55bf53855313d766fe61ea2d7a9de58e44c",
+      "vertices": 780,
+      "flags": 780,
+      "bytes": 1,
+      "broad": 780,
+      "needles": 0
+    }
+  ],
+  "scene": {
+    "calls": 2,
+    "triangles": 3179,
+    "flags": 9297,
+    "material": "MeshLambertMaterial"
+  },
+  "timing": {
+    "medianMs": 0.09999999776482582,
+    "samples": [
+      0,
+      0.09999999776482582,
+      0.09999999776482582,
+      0.09999999776482582,
+      0.09999999776482582,
+      0.10000000149011612,
+      0.10000000149011612,
+      0.10000000149011612,
+      0.10000000149011612
+    ],
+    "calls": 2,
+    "triangles": 3179,
+    "error": 0
+  },
+  "shadow": {
+    "pair": true,
+    "shared": true,
+    "defaultZero": true,
+    "shadowMap": true,
+    "calls": 7,
+    "triangles": 6822,
+    "error": 0
+  },
+  "distanceShadow": {
+    "shadowMap": true,
+    "error": 0
+  },
+  "proxy": {
+    "data": "ad6f68bb8f11a06bbb93eca54ffb8c363ed3945d2dcbca446237c2e8d6937fdc",
+    "vertices": 2700,
+    "flags": 2700,
+    "shadows": true,
+    "shadowKey": "p01000f0m0-terra-leaf-canopies-1",
+    "side": 2,
+    "error": 0
+  },
+  "errors": []
+}
