@@ -1,4 +1,8 @@
-"""Published 0.4.28 vs faded local footpaths: native geometry stays exact."""
+"""Published 0.4.28 vs faded local footpaths: native geometry stays exact.
+
+Disable the later edge-normal correction in both modes to keep this historical
+comparison focused on footpath paint. Its default is tested separately.
+"""
 import hashlib
 import json
 import os
@@ -19,7 +23,7 @@ with sync_playwright() as p:
   label='before' if baseline else 'after'
   browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
   page=browser.new_page(viewport={'width':1280,'height':900});page.set_default_timeout(90000)
-  page.add_init_script("localStorage.setItem('terra_set',JSON.stringify({q:'med',post:false,dpr:1}))")
+  page.add_init_script("localStorage.setItem('terra_set',JSON.stringify({q:'med',post:false,dpr:1}));window.TERRA_ART={terrainEdgeNormalsEnabled:false}")
   errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.on('console',lambda m:errors.append(m.text[:1000]) if m.type=='error' else None)
   if baseline:page.route(url,lambda r:r.fulfill(body=old,content_type='text/html'))

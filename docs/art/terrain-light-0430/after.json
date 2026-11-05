@@ -1,0 +1,475 @@
+{
+  "cases": [
+    {
+      "key": "1,1,pad,0",
+      "maxError": 2.785592367882117e-08,
+      "maxUnit": 2.803343512880474e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "b215a4c0cb101fe399f2ba95024de92650e630f24b242d755857f953b3acc07c",
+      "paint": "bae5e605ebb28aa2515f60e2ad429d5b09d923d91e251eb56a7763dfcfed0659",
+      "interior": "f60a2b2e9ed5594c618e842fb8786e8b33d0ee2908108396315b0d7e5f0e467e",
+      "meta": "841e4ef1705ef6c8313cd690aced5b92d122b2c8c52cb21eb7298170686ddf92"
+    },
+    {
+      "key": "1,1,pad,1",
+      "maxError": 2.9391680866908132e-08,
+      "maxUnit": 3.5180811819301994e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "bbc50719aeb1c018b39d7e712fbb91f6bb39ad1a67cf028ebfb789a83b060635",
+      "paint": "a0d5ddb62469c7ca73320ceb02e7da3337b9f3305f66866108346e62a7616670",
+      "interior": "d7b46fb84e86e043c9bb8142ec881e596de2a123de32eff44fb4f2fccf724a4e",
+      "meta": "0aaec81eaf70bc2dd50c53c08226a37f785904a0e9a38df228ab8a450a3569dc"
+    },
+    {
+      "key": "1,1,pad,2",
+      "maxError": 2.9484300667625973e-08,
+      "maxUnit": 3.219312905144989e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "eb6ba3f790a725d965d82d18ea50f95dd2aa48b62f5d2ca468e9b227e5394ab8",
+      "paint": "d12cc1f94f7769948f7b7a3546bfdd108668489bc6327a49b6198e32b5b1e675",
+      "interior": "16329366e600bfe3489f7d84e582606264b147860584f44acf7f0815829c18a8",
+      "meta": "06bf9fd6aefd62944b360edb989212a25ae381cb2db2bda1dba52470b7736aac"
+    },
+    {
+      "key": "1,1,pad,3",
+      "maxError": 2.9301111204027563e-08,
+      "maxUnit": 3.1260458221993304e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "7694bb268a21b36f8c0a4e70a1fa5085eaeb1c5bc1b6815f1db844828c2035a8",
+      "paint": "b62f929767d12acadd4315b662a693289e056ca09edd48f2142d3f8a8a2a297f",
+      "interior": "26092791439b7b528846646910a5c5c091b31da9a290e35b139dcb475d8bf37f",
+      "meta": "3d9d020defaf3fd68a500c46f0b2234a4f6d3b2880d8f21592b659af435e059e"
+    },
+    {
+      "key": "1,1,pond,0",
+      "maxError": 2.752303018827007e-08,
+      "maxUnit": 2.755119965502928e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "50d752729775b8682d7daff00e51a1fe7f2f6e181781fd26065e68ae5f70311a",
+      "paint": "dea8c6910bcbad3129fba59a99a97debead6111f10f99cad5346fa8bf6f62328",
+      "interior": "777f1d9b90dcaafedb6bb70bb5abe4794d7338d06e8b2a6a92a2ba5f4e6bd731",
+      "meta": "86cdd6f0a5ceffd903ebd1a93b377beefcfd62cd674b3e6c1cf61469dab20224"
+    },
+    {
+      "key": "1,1,pond,1",
+      "maxError": 2.7016056947104516e-08,
+      "maxUnit": 2.6944111164439732e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "4a2e0bfa9f3cdb98da1bf1bdd8d016e5089c61593ea9bc82c40d1b6941536489",
+      "paint": "a93be633c3ad1160ba1422feb1b35829223c44a09a7e7fcba0874d18da2e334c",
+      "interior": "c65b1deeaf160805a71bd8e5355de8600fa9cfe9bdb0d47836165081efaffa3f",
+      "meta": "3b88ff9a589899202f30a5cdd0559800a489a4c99e6b5e84ef12cc042ee674ca"
+    },
+    {
+      "key": "1,1,interior,0",
+      "maxError": 2.9745590324203874e-08,
+      "maxUnit": 2.9003877410893608e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "9c63e73149e3d886b86db29236f193f20596982da979141090d9ca133cab6eae",
+      "paint": "821e41bb3a2720f05877e3c83db4709b8f984031685e452edb40a8c903821717",
+      "interior": "90c3aacf06b102a3e539dcf908754972488e2b4add3c213ad2f4bf1f7738015c",
+      "meta": "1838497af4dba408f82cbd0808167621c1882360d774717e36975e710427eca0"
+    },
+    {
+      "key": "1,1,empty,0",
+      "maxError": 2.6906407768478857e-08,
+      "maxUnit": 2.692097300638352e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "d1bc548006f22573879d43b88918aa8eecfd77613ecac8431226a0caf78cacf7",
+      "paint": "9e52b158ff5c6b7b25a1bcd9148bb28dd7ccb29c9688cebb009480a9b7157af6",
+      "interior": "fdad3304fa571b2dee090c41f92ee0abe7491f8c916d1169c8bdb9bc45750afd",
+      "meta": "b4be677bb60148d72679c974cccfef15e3d7dbc9a16373c77bac6de88920b6a5"
+    },
+    {
+      "key": "-2,-1,pad,0",
+      "maxError": 2.721815561823604e-08,
+      "maxUnit": 2.727340442376658e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "207828f9095c8f20573b97d0f5f7c240d3eb668e2e29f2cb9aa86f92fa0e2844",
+      "paint": "b650d729a9e72979f51486b46428a96689bd7fd2aae9b5f85d507432ad1961ed",
+      "interior": "b0cfc11b1116c67f62a0ca6230d6905eca85825d644d551095558aa7832b4795",
+      "meta": "e08c0346b70b542baf4aa86bcd898b23a0d564f934496dfea5e8181a0e7c2072"
+    },
+    {
+      "key": "-2,-1,pad,1",
+      "maxError": 2.924685360561341e-08,
+      "maxUnit": 3.5180811819301994e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "eec8b70cd6e746e143e40c222c390f8b78be81933585e22be116bf5f46553dde",
+      "paint": "7747e53e08ac0e126769cd6d4926ea809fcdccc356bf969af2391c4577d70be8",
+      "interior": "dc9070f25c9a59bc719afcef3f36a8a5f45db9ea8c1f855d309e5116345ab94e",
+      "meta": "4260f4bc24c4c6056eb07c7daa9c67c432af696292934a9c45fb4edd8a64b0cb"
+    },
+    {
+      "key": "-2,-1,pad,2",
+      "maxError": 2.9660602196557306e-08,
+      "maxUnit": 3.23659672396559e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "650cbd5868524aebc6ee7868fda83508714bf507ff695d8c5c99a52c6ec2f3eb",
+      "paint": "19a3d441953a1797a5087bcc100121f5e0fbf0dd249f73e00b0e22c4e864978b",
+      "interior": "f2b3e340f41d5177eede164899201e321b0fa26468030d418eaf44df347d7df6",
+      "meta": "a72d72d5f7cfe91a1922bd88bbe63339bfdbcc6a51d6b656d7f075ece3910686"
+    },
+    {
+      "key": "-2,-1,pad,3",
+      "maxError": 2.8933121454244315e-08,
+      "maxUnit": 3.201368903305024e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "7e6a7c874f4e9151dfc5d51d781479561e4a79e5983763fa90a37f4d59ad8b32",
+      "paint": "1c57bae3751f0468ca36689bf69d7e0318014ac4281b605cb1518d3e88c72302",
+      "interior": "b3eb981b99861008b3cf06a5d988fce1d16d8d673e61ef9e00db67950ea288ff",
+      "meta": "4e739acc687928f5dc6984b91ceab6ef44d16d69ed37e9cd010986e5b81ccc00"
+    },
+    {
+      "key": "-2,-1,pond,0",
+      "maxError": 2.752303018827007e-08,
+      "maxUnit": 2.7858923390411405e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "f17b5f3e563ec6e676ddb083daec14335360f1bb48af9c030779a95d169f10e5",
+      "paint": "0db229520baf4370e1a496f013d742c2ea5cabefd58fe09ef997d96bdcb8a0fb",
+      "interior": "40276fb63aebfb5dd0bd4a7d886643de132d5b4aca5786a4d4d579ecb59dd60b",
+      "meta": "e9e2a608102e08d951d5bb49635ccfc96348f1a4db6d8b46e6c8428b05878da9"
+    },
+    {
+      "key": "-2,-1,pond,1",
+      "maxError": 2.8492735171248285e-08,
+      "maxUnit": 2.745311067364753e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "9a072d03913f44a78e19adfecd6e04694743d8cef42a4774e4cc3c33058718fb",
+      "paint": "12b61a1509ced1b6dab803c57de03073fcf64f5b5457bdb4151ecf0aaa473803",
+      "interior": "ee50a977617ce1862da853f3d11e77738a28020dc9a925d0184799f9f944cece",
+      "meta": "ef77e58390dcf807fcc3d76aa7e30511df1bc749e01c0f43dec62e0dc9e5dd88"
+    },
+    {
+      "key": "-2,-1,interior,0",
+      "maxError": 2.958490974425132e-08,
+      "maxUnit": 2.9670490175881525e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "71fad4a58063c7f5f28ecc0359fb98c9b7d7b13c242f5b03d19c2ff2292b9456",
+      "paint": "e53e454419f082c1166a1c9acb7519dae79c4ec6022d95d8d9301692c10bbd91",
+      "interior": "6be56511036d581ed2f4caac08f084561bfa811ec65cd0b68af9f37b4ce853b2",
+      "meta": "e40d55fc37d0a8d897da9024c0434f41a8bb77aa948a644011b496860ada1e6f"
+    },
+    {
+      "key": "-2,-1,empty,0",
+      "maxError": 2.6906407768478857e-08,
+      "maxUnit": 2.692097300638352e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "boundaryError": 0,
+      "geometry": "341a244bca19f0dae94471c43de0176502f70e438b678e3648343ca16eaa4aa8",
+      "paint": "64f1e3883cfe206f2e8454b7c465f48423cb89e48d00c05250bfa16fcf40a385",
+      "interior": "2474527238a65c1f018c1a3c4871c97bb628412391a7ca832615d2b70a8928fe",
+      "meta": "88b52d4f45d2525aa2db1dadcaf7e1f8f17cfdf6fb6ecdd1e16704cc0868e4a7"
+    }
+  ],
+  "chunks": [
+    {
+      "key": "0,0",
+      "cx": 0,
+      "cz": 0,
+      "kind": "crash",
+      "pads": [],
+      "ponds": null,
+      "maxError": 2.97312139352357e-08,
+      "maxUnit": 3.2053125820219464e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "dbb3e1526af620b89932c18649171d201f37a4206c5a3b973f0576fe5629d96d",
+      "paint": "f5c70a88b48fc14b0956ec6cc3ce8001f482ea83ebcbac3c918794d411e2ca59",
+      "interior": "652f61c4597cd66b935863836048a1592048d66f63790c37265ba9b8be92bd9e",
+      "metadata": "d4dfbc2656a65a8d56009fcba25d624361d78e8fc9004792d18c0dfc62d952de"
+    },
+    {
+      "key": "1,0",
+      "cx": 1,
+      "cz": 0,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": 59,
+          "z0": 11,
+          "x1": 95,
+          "z1": 22,
+          "y": 1.0197070240974426
+        },
+        {
+          "x0": 76.2,
+          "z0": 21.05,
+          "x1": 79.2,
+          "z1": 23.45,
+          "y": 0.2749138016998769
+        },
+        {
+          "x0": 88.2,
+          "z0": 21.05,
+          "x1": 91.2,
+          "z1": 23.45,
+          "y": 0.7387617841362955
+        },
+        {
+          "x0": 60,
+          "z0": 40,
+          "x1": 88.8,
+          "z1": 46.2,
+          "y": 1.3523672580718993
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.9707716175941812e-08,
+      "maxUnit": 3.87609870866612e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "243dee8851a5542e4533af7e958a70fcc3640b48668e8dda5c90b0974bbaa873",
+      "paint": "3d43710466b7d261aefefedc8b6c64b64bac50cb4b3e528dbfb60a9a2fdf2d82",
+      "interior": "ed0898f12beba40a6b5ebc94f21ce67d8c67465f3a803a79a4fac01cd5d47a58",
+      "metadata": "ea65b1e6022de8465c3d366628c02b318fa226a9a3317ac8ba7a737b071cb5ea"
+    },
+    {
+      "key": "-1,0",
+      "cx": -1,
+      "cz": 0,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": -37,
+          "z0": 11,
+          "x1": -1,
+          "z1": 22,
+          "y": -2.468660056591034
+        },
+        {
+          "x0": -31.8,
+          "z0": 21.05,
+          "x1": -28.8,
+          "z1": 23.45,
+          "y": -2.8476092833280564
+        },
+        {
+          "x0": -36,
+          "z0": 40,
+          "x1": -21.6,
+          "z1": 46.2,
+          "y": -3.299147367477417
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.9771482945584182e-08,
+      "maxUnit": 2.9802450951521564e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "a3b0470478a66ca272af40c6d639b9e5ffb97f6d00f2d1ed6c9c755b7886a3e2",
+      "paint": "a9f4c374b218f5406571fce345fee4ed133ddd237650520eecdfcd3b463837ba",
+      "interior": "964aa156ae1a397db2bc3dd7e8dd7596b7ea87c30a8f98f08c48ce65d479d700",
+      "metadata": "1ca35f574addfed931f5cbda446ad23e6ad00f7a4dd177dd3b594dd16949a230"
+    },
+    {
+      "key": "0,1",
+      "cx": 0,
+      "cz": 1,
+      "kind": "camp",
+      "pads": [
+        {
+          "x0": 18,
+          "z0": 66,
+          "x1": 40,
+          "z1": 88,
+          "y": -2.1302382946014404
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.9787767363842477e-08,
+      "maxUnit": 3.059657549542294e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "a0a020128c9a8899b177680481a68090ce1fe97a53ddc893966567798264797d",
+      "paint": "b24f91700a63d2b4ea3b5b4a054f8a9bce0335fb1dd7d25bbc324234440e0fb1",
+      "interior": "93aa15d6fdb3758efcbc0e1ddbb4ae0c13c6a4fe9f99abfc1bf7112b0a033a17",
+      "metadata": "a81f59378f0836ded13b08d1f13a930ec870ef21b38f20824fa5e36c0a211747"
+    },
+    {
+      "key": "0,-1",
+      "cx": 0,
+      "cz": -1,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": 11,
+          "z0": -37,
+          "x1": 47,
+          "z1": -26,
+          "y": 0.4429710879921913
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.980172808531023e-08,
+      "maxUnit": 2.9865460771105745e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "d533d4004dfcb3240060c3616ed9832e145f6dd7e626a0e5dc4ed9fb8c6acb7f",
+      "paint": "28f82ef5b8b066dec86e6c3c319e13ab5749706b0782dee4abda4520a688c353",
+      "interior": "a93d41b136d4eb7ca4aa4812c9ce579d9b86a32b79522d3d59731a5c53b6b3f0",
+      "metadata": "e26204c31a7479d0f22eff0f6e5549cdcf8f4df58737d1fd48da471d188c93db"
+    },
+    {
+      "key": "1,1",
+      "cx": 1,
+      "cz": 1,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": 59,
+          "z0": 59,
+          "x1": 95,
+          "z1": 70,
+          "y": 1.1695187985897064
+        },
+        {
+          "x0": 64.2,
+          "z0": 69.05,
+          "x1": 67.2,
+          "z1": 71.45,
+          "y": -0.7346425387263297
+        },
+        {
+          "x0": 60,
+          "z0": 88,
+          "x1": 78,
+          "z1": 94.2,
+          "y": 0.07792014218866848
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.9799626766191523e-08,
+      "maxUnit": 3.248962565649549e-08,
+      "checked": 891,
+      "interpolated": 78,
+      "geometry": "9b60b84d7d9d2e72614a1a9ea13c7753cd0eef4c9819e91bfd0e7283e190a721",
+      "paint": "84de2a3ba1851cbb8054d197d8b71b74dac5ea0f673309075d4d13fef9cef32c",
+      "interior": "d736945324e123d3275031c905e08d8bb4f85160b4d091315f71e1eac41c6822",
+      "metadata": "f8460431faab51ab62cc3a568d22686b4dd714877f9aa165ca293c9ed6777a44"
+    },
+    {
+      "key": "-1,-1",
+      "cx": -1,
+      "cz": -1,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": -37,
+          "z0": -37,
+          "x1": -1,
+          "z1": -26,
+          "y": -2.101423144340515
+        },
+        {
+          "x0": -7.8,
+          "z0": -26.95,
+          "x1": -4.8,
+          "z1": -24.55,
+          "y": -2.355800087451935
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.9786661026598438e-08,
+      "maxUnit": 2.990701264415918e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "91ecbb93fb55a6955572660e2c4888fdafd985220d803bf23f4dff93396c3fbb",
+      "paint": "49ff4dbd97a4078b0212cab264ae332654bc4d166d9b89f753e25be8d23ceca2",
+      "interior": "2a56206de0762394b3e71a64c65a9dee137b0b8687533d5b1b5094232415899b",
+      "metadata": "95cdc931d0e487374830024323b847c5d53ffe51542054ade23ceb2f0f7bd86d"
+    },
+    {
+      "key": "-1,1",
+      "cx": -1,
+      "cz": 1,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": -37,
+          "z0": 59,
+          "x1": -1,
+          "z1": 70,
+          "y": -3.774046778678894
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.978977697853935e-08,
+      "maxUnit": 2.978787161378449e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "b4d5505026ee255123218ead131066344639f4c29520b8bfa0cacd5227805141",
+      "paint": "6d31f1321d51598263ddbb3527fed832a30968068aca334598c166a0c12c39f2",
+      "interior": "4b3290bc5f162743dec0fdf375854c91ca2924af6faba70eb106bb146f2fa4a9",
+      "metadata": "45b28353653d8bd4ba8e1fb4dff31d3a7ca713dda9e8142587c02bbc6a130863"
+    },
+    {
+      "key": "1,-1",
+      "cx": 1,
+      "cz": -1,
+      "kind": "res",
+      "pads": [
+        {
+          "x0": 59,
+          "z0": -37,
+          "x1": 95,
+          "z1": -26,
+          "y": 2.246325731277466
+        }
+      ],
+      "ponds": null,
+      "maxError": 2.978568280909144e-08,
+      "maxUnit": 3.6921206314488586e-08,
+      "checked": 900,
+      "interpolated": 0,
+      "geometry": "3185172cbf4c770db6827da6b3dbb48325aa7a45c5ed1b96317f4bc53e4036be",
+      "paint": "8a7220598a2820c36a17854f374cabe02a7ab737c97db6003d80dab1e15216c2",
+      "interior": "066f65225036f73341efa520aab56ac0b299f21708317d8de516ddaffa8eefd4",
+      "metadata": "03dd2e0019476a8ff4873e5a917f8471e5d2f2c6e236320ef78f2b2222fabe35"
+    }
+  ],
+  "edges": {
+    "height": 0,
+    "normal": 0,
+    "color": 0.022846557199954987,
+    "weights": 0,
+    "samples": 360
+  },
+  "render": {
+    "calls": 2,
+    "triangles": 3376,
+    "glError": 0
+  },
+  "errors": []
+}
