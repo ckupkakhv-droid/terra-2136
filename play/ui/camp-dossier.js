@@ -280,6 +280,9 @@
         const t = panel.classList.contains('hidden') ? null : tab();
         const residents = body.querySelector(':scope > .campResidents');
         const card = t === 'settlers' && residents?.querySelector(':scope > .residentIdentityHead') ? residents : null;
+        // Native resident navigation reuses this root for the list and task
+        // targets. Dossier styles hide folds that the list needs for hiring.
+        residents?.classList.toggle('dossier', !!card);
         body.classList.toggle('deskDossier', !!card);
         body.classList.toggle('deskBuild', t === 'build');
         if (t === 'settlers' && residents && !card) {
