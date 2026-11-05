@@ -1,5 +1,39 @@
 /* Surface architecture uses the native chunk builder and its shared instanced
  * geometries. Entries, collision and fast-travel identifiers stay native. */
+function foundation(builder,x,y,z,height) {
+  // A small chamfer catches light at the foundation edge without another
+  // material, mesh or collider. Coordinates passed to tri are already world-space.
+  const lower=[[-3,0,-3.5],[-3,0,3.5],[3,0,3.5],[3,0,-3.5]];
+  // Bury the lower edge below the perimeter terrain so a level base has no
+  // daylight gap on a slope. The top and native walking height stay unchanged.
+  let bottom=0;
+  for(let edge=0;edge<4;edge++)for(let step=0;step<=8;step++) {
+    const a=lower[edge],b=lower[(edge+1)%4],t=step/8;
+    const sample=height(x+a[0]+(b[0]-a[0])*t,z+a[2]+(b[2]-a[2])*t);
+    if(Number.isFinite(sample))bottom=Math.min(bottom,sample-y-.03);
+  }
+  for(const p of lower)p[1]=bottom;
+  const shoulder=lower.map(([a,,b])=>[a,.075,b]);
+  const top=lower.map(([a,,b])=>[Math.sign(a)*2.955,.12,Math.sign(b)*3.455]);
+  const ink=[.0953074666,.1046164841,.0908417112]; // #575b55, linear RGB
+  const point=p=>[p[0]+x,p[1]+y,p[2]+z];
+  function triangle(a,b,c,tone) {
+    const u=b.map((v,i)=>v-a[i]),v=c.map((n,i)=>n-a[i]);
+    const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+    const length=Math.hypot(...n);for(let i=0;i<3;i++)n[i]/=length;
+    const color=ink.map(c=>c*tone),start=builder.m?.length;
+    builder.tri(...point(a),...point(b),...point(c),n,n,n,color,color,color);
+    if(builder.m)for(let i=start;i<builder.m.length;i++)builder.m[i]=6; // native concrete atlas
+  }
+  function quad(a,b,c,d,tone) {triangle(a,b,c,tone);triangle(a,c,d,tone);}
+  quad(...top,1);
+  for(let i=0;i<4;i++) {
+    const next=(i+1)%4;
+    quad(lower[i],lower[next],shoulder[next],shoulder[i],.84);
+    quad(shoulder[i],shoulder[next],top[next],top[i],1.08);
+  }
+}
+
 const installed = new WeakSet();
 export function installMetroArchitecture(bridge) {
   const proto=bridge?.Chunk?.prototype, L=bridge?.shapes;
@@ -15,16 +49,42 @@ export function installMetroArchitecture(bridge) {
     s.oy=this.g.oy=this.n.oy=ground;
     s.r=()=>.5;
     try {
-    // Reuse the existing textured concrete slabs when the world kit is ready.
-    // Roll back the kit batches on failure, then keep the native pavement.
+    // Paving belongs in front of the station, outside the stairs. Keep its
+    // relief and thickness while bending it to the existing terrain height.
+    // Roll back the kit batches on failure, then keep the station foundation.
     const previousKit=this.kb, lengths={};
     for(const [key,batches] of Object.entries(previousKit||{}))
       lengths[key]=batches.map(batch=>Object.fromEntries(['p','n','uv','c','i'].map(k=>[k,batch[k].length])));
     const stats=globalThis.TERRA_KITS?.stats, placed=stats?.placed;
     try {
       if(typeof this.kp_!=='function') throw Error('kit unavailable');
-      for(const dx of [-2.25,2.25]) for(const dz of [-1.5,1.5])
-        if(!this.kp_('slab',x+dx,z+dz,0,1,{y:ground+.13,sink:0,tint:.84,sx:.35})) throw Error('slab unavailable');
+      for(const dx of [-1.1,1.1]) for(const dz of [4.2,5.6]) {
+        const xx=x+dx,zz=z+dz;
+        if(this.cols.some(c=>c.h>=.6 && xx+1.08>c.x0 && xx-1.08<c.x1 && zz+.68>c.z0 && zz-.68<c.z1))
+          throw Error('approach obstructed');
+        const starts=this.kb?.bld?.map(batch=>batch.p.length)||[0,0,0];
+        const rotation=(dx<0)===(dz<5)?0:Math.PI;
+        if(!this.kp_('slab',xx,zz,rotation,1,{y:0,sink:0,tint:.74+(dx>0?.04:0)-(dz>5?.02:0),sx:.72,sz:1.36/3})) throw Error('slab unavailable');
+        let top=-Infinity;
+        for(let b=0;b<this.kb.bld.length;b++)for(let i=starts[b];i<this.kb.bld[b].p.length;i+=3)
+          top=Math.max(top,this.kb.bld[b].p[i+1]);
+        if(!Number.isFinite(top))throw Error('empty paving');
+        for(let b=0;b<this.kb.bld.length;b++) {
+          const batch=this.kb.bld[b];
+          for(let i=starts[b];i<batch.p.length;i+=3) {
+            const vx=batch.p[i],vz=batch.p[i+2],height=this.hAt(vx,vz);
+            const hx=(this.hAt(vx+.05,vz)-this.hAt(vx-.05,vz))/.1;
+            const hz=(this.hAt(vx,vz+.05)-this.hAt(vx,vz-.05))/.1;
+            if(![height,hx,hz].every(Number.isFinite))throw Error('invalid terrain');
+            batch.p[i+1]+=height+.025-top;
+            // Inverse transpose for y'=y+height(x,z), preserving side normals.
+            const nx=batch.n[i]-hx*batch.n[i+1],ny=batch.n[i+1],nz=batch.n[i+2]-hz*batch.n[i+1];
+            const length=Math.hypot(nx,ny,nz);
+            if(!Number.isFinite(length)||length<1e-8)throw Error('invalid paving normal');
+            batch.n[i]=nx/length;batch.n[i+1]=ny/length;batch.n[i+2]=nz/length;
+          }
+        }
+      }
     } catch (_) {
       for(const [key,batches] of Object.entries(this.kb||{})) {
         if(!lengths[key]) delete this.kb[key];
@@ -33,7 +93,7 @@ export function installMetroArchitecture(bridge) {
       if(!previousKit) delete this.kb;
       if(Number.isFinite(placed))stats.placed=placed;
     }
-    s.box(x,0,z,6,.12,7,'#575b55');
+    foundation(s,x,ground,z,(xx,zz)=>this.hAt(xx,zz));
     // Deep shadow and descending treads: visual only.
     s.box(x,.015,z+.5,4,.06,5,'#131916');
     for(let i=0;i<7;i++) {
