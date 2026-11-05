@@ -1,0 +1,135 @@
+{
+  "cases": [
+    {
+      "key": "1,1,0",
+      "maxError": 0.42243652343750004,
+      "wrong": 32,
+      "count": 92,
+      "geometry": "df7616e3d347b4a5b80f438d39a9662287b1f28c78d7c9ee0bd7ae20bbf9b5ab",
+      "meta": "8f0b739ee200b2676803b647041457cbc8113d0c9907c0856b2e656ae42597a8"
+    },
+    {
+      "key": "1,1,1",
+      "maxError": 0.42243652343750004,
+      "wrong": 32,
+      "count": 92,
+      "geometry": "df7616e3d347b4a5b80f438d39a9662287b1f28c78d7c9ee0bd7ae20bbf9b5ab",
+      "meta": "da26e72e6387a6fbf7dafd8b86e124657c3dfdf2e01746a5582f3ae3ffb4d1ac"
+    },
+    {
+      "key": "1,1,2",
+      "maxError": 0.39236359120657127,
+      "wrong": 16,
+      "count": 16,
+      "geometry": "df7616e3d347b4a5b80f438d39a9662287b1f28c78d7c9ee0bd7ae20bbf9b5ab",
+      "meta": "55d934c6e26376182f5776af334b604e5bc6f92f3616d7c42f9bec1ba8407adc"
+    },
+    {
+      "key": "1,1,3",
+      "maxError": 0,
+      "wrong": 0,
+      "count": 0,
+      "geometry": "df7616e3d347b4a5b80f438d39a9662287b1f28c78d7c9ee0bd7ae20bbf9b5ab",
+      "meta": "562f93b4ae406cb471e6d9b3f96d81f40c97b50e3f77a6f7241cd3da9c295868"
+    },
+    {
+      "key": "-2,-1,0",
+      "maxError": 0.42243652343750004,
+      "wrong": 32,
+      "count": 92,
+      "geometry": "59e36717df1a506cd5dc477cac45f2d92c4c8f8eb7ffbe4f778a9b435cd63c20",
+      "meta": "fb8afcb416d3263e8f7b5e7a5360ed95bfea5ae45a3c4ccc356b2243639d3924"
+    },
+    {
+      "key": "-2,-1,1",
+      "maxError": 0.42243652343750004,
+      "wrong": 32,
+      "count": 92,
+      "geometry": "59e36717df1a506cd5dc477cac45f2d92c4c8f8eb7ffbe4f778a9b435cd63c20",
+      "meta": "9a55b61228976a271ea6fa335999f18da07d8dbd787971ce2cb91c1d03b73c57"
+    },
+    {
+      "key": "-2,-1,2",
+      "maxError": 0.39236359120657605,
+      "wrong": 16,
+      "count": 16,
+      "geometry": "59e36717df1a506cd5dc477cac45f2d92c4c8f8eb7ffbe4f778a9b435cd63c20",
+      "meta": "17e5a496cb70bdaaeb5d35317dd0d20068347e385f4a41662a7f1fa983891487"
+    },
+    {
+      "key": "-2,-1,3",
+      "maxError": 0,
+      "wrong": 0,
+      "count": 0,
+      "geometry": "59e36717df1a506cd5dc477cac45f2d92c4c8f8eb7ffbe4f778a9b435cd63c20",
+      "meta": "d7b26e81b312e731ad59a2e73a65ac65ca31b129a1e7c860f92b301b5633d18a"
+    }
+  ],
+  "chunks": [
+    {
+      "key": "0,0",
+      "missing": 168,
+      "geometry": "2288f43c431792cd720faf9bff0c0a6705a8fdbf2f6af10970c10cf7fe99b8dc",
+      "meta": "460fde6c505dceaa10f7fc03fa5735e202d5d41008f916b04160d8c3137f91c8"
+    },
+    {
+      "key": "1,0",
+      "missing": 272,
+      "geometry": "f5e92fa5acd045dfe19dd5b315c19c449f54fbee31673eea04cb33097e8fe1e5",
+      "meta": "2d5f7ad6ded6d847f29e8594f32499525caa27e761a45097f78ebd9363d6ed92"
+    },
+    {
+      "key": "-1,0",
+      "missing": 336,
+      "geometry": "2344aaff5c2494479e46e6835638b8d76a5a91729156653a926ada722d3a9abf",
+      "meta": "ac50c4e5880d021312a9a9108fdb794cdc9941200ea6e25071697f6aadae4187"
+    },
+    {
+      "key": "0,1",
+      "missing": 160,
+      "geometry": "aacfdf872d760a3cff3bbafb7c0af5f18064f478f1d22c9d48d7190240b3b53e",
+      "meta": "a4b4de4c2ce09468e11c703d71bad4626a0e29b7ca38a23c4f5173c8d302bfe6"
+    },
+    {
+      "key": "0,-1",
+      "missing": 282,
+      "geometry": "785fd410711b9022d430bf0610a63143c35ffb5767aea6279c4b67791def9107",
+      "meta": "fa21edad47333e87b9f324db4aa9b281fe2a2ffb3e5ddc2e344aebe408ac4d6f"
+    },
+    {
+      "key": "1,1",
+      "missing": 304,
+      "geometry": "2c989a49e7383e55469b871f602ed9bbfc1f7663185c23a497103ec723f8b597",
+      "meta": "bb5fd59d9a5ae2a0876b5956cf484071afa30974c27abf6798d176269d9bf154"
+    },
+    {
+      "key": "-1,-1",
+      "missing": 384,
+      "geometry": "36849ac7e3d4c6376d8da7fa098bf39e9597754cb163ba9af7677948183e7d0c",
+      "meta": "1c715ed1f274ac15fefc8b83e24407e168e4d242b1381d20fc05a2a25ac4b601"
+    },
+    {
+      "key": "-1,1",
+      "missing": 320,
+      "geometry": "007b7bdc0ad95f3f79cda5788c25d9c0411cdb66e4622ff8b3be86aab03fa587",
+      "meta": "590d54975fc743687db534ae268ef7bc6d4b3905034e14d9e530a8a9476d7248"
+    },
+    {
+      "key": "1,-1",
+      "missing": 324,
+      "geometry": "3a5c17cc1ee152d235cfb7722a375193af6a91c6231bf1725c283bc7bbb04cd2",
+      "meta": "dea26392a500c556e671b380694ad674b6f14178dd1aa2b3e0e705e7b0dbdebc"
+    }
+  ],
+  "edges": {
+    "height": 0,
+    "color": 0.0399496853351593,
+    "weights": 0.7352500110864639
+  },
+  "render": {
+    "calls": 2,
+    "triangles": 2010,
+    "error": 0
+  },
+  "errors": []
+}
