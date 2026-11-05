@@ -1,0 +1,19 @@
+{
+  "repository": "flo-bit/tiny-planets",
+  "commit": "b51aa232dff0799908eb97927381bb33f40cf2d6",
+  "path": "public/lowpoly_nature",
+  "files": [
+    {
+      "file": "Rock_1.gltf",
+      "bytes": 7396,
+      "blob": "6bd33c75a201d58721b2a29a99fcf81078c7f4eb",
+      "sha256": "20f0c7640cf4aff3be77246d30bef7cbe87a996b04a6772a2551848c65648456"
+    },
+    {
+      "file": "Rock_3.gltf",
+      "bytes": 7778,
+      "blob": "2046b64611d206ad109c7227ac762d3a9ec76401",
+      "sha256": "fa55001d859850c8c13ed8722e1f72867e7bf703b9934a76828e9808c87b18bb"
+    }
+  ]
+}

@@ -29,6 +29,8 @@ before, old = decode(subprocess.check_output(['git', 'show', BASE + ':' + FILE],
 after, new = decode((ROOT / FILE).read_bytes())
 targets = json.loads((NATURE / 'native-layout.json').read_text())
 lock = json.loads((NATURE / 'source-lock.json').read_text())
+# Separately replaced and audited against published 0.4.25 by rocks-topology.py.
+rock_targets = {'qn_rock_medium_1', 'qn_rock_medium_3'}
 assert len(targets) == 18 and len(lock['files']) == 15
 assert all(entry['source'] in {source['file'] for source in lock['files']} for entry in targets.values())
 for source in lock['files']:
@@ -43,6 +45,8 @@ for name, entry in after.items():
     assert all(entry[k] == original[k] for k in ['s', 'w', 'h', 'd']), name
     data = new[entry['o']:entry['o'] + entry['t'] * 24]
     if name not in targets:
+        if name in rock_targets:
+            continue
         assert data == old[original['o']:original['o'] + original['t'] * 24], name
         continue
     assert 0 < entry['t'] <= targets[name]['layout']['t'] == original['t'], name
@@ -78,4 +82,4 @@ for name, entry in after.items():
                    'openBarkEdges': 0, 'rootOffset': pivot})
 print(json.dumps(report, ensure_ascii=False))
 print('PASS 18 closed quantised trunks, normals, pivots, dimensions, budgets, source hashes; '
-      '84 unrelated prop entries byte-for-byte unchanged')
+      '82 other prop entries byte-for-byte unchanged; two rocks audited separately')
