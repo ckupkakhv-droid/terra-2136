@@ -129,7 +129,8 @@ def classic_source(path):
 
 
 def inline_script(match):
-    attributes, path = match.group(1) + match.group(3), match.group(2)
+    attributes = match.group(1) + match.group(3)
+    path = urlsplit(match.group(2)).path
     # Preserve staged scripts until boot.js activates them in online order.
     kind = re.search(r'\btype\s*=\s*(["\'])(.*?)\1', attributes)
     opening = '<script' + attributes + '>'

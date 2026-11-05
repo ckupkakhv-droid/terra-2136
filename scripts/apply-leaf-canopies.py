@@ -6,8 +6,12 @@ this tiny bridge reproducible; readable rendering lives in leaf-canopies.js.
 from pathlib import Path
 
 p=Path(__file__).resolve().parents[1]/'play/index.html'
-s=p.read_text();old='<script src="art/prop-materials.js"></script>';new=old+'\n<script src="art/leaf-canopies.js"></script>'
-if new not in s:
+s=p.read_text();old='<script src="art/prop-materials.js"></script>';tag='<script src="art/leaf-canopies.js?v=2"></script>';new=old+'\n'+tag
+legacy='<script src="art/leaf-canopies.js"></script>'
+if legacy in s:
+ if s.count(legacy)!=1:raise SystemExit('Leaf canopies: duplicate legacy script')
+ s=s.replace(legacy,tag,1)
+elif new not in s:
  if s.count(old)!=1:raise SystemExit('Leaf canopies: script anchor changed')
  s=s.replace(old,new,1)
 old='TERRA_ART.hook({Ie,get ue(){return ue},'

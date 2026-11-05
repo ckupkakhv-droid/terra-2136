@@ -1,0 +1,97 @@
+{
+  "repository": "flo-bit/tiny-planets",
+  "commit": "b51aa232dff0799908eb97927381bb33f40cf2d6",
+  "directory": "public/lowpoly_nature",
+  "files": [
+    {
+      "file": "CommonTree_1.gltf",
+      "blob": "1456df7a9daddaa754973fe6aa45fb1924c4ac75",
+      "sha256": "5461cb23d919e5f6fde9898d50a5be45c444ee469e68de16c16b0fafe768bff3",
+      "bytes": 211686
+    },
+    {
+      "file": "CommonTree_2.gltf",
+      "blob": "17851dc26585eb6a1e8d17d83796e1eb82d39eef",
+      "sha256": "61b014499d7af706972ea9e508f9c1a8127a8ebb10301f7b9c3d253bb11c1321",
+      "bytes": 216216
+    },
+    {
+      "file": "CommonTree_3.gltf",
+      "blob": "7404d842347930b8682bb49a4d9ac3f33ed6ebb3",
+      "sha256": "5779930edc57fd08f39d0ac6e678deefe7e0776624e1ac4927e69180468b3f19",
+      "bytes": 119261
+    },
+    {
+      "file": "CommonTree_4.gltf",
+      "blob": "701fa04e492c8ef0dfbec5228f3057d189a5957e",
+      "sha256": "4a45daeccd2811eafab829daaff0d4d0eb6afd9cb1c99932e9c64a6460e6d329",
+      "bytes": 102501
+    },
+    {
+      "file": "CommonTree_5.gltf",
+      "blob": "dc293a0a5cd6212b20c0d119edc5fb9f305808fa",
+      "sha256": "5bac957465d2f08f4a61540e34d487dc4cf994889f6e0c0fff1e7be8f067c947",
+      "bytes": 135953
+    },
+    {
+      "file": "CommonTree_Dead_1.gltf",
+      "blob": "5fb7a11c246832897f9b787a55daf796321d4783",
+      "sha256": "c2549fc8475c02097778057f4cd6e43e13e09646852a9b54ba348e3b4ee79576",
+      "bytes": 172231
+    },
+    {
+      "file": "CommonTree_Dead_2.gltf",
+      "blob": "d6a75d4b832821ae86750bae04d2a7199b71b276",
+      "sha256": "f338df3e0fe9572cf21aa61e090ef0fda29034b80ff0e4dcd1cb9c780e1d734c",
+      "bytes": 172232
+    },
+    {
+      "file": "CommonTree_Dead_3.gltf",
+      "blob": "72091010188b07e4c7cec849225924c5135dc2e7",
+      "sha256": "ae8e47ce72c0b2bcc2482758e8f6eb86ab12cf7c7bcf28753257249fcc378a9b",
+      "bytes": 70294
+    },
+    {
+      "file": "CommonTree_Dead_4.gltf",
+      "blob": "b863de4533b5248d66b5e7a459ad56531e2e9067",
+      "sha256": "e8d38b40ee7fb5c1b24c6b1b107595f3b2b420895b7f17adec5c19b2bd9e4abf",
+      "bytes": 74884
+    },
+    {
+      "file": "CommonTree_Dead_5.gltf",
+      "blob": "601c74d71df1e0503238dd4ef78aadcb0eb0aa38",
+      "sha256": "490958886d1557e904f899ceefc7bbe3ce0449a08453ce915dbf67193ba186eb",
+      "bytes": 104854
+    },
+    {
+      "file": "PineTree_1.gltf",
+      "blob": "6cf59c48318c7fa1d21fad1e657f4c016d31b122",
+      "sha256": "1d2776b9c387c926ece78b4ae5148b805a7b4d67b5e0643432b861ff8e0d54c0",
+      "bytes": 141494
+    },
+    {
+      "file": "PineTree_2.gltf",
+      "blob": "6a988b5c51fd59fbf50997d4e561fafb349f25f5",
+      "sha256": "d70c1d46d00495566799a4b4a90a03271e846914cf5fbaaa545b309dbbfc24f4",
+      "bytes": 125014
+    },
+    {
+      "file": "PineTree_3.gltf",
+      "blob": "213ce3c29d3112fca51774643f6d7fe91581d605",
+      "sha256": "0bceea53e8e31c6c09fe8d60947b28baa32604cef96441090f9a9372a5193fe0",
+      "bytes": 175476
+    },
+    {
+      "file": "PineTree_4.gltf",
+      "blob": "dd9f9d5411ad5a3df9da8a5e2762447b71c4549b",
+      "sha256": "2e867e1421b420ada772f97fe96c47e992eb9452d9489e749262bc5d61ec3bc4",
+      "bytes": 125939
+    },
+    {
+      "file": "PineTree_5.gltf",
+      "blob": "46f9f05c827fa5da5629ad3f83813fe1e245faf8",
+      "sha256": "c760de0d2d43ac9f17da6be82d0cdfa0f6149aa4488241e973e098e467a843eb",
+      "bytes": 116681
+    }
+  ]
+}

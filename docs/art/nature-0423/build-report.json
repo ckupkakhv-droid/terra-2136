@@ -1,0 +1,380 @@
+{
+  "qn_commontree_1": {
+    "layout": {
+      "t": 892,
+      "s": 0.00021388997416943312,
+      "w": 2.782,
+      "h": 6.844,
+      "d": 2.865
+    },
+    "source": {
+      "triangles": 2888,
+      "barkTriangles": 2360,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 892,
+      "barkTriangles": 504,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_commontree_2": {
+    "layout": {
+      "t": 888,
+      "s": 0.0002181822331622243,
+      "w": 2.888,
+      "h": 6.982,
+      "d": 2.751
+    },
+    "source": {
+      "triangles": 2950,
+      "barkTriangles": 2360,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 888,
+      "barkTriangles": 494,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_commontree_3": {
+    "layout": {
+      "t": 892,
+      "s": 0.0002726092860102654,
+      "w": 3.587,
+      "h": 8.723,
+      "d": 3.862
+    },
+    "source": {
+      "triangles": 1584,
+      "barkTriangles": 944,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 892,
+      "barkTriangles": 400,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_commontree_4": {
+    "layout": {
+      "t": 899,
+      "s": 0.0002863843319937587,
+      "w": 3.373,
+      "h": 9.164,
+      "d": 3.401
+    },
+    "source": {
+      "triangles": 1351,
+      "barkTriangles": 1008,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 899,
+      "barkTriangles": 566,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_commontree_5": {
+    "layout": {
+      "t": 882,
+      "s": 0.00021080506965517998,
+      "w": 3.283,
+      "h": 6.746,
+      "d": 3.452
+    },
+    "source": {
+      "triangles": 1836,
+      "barkTriangles": 1424,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 882,
+      "barkTriangles": 506,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_pine_1": {
+    "layout": {
+      "t": 893,
+      "s": 0.0002268632920458913,
+      "w": 4.799,
+      "h": 7.26,
+      "d": 4.057
+    },
+    "source": {
+      "triangles": 1911,
+      "barkTriangles": 56,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 893,
+      "barkTriangles": 172,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_pine_2": {
+    "layout": {
+      "t": 895,
+      "s": 0.0002310490431264043,
+      "w": 5.098,
+      "h": 7.394,
+      "d": 4.77
+    },
+    "source": {
+      "triangles": 1681,
+      "barkTriangles": 68,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 895,
+      "barkTriangles": 150,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_pine_3": {
+    "layout": {
+      "t": 955,
+      "s": 0.0002294870992191136,
+      "w": 2.642,
+      "h": 7.344,
+      "d": 2.933
+    },
+    "source": {
+      "triangles": 2383,
+      "barkTriangles": 80,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 955,
+      "barkTriangles": 164,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_pine_4": {
+    "layout": {
+      "t": 881,
+      "s": 0.00032080470118671655,
+      "w": 5.802,
+      "h": 10.266,
+      "d": 5.371
+    },
+    "source": {
+      "triangles": 1695,
+      "barkTriangles": 80,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 881,
+      "barkTriangles": 150,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_pine_5": {
+    "layout": {
+      "t": 878,
+      "s": 0.00027326337434351445,
+      "w": 6.42,
+      "h": 8.744,
+      "d": 6.222
+    },
+    "source": {
+      "triangles": 1566,
+      "barkTriangles": 56,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 878,
+      "barkTriangles": 196,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_deadtree_1": {
+    "layout": {
+      "t": 1234,
+      "s": 0.0002979660425335169,
+      "w": 6.108,
+      "h": 9.535,
+      "d": 5.729
+    },
+    "source": {
+      "triangles": 2360,
+      "barkTriangles": 2360,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1234,
+      "barkTriangles": 1234,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_deadtree_2": {
+    "layout": {
+      "t": 1330,
+      "s": 0.00036088443640619515,
+      "w": 6.732,
+      "h": 11.548,
+      "d": 6.366
+    },
+    "source": {
+      "triangles": 2360,
+      "barkTriangles": 2360,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1330,
+      "barkTriangles": 1330,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_deadtree_3": {
+    "layout": {
+      "t": 1074,
+      "s": 0.00041590897645801307,
+      "w": 6.359,
+      "h": 13.309,
+      "d": 6.419
+    },
+    "source": {
+      "triangles": 944,
+      "barkTriangles": 944,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1074,
+      "barkTriangles": 1074,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_deadtree_4": {
+    "layout": {
+      "t": 1090,
+      "s": 0.0004010308515280485,
+      "w": 7.947,
+      "h": 12.833,
+      "d": 7.71
+    },
+    "source": {
+      "triangles": 1008,
+      "barkTriangles": 1008,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1090,
+      "barkTriangles": 1090,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_deadtree_5": {
+    "layout": {
+      "t": 1050,
+      "s": 0.0005146273421123623,
+      "w": 8.341,
+      "h": 16.468,
+      "d": 8.406
+    },
+    "source": {
+      "triangles": 1424,
+      "barkTriangles": 1424,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1050,
+      "barkTriangles": 1050,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_twistedtree_1": {
+    "layout": {
+      "t": 1110,
+      "s": 0.0004909411203116178,
+      "w": 11.492,
+      "h": 15.71,
+      "d": 8.56
+    },
+    "source": {
+      "triangles": 944,
+      "barkTriangles": 944,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1110,
+      "barkTriangles": 1110,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_twistedtree_2": {
+    "layout": {
+      "t": 1182,
+      "s": 0.0005592577047646046,
+      "w": 8.462,
+      "h": 17.896,
+      "d": 6.482
+    },
+    "source": {
+      "triangles": 1008,
+      "barkTriangles": 1008,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1182,
+      "barkTriangles": 1182,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  },
+  "qn_twistedtree_3": {
+    "layout": {
+      "t": 1530,
+      "s": 0.00046943857707083223,
+      "w": 8.475,
+      "h": 15.022,
+      "d": 8.899
+    },
+    "source": {
+      "triangles": 1424,
+      "barkTriangles": 1424,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    },
+    "result": {
+      "triangles": 1530,
+      "barkTriangles": 1530,
+      "openBarkEdges": 0,
+      "nonManifoldBarkEdges": 0
+    }
+  }
+}
