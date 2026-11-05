@@ -118,15 +118,29 @@ export function installMetroTransition(game) {
       const active=()=>this.p===owner && owner?.alive && this.state==='play' && this.dungeonTransition===token && !this.world.inDungeon &&
         this.cam===nativeCamera && this.post===post;
       if(camera && typeof previous==='function') {
+        // `from` is the surface *return* point, three metres in front of the
+        // entry. Metro architecture puts the stair centre 1.5 m behind the
+        // entry; aim at that centre instead of at the return point.
+        const from=descriptor.from;
+        const x=Number.isFinite(from?.x)?from.x:owner.x;
+        const z=Number.isFinite(from?.z)?from.z-4.5:owner.z;
+        const sampledGround=window.TERRA_H?.(x,z);
+        const ground=Number.isFinite(sampledGround)?sampledGround:0;
+        // Keep a separate target: slerpQuaternions copies its first argument
+        // before reading the second, so passing camera.quaternion as both the
+        // destination and target silently cancels the camera turn.
+        const targetOrientation=nativeCamera.quaternion.clone();
         wrapped=function(scene,view,...renderArgs) {
           if (!active()) return previous.call(this,scene,view,...renderArgs);
           const progress=Math.min(1,Math.max(0,(performance.now()-started)/650));
-          const x=descriptor.from?.x ?? owner.x,z=descriptor.from?.z ?? owner.z;
-          const ground=window.TERRA_H?.(x,z)||0;
+          const eased=progress*progress*(3-2*progress),move=eased*.18;
           camera.copy(nativeCamera);
-          camera.position.lerp(camera.position.clone().set(x,ground+2.2,z),progress*.14);
+          camera.position.x+=(x-camera.position.x)*move;
+          camera.position.y+=(ground+2.2-camera.position.y)*move;
+          camera.position.z+=(z-camera.position.z)*move;
           camera.lookAt(x,ground+.7,z);
-          camera.quaternion.slerpQuaternions(nativeCamera.quaternion,camera.quaternion,progress*.55);
+          targetOrientation.copy(camera.quaternion);
+          camera.quaternion.slerpQuaternions(nativeCamera.quaternion,targetOrientation,eased*.7);
           camera.updateMatrixWorld();
           return previous.call(this,scene,camera,...renderArgs);
         };
