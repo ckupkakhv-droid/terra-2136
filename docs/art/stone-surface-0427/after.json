@@ -1,0 +1,948 @@
+{
+  "chunks": [
+    {
+      "key": "0,0",
+      "meta": "460fde6c505dceaa10f7fc03fa5735e202d5d41008f916b04160d8c3137f91c8",
+      "terrain": "8f8dcc40ed13261ad04fa1b9c228819cafa77b6b05c5df39157a289417810a03"
+    },
+    {
+      "key": "1,0",
+      "meta": "2d5f7ad6ded6d847f29e8594f32499525caa27e761a45097f78ebd9363d6ed92",
+      "terrain": "acdf794bd3a0b39fd64ef1b17845a0b820e867920b159b2feeda2495e0809691"
+    },
+    {
+      "key": "-1,0",
+      "meta": "ac50c4e5880d021312a9a9108fdb794cdc9941200ea6e25071697f6aadae4187",
+      "terrain": "2868d33b4e7367355aa1134cab65f586c78d5d19d0b61a7eceed87a0d4356ba1"
+    },
+    {
+      "key": "0,1",
+      "meta": "a4b4de4c2ce09468e11c703d71bad4626a0e29b7ca38a23c4f5173c8d302bfe6",
+      "terrain": "82daa12fbb16e4e1d4c804b6ed0470d987cbb5a0bf780dfc449d120234021bc1"
+    },
+    {
+      "key": "0,-1",
+      "meta": "fa21edad47333e87b9f324db4aa9b281fe2a2ffb3e5ddc2e344aebe408ac4d6f",
+      "terrain": "b5b1c9fe0637e4ab108229f1167b41e7868c69b54d2bed7295b99ee53913a3ef"
+    },
+    {
+      "key": "1,1",
+      "meta": "bb5fd59d9a5ae2a0876b5956cf484071afa30974c27abf6798d176269d9bf154",
+      "terrain": "7776c3ef0b458092d8b8804b19be06c03e806410ab9f937bab2aa43f80626562"
+    },
+    {
+      "key": "-1,-1",
+      "meta": "1c715ed1f274ac15fefc8b83e24407e168e4d242b1381d20fc05a2a25ac4b601",
+      "terrain": "7fc18849b2ba75584904517482a2849f1406f0c87d1c2eb3f3816a642c68363b"
+    },
+    {
+      "key": "-1,1",
+      "meta": "590d54975fc743687db534ae268ef7bc6d4b3905034e14d9e530a8a9476d7248",
+      "terrain": "fcff369dbdf089af5c53fe8c6052c90f3d638df8a79ac91fcdb1e4453fc1a802"
+    },
+    {
+      "key": "1,-1",
+      "meta": "dea26392a500c556e671b380694ad674b6f14178dd1aa2b3e0e705e7b0dbdebc",
+      "terrain": "41c691b55235f606322d2362eb769f0570d1fd63174df79086df01cb1bff5b0e"
+    }
+  ],
+  "models": [
+    {
+      "name": "rock_a",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 312,
+      "dimensions": {
+        "w": 1.1297709923664123,
+        "d": 1.2661577608142494,
+        "h": 0.8
+      },
+      "maxError": 2.3716135776302823e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "498504e24182bf9c07c767fca1fb598d22ab1346fe29a5ea1d0513708deaea1b",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "rock_a",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 312,
+      "dimensions": {
+        "w": 1.9770992366412212,
+        "d": 2.215776081424936,
+        "h": 1.4
+      },
+      "maxError": 2.3716137376825188e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "82df503dfa460ed643bb0999a793d2ac9cee1393742ae3845f8597a1f3d51e35",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "rock_a",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 312,
+      "dimensions": {
+        "w": 0.5648854961832062,
+        "d": 0.6330788804071247,
+        "h": 0.4
+      },
+      "maxError": 2.3716131852219384e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "edf53808c5930b2ac3091972437743e7a3b45e501cf8f477694802552d200052",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "rock_b",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 468,
+      "dimensions": {
+        "w": 1.594272076372315,
+        "d": 1.3842482100238664,
+        "h": 0.8
+      },
+      "maxError": 3.668858901793916e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "339e180e3a5606f0d7e1242895546aa6b7af00072405cf79cfbce9c2383076bd",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "rock_b",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 468,
+      "dimensions": {
+        "w": 2.7899761336515514,
+        "d": 2.422434367541766,
+        "h": 1.4
+      },
+      "maxError": 3.6688591952177864e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "5ddd686ac62441f47dd32a5a84becfc1cf0c8a169244380db817769d8c64e130",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "rock_b",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 468,
+      "dimensions": {
+        "w": 0.7971360381861575,
+        "d": 0.6921241050119332,
+        "h": 0.4
+      },
+      "maxError": 3.668859134214178e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "36b120a347b6a2d1d3b6a6c5d4cb02b82f6f7b8aea0fbc646599fc977b81da4a",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "stones",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 396,
+      "dimensions": {
+        "w": 1.88,
+        "d": 1.685,
+        "h": 0.8
+      },
+      "maxError": 3.49546724447755e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "3e9a7eb42e0df659d65cc524e6f0dea1d70ba7856278d1084237b22c59ea8cec",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "stones",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 396,
+      "dimensions": {
+        "w": 3.29,
+        "d": 2.94875,
+        "h": 1.4
+      },
+      "maxError": 3.495467215951626e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "8f609c45b37c585a689bfef14d40b5689e371246bf666eb13c09d86f8b71e02a",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "stones",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 396,
+      "dimensions": {
+        "w": 0.94,
+        "d": 0.8425,
+        "h": 0.4
+      },
+      "maxError": 3.495467118740631e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "9a5291bc6925507e70c5a3183b8d3a9b3b27c17562c9df1aec363dc283f9f59f",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_1",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 558,
+      "dimensions": {
+        "w": 1.1426040744021257,
+        "d": 1.0589902568644818,
+        "h": 0.8
+      },
+      "maxError": 4.0456078334625534e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "d45e2c8fa292b851979836db8715a1645e6e66f3dcce52b086ee25a66852e07b",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_1",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 558,
+      "dimensions": {
+        "w": 1.99955713020372,
+        "d": 1.8532329495128432,
+        "h": 1.4
+      },
+      "maxError": 4.045608035046125e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "c69fcde3018d37a7300f026dc4a035af4e3da0752726e7740d645893bf6cbaef",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_1",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 558,
+      "dimensions": {
+        "w": 0.5713020372010629,
+        "d": 0.5294951284322409,
+        "h": 0.4
+      },
+      "maxError": 4.045607400128697e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "a27b501d90da0dc34beb2d9b2ed2e05766d1bd0b210fce46389ab5f3c1640fbf",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_2",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 732,
+      "dimensions": {
+        "w": 1.2844655081621907,
+        "d": 1.0443391258557138,
+        "h": 0.8
+      },
+      "maxError": 3.726287263888488e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "2c362ec9d31f0dcb7e2fcf54b8a86b6fee4422517ffd9320432a3eee7913b741",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_2",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 732,
+      "dimensions": {
+        "w": 2.2478146392838334,
+        "d": 1.8275934702474985,
+        "h": 1.4
+      },
+      "maxError": 3.726286616466869e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "d402afff004433bd78edb0a874f4ea2afde2675d85340546ba3a34ecc840a914",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_2",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 732,
+      "dimensions": {
+        "w": 0.6422327540810954,
+        "d": 0.5221695629278569,
+        "h": 0.4
+      },
+      "maxError": 3.726287312574803e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "52cbfc7cd043b5f71098d75e575b94fc2f7dc7de49a9d4858cdb26a33b23a0b8",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_3",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 630,
+      "dimensions": {
+        "w": 1.1900826446280992,
+        "d": 1.213745106568073,
+        "h": 0.8
+      },
+      "maxError": 3.984064321412232e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "c618a559ee00bfb28225e66f70339ef4ed8cd29e41773e40942b57b1f7e3439b",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_3",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 630,
+      "dimensions": {
+        "w": 2.0826446280991737,
+        "d": 2.124053936494128,
+        "h": 1.4
+      },
+      "maxError": 3.984064281855723e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "186422ec2c13679244785a8bd5ce478f74f08be7ea59f72026508efb1c8a2a20",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_rock_medium_3",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 630,
+      "dimensions": {
+        "w": 0.5950413223140496,
+        "d": 0.6068725532840366,
+        "h": 0.4
+      },
+      "maxError": 3.984064065410166e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "f01af2e7a7629d8b98b0bd09201ece508ef59f4ae0cb3421606f075dde6f47c6",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_1",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 408,
+      "dimensions": {
+        "w": 4.2105263157894735,
+        "d": 3.0905263157894733,
+        "h": 0.8
+      },
+      "maxError": 3.8841308477841497e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "2c9097cbec1f1948ad5ab7f5fd33e625851820bf21f4a9e93aa12f845cfeefe0",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_1",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 408,
+      "dimensions": {
+        "w": 7.368421052631579,
+        "d": 5.408421052631579,
+        "h": 1.4
+      },
+      "maxError": 3.884130844366485e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "7ffeca70887d4eb3b60a5ab345b92922271d71f461c00a7a7b28ddaba3bda15f",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_1",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 408,
+      "dimensions": {
+        "w": 2.1052631578947367,
+        "d": 1.5452631578947367,
+        "h": 0.4
+      },
+      "maxError": 3.8841307322217546e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "3cc70ad5818335a0a26c77e6e0803469b9ef2b47e22313bb1a158dba27733485",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_3",
+      "pose": [
+        0,
+        0,
+        0,
+        0.8
+      ],
+      "vertices": 384,
+      "dimensions": {
+        "w": 3.6363636363636367,
+        "d": 3.919191919191919,
+        "h": 0.8
+      },
+      "maxError": 2.971010287270172e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "b66a38c2320e6105bd0123c750c45ebfbefc7704d8071621b28bb3f10453cabf",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_3",
+      "pose": [
+        0.7,
+        0.25,
+        -0.15,
+        1.4
+      ],
+      "vertices": 384,
+      "dimensions": {
+        "w": 6.363636363636363,
+        "d": 6.858585858585858,
+        "h": 1.4
+      },
+      "maxError": 2.971010449419001e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "26e1c213944931ba5a1cc2e5844248c0c476da4c2a84bca98d992b0effd1696a",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_pebble_round_3",
+      "pose": [
+        -1.2,
+        -0.3,
+        0.5,
+        0.4
+      ],
+      "vertices": 384,
+      "dimensions": {
+        "w": 1.8181818181818183,
+        "d": 1.9595959595959596,
+        "h": 0.4
+      },
+      "maxError": 2.9710104856966827e-08,
+      "mismatch": 0,
+      "unit": true,
+      "prefix": true,
+      "material": true,
+      "aligned": true,
+      "missing": true,
+      "data": "bac77261cbe3018ee2442421b9a615c98f9508136f54f295b65ccc9533768a40",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    }
+  ],
+  "other": [
+    {
+      "name": "barrel",
+      "hash": "a52d4726f618005fe20fa6218e93b41b8ef1db1c92b63a0e1ee12d6e23266bf6",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "qn_commontree_1",
+      "hash": "cfc2c5b4ebc6b7daa4540a5d6d21c0c7b8e215b81368cc07efdedc3a3b766760",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "workbench",
+      "hash": "50912ed7f97ce723181dc130dfc6ad6388ad8f654437e664fb68d28e07e72e92",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    },
+    {
+      "name": "bench",
+      "hash": "85b51051f0b79caaac2423513db33e23a783bd4ba1c359f9bba8bf03ac3bff07",
+      "next": [
+        0.006907482398673892,
+        0.41859622905030847,
+        0.7082795794121921
+      ]
+    }
+  ],
+  "material": {
+    "type": "MeshPhongMaterial",
+    "flat": false,
+    "key": "p01101f2m1-stone-projection-1"
+  },
+  "render": {
+    "calls": 2,
+    "triangles": 2584,
+    "error": 0
+  },
+  "seam": {
+    "layers": [
+      {
+        "layer": 0,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 1,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 2,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 3,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 4,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 5,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 6,
+        "up": [
+          141,
+          141,
+          141,
+          255
+        ],
+        "down": [
+          141,
+          141,
+          141,
+          255
+        ],
+        "gap": 0
+      },
+      {
+        "layer": 7,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 8,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      },
+      {
+        "layer": 9,
+        "up": [
+          181,
+          181,
+          181,
+          255
+        ],
+        "down": [
+          101,
+          101,
+          101,
+          255
+        ],
+        "gap": 80
+      }
+    ],
+    "error": 0,
+    "center": [
+      640,
+      450
+    ]
+  },
+  "stats": {
+    "instances": 48,
+    "shaders": 3,
+    "fallback": 0,
+    "models": 8,
+    "bytes": 46656
+  },
+  "errors": []
+}

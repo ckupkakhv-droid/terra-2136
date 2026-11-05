@@ -17,6 +17,7 @@
         const count=this.p.length/3;
         for(let i=before;i<count;i++)this.m.push(stone?7:0); // Rock030 is atlas layer 6 + encoded offset 1.
       }
+      if(stone)ART.smoothRock?.(this,before,args);
       if(legacy)for(let i=before*3;i<this.p.length;i+=3) {
         const light=(this.c[i]*.21+this.c[i+1]*.72+this.c[i+2]*.07)*.5;
         const noise=Math.sin(this.p[i]*12.9898+this.p[i+2]*78.233)*43758.5453;
