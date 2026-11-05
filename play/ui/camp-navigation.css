@@ -279,3 +279,25 @@ body:has(#sewerRecording) #touch{visibility:hidden!important}
   font:600 11px/1.4 system-ui,sans-serif; letter-spacing:.24em; text-shadow:0 2px 8px #000; }
 @keyframes metroTransitionFrame { 0%{opacity:0} 25%,65%{opacity:1} 100%{opacity:0} }
 @media(prefers-reduced-motion:reduce){.metroTransition{animation:none;opacity:0}}
+
+/* Keep the travel hint by the HUD rather than over the player or a station.
+   The native pointer still tracks the map button and the card remains tappable. */
+@media (orientation: portrait) and (max-width: 600px) {
+  #tipCard[data-tip="travel"] {
+    left: 0;
+    right: auto;
+    top: clamp(166px, 20vh, 180px);
+    transform: none;
+    max-width: min(220px, calc(100% - 76px));
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  #tipCard[data-tip="travel"] {
+    left: auto;
+    right: clamp(110px, 15vw, 140px);
+    top: 52px;
+    transform: none;
+    width: 160px;
+    max-width: calc(100% - 120px);
+  }
+}
