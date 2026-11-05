@@ -11,9 +11,18 @@ with sync_playwright() as p:
  page.locator('#mNew').click();page.locator('#skip').click();page.wait_for_function('game.sewers && game.state==="play"')
  # Local generator invariants include native collision and fast-travel ids.
  invariant=page.evaluate('''()=>{const c=new TERRA_SEWER_BRIDGE.Chunk(5,6);c.metro(260,300,'metro','Тест');
-   return {entry:c.ents[0],tp:c.tps[0],cols:c.cols};}''')
+   return {entry:c.ents[0],tp:c.tps[0],cols:c.cols,kitTriangles:c.kb?.bld?.[0]?.i?.length||0,next:[c.r(),c.r(),c.r(),c.r()]};}''')
  assert invariant['entry']=={'x':260,'z':301.5,'kind':'metro','name':'Тест'},invariant
  assert invariant['tp']['id']=='m5_6' and invariant['tp']['z']==305.5 and len(invariant['cols'])==3,invariant
+ # The surface kit must not advance the seeded stream or leave partially
+ # inserted geometry if a placement fails halfway through.
+ assert invariant['next']==[0.8220946618821472,0.7601078576408327,0.7970146320294589,0.38742400682531297],invariant
+ assert invariant['kitTriangles']>0,invariant
+ fallback=page.evaluate('''()=>{const c=new TERRA_SEWER_BRIDGE.Chunk(5,6), make=()=>({p:[1],n:[2],uv:[3],c:[4],i:[5]});
+   c.kb={bld:[make(),make(),make()]};let calls=0;
+   c.kp_=function(){for(const k of ['p','n','uv','c','i'])this.kb.bld[0][k].push(99);if(++calls===2)throw Error('simulated failure');return {}};
+   c.metro(260,300,'metro','Тест');return {lengths:['p','n','uv','c','i'].map(k=>c.kb.bld[0][k].length),surface:c.s.p.length,calls};}''')
+ assert fallback['lengths']==[1,1,1,1,1] and fallback['surface']>0 and fallback['calls']==2,fallback
  page.wait_for_function("game.world.ents.some(e=>e.kind==='metro'&&!e.sewer)",timeout=90000)
  entry=page.evaluate("game.world.ents.find(e=>e.kind==='metro'&&!e.sewer)")
  page.evaluate('e=>{game.p.x=e.x;game.p.z=e.z+2;game.camT=null;game.p.hp=game.p.maxHp=10000}',entry)
