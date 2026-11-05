@@ -28,6 +28,30 @@ with sync_playwright() as p:
  page.evaluate('e=>{game.p.x=e.x;game.p.z=e.z+2;game.camT=null;game.p.hp=game.p.maxHp=10000}',entry)
  page.wait_for_timeout(800);page.screenshot(path=str(out/'metro-desktop.png'))
  page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(500);page.screenshot(path=str(out/'metro-portrait.png'))
+ # Inspect three deterministic points of the actual camera wrapper. The scene
+ # target is the stair centre, not the surface return position in descriptor.from.
+ camera=page.evaluate('''e=>{
+  const g=game,post=g.post,old=post.render,now=Object.getOwnPropertyDescriptor(performance,'now');
+  let clock=1000,frames=[];Object.defineProperty(performance,'now',{configurable:true,value:()=>clock});
+  post.render=function(scene,cam){
+   const direction=cam.getWorldDirection(cam.position.clone());
+   const target=cam.position.clone().set(e.x,(window.TERRA_H?.(e.x,e.z-1.5)||0)+.7,e.z-1.5).sub(cam.position).normalize();
+   frames.push({position:cam.position.toArray(),rotation:cam.quaternion.toArray(),alignment:direction.dot(target),native:cam===g.cam});
+  };
+  try{
+   const key=Math.round(e.x)+','+Math.round(e.z);
+   const ok=g.runDungeonTransition({theme:'metro',seed:key,key,idx:0,tier:1,from:{x:e.x,z:e.z+3},name:e.name},false);
+   if(!ok)throw Error('camera probe transition refused');
+   for(const t of [0,325,649]){clock=1000+t;post.render(g.scene,g.cam,0)}
+   g.cancelDungeonTransition();return frames;
+  }finally{g.cancelDungeonTransition?.();post.render=old;if(now)Object.defineProperty(performance,'now',now);else delete performance.now}
+ }''',entry)
+ assert len(camera)==3 and not any(frame['native'] for frame in camera),camera
+ assert camera[2]['alignment'] > camera[0]['alignment'] + .002,camera
+ dot=abs(sum(a*b for a,b in zip(camera[0]['rotation'],camera[2]['rotation'])))
+ assert dot < .9999,camera  # catches aliased quaternion targets that never rotate
+ assert camera[2]['position'][2] < camera[0]['position'][2],camera
+ page.wait_for_function('!document.querySelector(".metroTransition") && !game.dungeonTransition')
  result=page.evaluate('''e=>{
   const post=game.post, old=post.render;window.__oldMetroRender=old;window.__nativeCamera=game.cam;
   window.__meterRender=function(scene,camera,...rest){if(camera!==window.__nativeCamera)window.__metroTemporaryRendered=true;};
