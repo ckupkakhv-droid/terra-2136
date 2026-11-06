@@ -1,0 +1,101 @@
+/* Бумажный лист поверх журнала. Новых изображений нет. */
+#fieldArchive { z-index: 60; }
+#fieldArchive.modal, #fieldArchive .win { animation: none; }
+#fieldArchive .fieldArchiveSheet {
+  width: min(520px, calc(100vw - 16px));
+  max-height: calc(100dvh - 16px);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 16px;
+  overflow: hidden;
+  background: #f3e6c8;
+  color: #342313;
+  border: 1px solid #8d6a3d;
+  border-radius: 4px 12px 8px 4px;
+  box-shadow: inset 0 0 0 3px #f7edd6, 0 16px 40px #000c;
+  font-family: Georgia, 'DejaVu Serif', serif;
+}
+#fieldArchive h2 {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 0 0 8px;
+  background: #f3e6c8;
+  color: #6a341c;
+  font-size: clamp(16px, 4vw, 22px);
+  letter-spacing: .04em;
+  line-height: 1.2;
+}
+#fieldArchive h2 span { min-width: 0; overflow-wrap: anywhere; }
+#fieldArchive .x {
+  position: static;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  color: #342313;
+  background: #ead7ae;
+  border: 1px solid #8d6a3d;
+  clip-path: none;
+  border-radius: 4px;
+}
+#fieldArchiveBody {
+  overflow: auto;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+  min-height: 0;
+}
+.fieldArchiveLimit, .fieldArchiveEmpty, .fieldArchiveCard p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.fieldArchiveLimit { color: #6d5434; font-size: 13px; }
+.fieldArchiveCard {
+  margin-top: 10px;
+  padding: 10px 12px 12px;
+  background: #f7edd6;
+  border: 1px solid #c4a36a;
+  border-left: 4px solid #8a3d2c;
+}
+.fieldArchiveCard h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+#inv .fieldArchiveOpen {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  text-align: left;
+  color: #342313;
+  background: #f3e6c8;
+  border: 1px solid #8d6a3d;
+  border-radius: 3px;
+  font: 700 14px/1.3 Georgia, 'DejaVu Serif', serif;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+#fieldArchive :is(button):focus-visible, #inv .fieldArchiveOpen:focus-visible {
+  outline: 3px solid #8a3d2c;
+  outline-offset: 2px;
+}
+@media (max-width: 390px) {
+  #fieldArchive .fieldArchiveSheet { width: calc(100vw - 12px); padding: 10px; }
+  #fieldArchive h2 { font-size: 16px; letter-spacing: .02em; }
+  .fieldArchiveCard h3, .fieldArchiveCard p, .fieldArchiveEmpty { font-size: 14px; }
+}
+@media (max-height: 580px) {
+  #fieldArchive .fieldArchiveSheet { max-height: calc(100dvh - 8px); }
+  .fieldArchiveCard { margin-top: 6px; padding: 8px; }
+}
