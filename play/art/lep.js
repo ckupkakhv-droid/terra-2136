@@ -19,16 +19,19 @@
   var lib = null, loading = null, H = null;
   var towers = [];
   var mesh = null;
-  var signature = '';
+  var applied = '';
+  var libGen = 0;
   var flushQueued = false;
+  // lep() на this вызывает только эти три метода. Приёмник — чанк, не прокси.
+  var HELPERS = { hAt: 1, seg: 1, col: 1 };
   var ANCHORS = [[-4.2, 10.8, 0], [4.2, 10.8, 0], [3, 13.2, 0]];
   var STAT_KEY = 'p01101f2m1';
 
-  function warn(e) {
-    try {
-      var list = LEP.stats.errors;
-      if (list.length < 24) list.push(String(e && e.message || e));
-    } catch (_) {}
+  function note(code) {
+    var tag = 'lep:' + code;
+    var list = LEP.stats.errors;
+    if (list.indexOf(tag) >= 0 || list.length >= 12) return;
+    list.push(tag);
   }
 
   function extract(scene) {
@@ -102,8 +105,8 @@
         };
         LEP.models = Object.keys(lib);
         LEP.ready = true;
-      }).catch(function (e) { warn(e); LEP.ready = false; LEP.failed = true; });
-    } catch (e) { warn(e); LEP.failed = true; }
+      }).catch(function () { note('glb'); LEP.ready = false; LEP.failed = true; });
+    } catch (e) { note('glb'); LEP.failed = true; }
     return loading;
   }
 
@@ -111,7 +114,13 @@
   LEP.debugDrop = function (lod) {
     var key = 'lep|' + lod, saved = lib ? lib[key] : null;
     if (lib) lib[key] = null;
-    return function () { if (lib && saved) lib[key] = saved; };
+    libGen++;
+    applied = '';
+    return function () {
+      if (lib && saved) lib[key] = saved;
+      libGen++;
+      applied = '';
+    };
   };
 
   LEP.lodName = function (dist) {
@@ -175,63 +184,94 @@
     return null;
   }
 
-  function dropMesh(scene) {
+  function dropMesh() {
     if (!mesh) return;
-    if (scene) scene.remove(mesh);
+    var id = mesh.geometry && mesh.geometry.uuid;
+    if (mesh.parent) mesh.parent.remove(mesh);
     if (mesh.geometry) mesh.geometry.dispose();
     mesh = null;
     LEP.stats.mesh = null;
+    if (id) {
+      LEP.stats.invalidated = LEP.stats.invalidated || [];
+      if (LEP.stats.invalidated.length < 8) LEP.stats.invalidated.push(id);
+    }
   }
 
   function liveSignature() {
-    var g = window.game, p = g && g.p, bits = [];
+    var g = window.game, bits = [];
     var dungeon = !!(g && g.world && g.world.inDungeon);
     for (var i = 0; i < towers.length; i++) {
       var t = towers[i];
       bits.push(t.cx + ',' + t.cz + ':' + LEP.lodName(playerDist(t.x, t.z)));
     }
-    return (dungeon ? 'd' : 's') + '|' + bits.join(';');
+    return libGen + (dungeon ? '|d|' : '|s|') + bits.join(';');
   }
 
+  function groupOf(lod) {
+    var part = lib && lib['lep|' + lod];
+    if (!part || !part.s || !part.dt) return null;
+    return part;
+  }
+
+  // Пропавший LOD не обнуляет подпись и не пересобирает батч каждые 200 мс.
+  // Опоры с живой группой остаются в меше. Чанк, собранный без группы, хранит
+  // один слитый примитив — его буфер здесь не трогаем.
   LEP.flush = function () {
     var g = window.game;
     if (!g || !g.scene || !lib) return false;
     var sign = liveSignature();
-    if (sign === signature && mesh) return true;
+    if (sign === applied) return true;
     var counts = { lod0: 0, lod1: 0, lod2: 0 };
     if (!towers.length || (g.world && g.world.inDungeon)) {
-      dropMesh(g.scene);
-      signature = sign;
+      dropMesh();
+      applied = sign;
       LEP.stats.byLod = counts;
       LEP.stats.tris = 0;
       return true;
     }
-    var mat = findStat(g.world);
-    if (!mat || !H) { warn('lep material'); return false; }
-    var batch = new H.ue(function () { return 0.5; });
-    batch.m = [];
-    var tris = 0;
+    var drawable = [], blocked = null;
     for (var i = 0; i < towers.length; i++) {
       var t = towers[i];
       var lod = LEP.lodName(playerDist(t.x, t.z));
-      var part = lib['lep|' + lod];
-      if (!part || !part.s || !part.dt) { warn('lep ' + lod + ' missing'); return false; }
-      tris += append(batch, part.s, t.x, t.y, t.z, t.ry);
-      tris += append(batch, part.dt, t.x, t.y, t.z, t.ry);
-      counts[lod]++;
+      var part = groupOf(lod);
+      if (!part) { blocked = lod; continue; }
+      drawable.push({ t: t, lod: lod, part: part });
+    }
+    if (blocked) note('lod-missing:' + blocked);
+    var mat = findStat(g.world);
+    if (!mat || !H) {
+      note('material');
+      applied = sign;
+      return false;
+    }
+    if (!drawable.length) {
+      dropMesh();
+      applied = sign;
+      LEP.stats.byLod = counts;
+      LEP.stats.tris = 0;
+      return true;
+    }
+    var batch = new H.ue(function () { return 0.5; });
+    batch.m = [];
+    var tris = 0;
+    for (var k = 0; k < drawable.length; k++) {
+      var d = drawable[k];
+      tris += append(batch, d.part.s, d.t.x, d.t.y, d.t.z, d.t.ry);
+      tris += append(batch, d.part.dt, d.t.x, d.t.y, d.t.z, d.t.ry);
+      counts[d.lod]++;
     }
     var next = batch.mesh(mat);
-    if (!next) { warn('lep mesh'); return false; }
+    if (!next) { note('mesh'); applied = sign; return false; }
     next.name = 'lep-batch';
     next.matrixAutoUpdate = false;
     next.castShadow = !!(g.world && g.world.shadows);
     next.receiveShadow = true;
     next.frustumCulled = true;
     g.scene.add(next);
-    dropMesh(g.scene);
+    dropMesh();
     mesh = next;
-    signature = sign;
-    LEP.stats.mesh = { calls: 1, shadow: next.castShadow, material: mat.customProgramCacheKey(), tris: tris, towers: towers.length };
+    applied = sign;
+    LEP.stats.mesh = { calls: 1, shadow: next.castShadow, material: mat.customProgramCacheKey(), tris: tris, towers: drawable.length };
     LEP.stats.byLod = counts;
     LEP.stats.tris = tris;
     return true;
@@ -240,7 +280,7 @@
   function scheduleFlush() {
     if (flushQueued) return;
     flushQueued = true;
-    queueMicrotask(function () { flushQueued = false; try { LEP.flush(); } catch (e) { warn(e); } });
+    queueMicrotask(function () { flushQueued = false; try { LEP.flush(); } catch (e) { note('flush'); } });
   }
 
   function dropChunk(cx, cz) {
@@ -248,7 +288,7 @@
     for (var i = 0; i < towers.length; i++) if (towers[i].cx !== cx || towers[i].cz !== cz) next.push(towers[i]);
     if (next.length === towers.length) return;
     towers = next;
-    signature = '';
+    applied = '';
     scheduleFlush();
   }
 
@@ -257,7 +297,7 @@
     var build = world.build, discard = world.discardChunk;
     world.build = function () {
       var chunk = build.apply(this, arguments);
-      try { LEP.flush(); } catch (e) { warn(e); }
+      try { LEP.flush(); } catch (e) { note('flush'); }
       return chunk;
     };
     world.build.__terraLep = true;
@@ -295,10 +335,14 @@
     if (typeof orig !== 'function' || orig.__terraLep) return;
     var wrapped = function (x, z, ry) {
       if (!LEP.enabled) return orig.apply(this, arguments);
-      if (!lib) { load(); LEP.stats.fallback++; return orig.apply(this, arguments); }
+      if (!lib) {
+        if (!LEP.failed) load();
+        LEP.stats.fallback++;
+        return orig.apply(this, arguments);
+      }
       var self = this, real = { s: this.s, dt: this.dt }, sk;
       try { sk = { s: sinkFor(real.s), dt: sinkFor(real.dt) }; }
-      catch (e) { warn(e); LEP.stats.fallback++; return orig.apply(this, arguments); }
+      catch (e) { note('sink'); LEP.stats.fallback++; return orig.apply(this, arguments); }
       var syncIn = function () {
         ['s', 'dt'].forEach(function (k) { sk[k].oy = real[k].oy; sk[k].sink = real[k].sink; });
       };
@@ -307,7 +351,13 @@
         get: function (tg, key) {
           if (key === 's' || key === 'dt') return sk[key];
           var v = Reflect.get(tg, key, tg);
-          if (typeof v === 'function') return function () { var r = v.apply(tg, arguments); syncIn(); return r; };
+          if (HELPERS[key] && typeof v === 'function') {
+            return function () {
+              var r = v.apply(tg, arguments);
+              syncIn();
+              return r;
+            };
+          }
           return v;
         },
         set: function (tg, key, val) {
@@ -319,19 +369,19 @@
       var res;
       try { res = orig.call(proxy, x, z, ry || 0); }
       catch (e) {
-        warn(e);
-        merge(real.s, sk.s); merge(real.dt, sk.dt);
+        note('throw');
         LEP.stats.fallback++;
-        throw e;
+        return orig.apply(self, arguments);
       }
       var y = res && res.top && res.top[0] ? res.top[0][2] - 10.8 : NaN;
       var err = anchorError(x, y, z, ry || 0, res && res.top);
       var lod = LEP.lodName(playerDist(x, z));
-      var part = lib['lep|' + lod];
-      if (!(err <= 0.001) || !part || !part.s || !part.dt) {
-        if (!(err <= 0.001)) warn('lep anchor ' + err);
-        else warn('lep ' + lod + ' missing');
-        merge(real.s, sk.s); merge(real.dt, sk.dt);
+      var part = groupOf(lod);
+      if (!(err <= 0.001) || !part) {
+        if (!(err <= 0.001)) note('anchor');
+        else note('lod-missing:' + lod);
+        merge(real.s, sk.s);
+        merge(real.dt, sk.dt);
         LEP.stats.fallback++;
         return res;
       }
@@ -339,19 +389,19 @@
       LEP.stats.replaced++;
       if (err > LEP.stats.anchorErrMax) LEP.stats.anchorErrMax = err;
       if (self.T) arm(self.T);
-      signature = '';
+      applied = '';
       scheduleFlush();
       return res;
     };
     wrapped.__terraLep = true;
     P.lep = wrapped;
     setTimeout(load, 0);
-    setInterval(function () { if (lib && towers.length) try { LEP.flush(); } catch (e) { warn(e); } }, 200);
+    setInterval(function () { if (lib && towers.length) try { LEP.flush(); } catch (e) { note('flush'); } }, 200);
   }
 
   var previous = ART.hook;
   ART.hook = function (h) {
     if (typeof previous === 'function') previous(h);
-    try { hook(h); } catch (e) { warn(e); }
+    try { hook(h); } catch (e) { note('hook'); }
   };
 })();

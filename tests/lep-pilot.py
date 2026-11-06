@@ -125,15 +125,57 @@ LODS = """() => {
 
 FALLBACK = """() => {
   const before = TERRA_LEP.stats.fallback;
-  const errors = TERRA_LEP.stats.errors.length;
+  const cx = 21, cz = 9;
+  const x = cx * 48 + 11.2, z = cz * 48 + 24;
   const restore = TERRA_LEP.debugDrop('lod0');
-  const cx = 15, cz = 15;
-  game.p.x = cx * 48 + 11.2;
-  game.p.z = cz * 48 + 24;
-  game.world.update(game.p.x, game.p.z, true);
-  const after = {fallback: TERRA_LEP.stats.fallback, errors: TERRA_LEP.stats.errors.slice()};
+  game.p.x = x; game.p.z = z;
+  game.world.update(x, z, true);
+  game.cameraUpdate(1);
+  const h = game.p.y;
+  const cs = Math.cos(Math.PI / 2), sn = Math.sin(Math.PI / 2);
+  const spots = [];
+  for (const [lx, ly, lz, kind] of [[1.4,0,1.4,'foot'],[1.4,0,-1.4,'foot'],[-1.4,0,1.4,'foot'],[-1.4,0,-1.4,'foot'],[0.35,15,0.35,'top'],[0.35,15,-0.35,'top'],[-0.35,15,0.35,'top'],[-0.35,15,-0.35,'top']]) {
+    spots.push({kind, x: x + cs * lx + sn * lz, y: h + ly, z: z - sn * lx + cs * lz});
+  }
+  function near(pos, spot) {
+    let n = 0, yMin = 1e9, yMax = -1e9;
+    for (let i = 0; i < pos.count; i++) {
+      const dx = pos.getX(i) - spot.x, dy = pos.getY(i) - spot.y, dz = pos.getZ(i) - spot.z;
+      if (dx * dx + dy * dy + dz * dz > 0.22 * 0.22) continue;
+      n++; yMin = Math.min(yMin, pos.getY(i)); yMax = Math.max(yMax, pos.getY(i));
+    }
+    return {n, yMin: n ? yMin : null, yMax: n ? yMax : null};
+  }
+  const ch = game.world.chunkAt(x, z);
+  const meshes = (ch && ch.meshes || []).map(m => ({
+    name: m.name || '',
+    uuid: m.geometry && m.geometry.uuid,
+    det: !!(m.userData && m.userData.det),
+    pos: m.geometry && m.geometry.attributes && m.geometry.attributes.position
+  })).filter(m => m.pos);
+  const batch = game.scene.getObjectByName('lep-batch');
+  const batchPos = batch && batch.geometry && batch.geometry.attributes.position;
+  const hits = spots.map(spot => {
+    let chunk = 0, owners = [];
+    for (const m of meshes) {
+      const hit = near(m.pos, spot);
+      if (!hit.n) continue;
+      chunk += hit.n;
+      owners.push({name: m.name, uuid: m.uuid, det: m.det, n: hit.n, yMin: hit.yMin, yMax: hit.yMax});
+    }
+    return {kind: spot.kind, chunk, batch: batchPos ? near(batchPos, spot).n : 0, owners};
+  });
+  const errors = TERRA_LEP.stats.errors.slice();
+  const invalidated = (TERRA_LEP.stats.invalidated || []).slice();
   restore();
-  return {before, errorsBefore: errors, after};
+  return {
+    before, h, x, z,
+    fallback: TERRA_LEP.stats.fallback,
+    errors, invalidated,
+    chunkMeshes: meshes.map(m => ({name: m.name, uuid: m.uuid, det: m.det, verts: m.pos.count})),
+    batchUuid: batch && batch.geometry && batch.geometry.uuid,
+    hits
+  };
 }"""
 
 UNLOAD = """(p) => {
@@ -247,6 +289,9 @@ def run_view(p, width, height, key, deep):
         lods = page.evaluate(LODS) if deep else None
         unload = page.evaluate(UNLOAD, ROAD) if deep else None
         fallback = page.evaluate(FALLBACK) if deep else None
+        if fallback:
+            page.wait_for_timeout(500)
+            fallback['errorsAfterWait'] = page.evaluate("() => TERRA_LEP.stats.errors.slice()")
         final = page.evaluate("() => TERRA_LEP.stats")
         return {
             'viewport': {'w': width, 'h': height}, 'ready': ready, 'road': road, 'ind': ind,
@@ -291,8 +336,26 @@ def main():
     assert desk['lods']['byLod']['lod0'] >= 1, desk['lods']
     assert desk['lods']['byLod']['lod2'] >= 1, desk['lods']
     assert str(desk['lods']['material']).startswith('p01101f2m1'), desk['lods']
-    assert desk['fallback']['after']['fallback'] > desk['fallback']['before'], desk['fallback']
-    assert any('missing' in e for e in desk['fallback']['after']['errors']), desk['fallback']
+    fb = desk['fallback']
+    assert fb['fallback'] > fb['before'], fb
+    assert fb['errors'].count('lep:lod-missing:lod0') == 1, fb['errors']
+    assert fb['errorsAfterWait'] == fb['errors'], fb['errorsAfterWait']
+    feet = [h for h in fb['hits'] if h['kind'] == 'foot']
+    tops = [h for h in fb['hits'] if h['kind'] == 'top']
+    assert len(feet) == 4 and len(tops) == 4, fb['hits']
+    # Конец балки — 18 вершин. Нога в s и раскос в dt дают 36, не два слияния (72).
+    for h in feet + tops:
+        assert h['batch'] == 0, h
+        assert h['chunk'] == 36, h
+        assert sorted(o['n'] for o in h['owners']) == [18, 18], h
+        assert sorted(o['det'] for o in h['owners']) == [False, True], h
+        assert all(o['name'] != 'lep-batch' for o in h['owners']), h
+    for h in tops:
+        y_top = max(o['yMax'] for o in h['owners'])
+        assert fb['h'] + 14.7 <= y_top <= fb['h'] + 15.35, (y_top, fb['h'], h)
+    chunk_ids = {m['uuid'] for m in fb['chunkMeshes']}
+    assert chunk_ids.isdisjoint(fb['invalidated']), fb
+    assert fb['batchUuid'] not in {o['uuid'] for h in fb['hits'] for o in h['owners']}, fb
     assert desk['unload']['mark'] is True, desk['unload']
     assert desk['gpu']['gpuMs'] is None
     print('PASS')
@@ -301,7 +364,7 @@ def main():
     print('sample', json.dumps(desk['sample'], ensure_ascii=False))
     print('gpu', desk['gpu'])
     print('unload', desk['unload'])
-    print('fallback', desk['fallback']['before'], '->', desk['fallback']['after']['fallback'], desk['fallback']['after']['errors'][:3])
+    print('fallback', fb['before'], '->', fb['fallback'], fb['errors'], 'feet', [h['chunk'] for h in feet], 'h', round(fb['h'], 3))
     print('anchor', desk['final']['anchorErrMax'], 'replaced', desk['final']['replaced'], 'tris', desk['final']['tris'])
     prim = report['primitive']
     assert prim['enabled'] is True, prim
