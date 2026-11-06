@@ -851,10 +851,19 @@
     const b = el('button', info ? 'campInfoButton' : 'campPrimaryAction', label);
     b.type = 'button';
     b.addEventListener('click', () => {
+      const focusKey=b.dataset.defenseFocus,player=game.p;
       const r = fn();
       if (r && (r.reason === 'save-failed' || r.reason === 'save-unconfirmed')) game.ui?.toast?.(saveErrorText(r), '#ff6a5a');
       else if (r && r.ok === false) game.ui?.toast?.('Нельзя: ' + (REASON[r.reason] || r.reason), '#ffba66');
-      if (!info) renderDefense(lastContainer);
+      if (!info) {
+        renderDefense(lastContainer);
+        // Commands rebuild their sheet. Keep keyboard focus at the same command,
+        // but never steal it from a newly opened modal or another player profile.
+        if(focusKey&&game.p===player&&!document.getElementById('campPanel')?.classList.contains('hidden')&&
+          (!document.activeElement||document.activeElement===document.body||document.activeElement===b))
+          (lastContainer?.querySelector('[data-defense-focus="'+CSS.escape(focusKey)+'"]')||
+            (focusKey.startsWith('deposit-')?lastContainer?.querySelector('[data-perimeter-fold=supply] > summary'):null))?.focus({preventScroll:true});
+      }
     });
     return b;
   }
@@ -868,6 +877,18 @@
   }
   const costText = (c) => Object.entries(c || {}).map(([k, n]) => ammoName(k) + ' ' + n).join(', ');
   let lastContainer = null;
+  let deskPlayer=null,deskSelected='',deskFolds=new Set();
+  function deskFold(key,title,...children) {
+    const fold=el('details','perimeterFold');fold.dataset.perimeterFold=key;
+    fold.open=deskFolds.has(key);fold.append(el('summary',null,title),...children);
+    fold.addEventListener('toggle',()=>{if(fold.isConnected){if(fold.open)deskFolds.add(key);else deskFolds.delete(key);}});
+    return fold;
+  }
+  // Offline stills from the shipped GLB; no extra WebGL context in the interface.
+  function gunDrawing(kind,level=1) {
+    const art=el('div','perimeterDrawing');art.dataset.gun=kind;art.dataset.level=String(level);
+    art.setAttribute('aria-hidden','true');return art;
+  }
   function styleOnce() {
     if (document.getElementById('terraDefenseStyle')) return;
     const st = el('style');
@@ -904,6 +925,7 @@
     lastContainer = container;
     styleOnce();
     const st = api.getState();
+    if(deskPlayer!==game.p){deskPlayer=game.p;deskSelected='';deskFolds=new Set();}
     if (st.future) {
       const s = container.querySelector('.campSection__summary') || container, l = container.querySelector('.campSection__list') || container;
       s.textContent = ''; l.textContent = '';
@@ -921,12 +943,34 @@
       e.setAttribute('role', 'alert');
       list.append(e);
     }
-    summary.append(el('div','opsDefenseHeader','ОГНЕВЫЕ ТОЧКИ'),stat(st.limit.used + '/' + st.limit.max, 'турели / лимит'), stat(st.summary.porters, 'подносчики'),
-      stat(st.summary.needAmmo, 'нужны боеприпасы'), supplyStock(s));
+    summary.append(stat(st.limit.used + '/' + st.limit.max, 'орудия'), stat(st.summary.porters, 'подносчики'),
+      stat(st.summary.needAmmo, 'пополнить'));
+    if(!st.turrets.some(t=>t.id===deskSelected))deskSelected=st.turrets[0]?.id||'';
+    const rail=el('nav','perimeterRail');rail.setAttribute('aria-label','Выбрать огневую точку');
+    const show=(id)=>{
+      deskSelected=id;
+      for(const node of list.querySelectorAll('[data-defense-id]'))node.hidden=node.dataset.defenseId!==id;
+      for(const node of rail.querySelectorAll('button'))node.setAttribute('aria-pressed',String(node.dataset.perimeterSelect===id));
+    };
+    st.turrets.forEach((t,i)=>{
+      const button=el('button','perimeterTag');button.type='button';button.dataset.perimeterSelect=t.id;
+      button.append(silhouette(t.dk),el('span',null,t.name),el('small',null,'№ '+String(i+1).padStart(2,'0')));
+      button.setAttribute('aria-pressed',String(t.id===deskSelected));button.setAttribute('aria-label','Огневая точка '+(i+1)+': '+t.name);
+      button.addEventListener('click',()=>show(t.id));rail.append(button);
+    });
+    rail.addEventListener('keydown',event=>{
+      if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      const buttons=[...rail.querySelectorAll('button')],index=buttons.indexOf(event.target);if(index<0)return;
+      event.preventDefault();event.stopPropagation();
+      const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:(index+(event.key==='ArrowLeft'?-1:1)+buttons.length)%buttons.length;
+      buttons[next].focus({preventScroll:true});buttons[next].scrollIntoView({block:'nearest',inline:'nearest'});
+    });
+    if(rail.children.length)list.append(rail);
     for (const t of st.turrets) {
       const card = el('article', 'campItemCard');
       card.dataset.tone = TONE[t.state] || 'idle';
       card.dataset.defenseId = t.id;
+      card.hidden=t.id!==deskSelected;
       const body = el('div', 'defenseBody');
       const title = el('div', 'campItemCard__title');
       title.append(el('span', null, t.name + ' · ' + t.lvl + ' ур.'));
@@ -934,15 +978,15 @@
       const meter = el('div', 'campMeter'); meter.dataset.kind = 'ammo'; meter.dataset.level = t.state === 'empty' ? 'bad' : t.state === 'lowAmmo' ? 'warn' : 'ok';
       meter.style.setProperty('--value', String(t.magMax ? Math.min(1, t.mag / t.magMax) : 0));
       meter.setAttribute('role', 'meter'); meter.setAttribute('aria-label', 'Магазин ' + t.mag + ' из ' + t.magMax);
-      meter.append(el('i'), el('span', null, t.mag + '/' + t.magMax));
+      meter.setAttribute('aria-valuemin','0');meter.setAttribute('aria-valuemax',String(t.magMax));meter.setAttribute('aria-valuenow',String(t.mag));
+      meter.append(el('small',null,t.ammoName),el('i'), el('span', null, t.mag + ' / ' + t.magMax));
       const who = t.assignedSettlers.map((a) => a.name + ': ' + a.task + (a.eta ? ' (~' + a.eta + ' с)' : '')).join('; ');
       const meta = el('div', 'campItemCard__meta');
-      meta.append(el('span', null, t.ammoName + ' · прочность ' + Math.ceil(t.hp) + '/' + t.maxHp), el('span', null, who || t.nextAction));
-      if (t.upgradeCost) meta.append(el('span', null, 'Улучшение: ' + costText(t.upgradeCost)));
-      body.append(title, meter, meta);
+      meta.append(el('span', 'perimeterDurability', 'Прочность ' + Math.ceil(t.hp) + ' / ' + t.maxHp), el('span', null, who || t.nextAction));
+      body.append(title, gunDrawing(t.dk,t.lvl), meter, meta);
       const a = el('div', 'campItemCard__actions');
-      const r = act('Зарядить', () => api.reload(t.id)); r.setAttribute('aria-label', 'Зарядить из рюкзака: ' + t.name); a.append(r);
-      if (t.upgradeCost) { const u = act('Улучшить', () => api.upgrade(t.id)); u.setAttribute('aria-label', 'Улучшить ' + t.name + ': ' + costText(t.upgradeCost)); a.append(u); }
+      const r = act('Зарядить', () => api.reload(t.id)); r.dataset.defenseFocus='reload-'+t.id;r.setAttribute('aria-label', 'Зарядить из рюкзака: ' + t.name); a.append(r);
+      if (t.upgradeCost) { const u = act('Улучшить', () => api.upgrade(t.id));u.dataset.defenseFocus='upgrade-'+t.id;u.append(el('small',null,costText(t.upgradeCost))); u.setAttribute('aria-label', 'Улучшить ' + t.name + ': ' + costText(t.upgradeCost)); a.append(u); }
       const info = act('i', () => {
         const box = el('div');
         const c = st.catalog.find((x) => x.dk === t.dk);
@@ -953,8 +997,7 @@
       }, true);
       info.setAttribute('aria-label', 'Подробности: ' + t.name);
       a.append(info);
-      const silhouetteBox=el('div','opsGun');silhouetteBox.append(silhouette(t.dk));
-      card.append(silhouetteBox, body, a);
+      card.append(body, a);
       list.append(card);
     }
     const pc = el('article', 'campItemCard defenseWide opsPorters');
@@ -972,6 +1015,8 @@
       const on = st.porters.some((x) => x.id === sv.id);
       const b = act((on ? '✓ ' : '+ ') + sv.name, () => api.assign(sv.id, !on));
       b.setAttribute('aria-pressed', String(on)); b.dataset.porter = sv.id;
+      b.dataset.defenseFocus='porter-'+sv.id;
+      const photo=el('span','perimeterPortrait');window.terraCampFieldbook?.portrait(photo,sv);photo.setAttribute('aria-hidden','true');b.prepend(photo);
       pa.append(b);
     }
     if (!pa.children.length) {
@@ -981,20 +1026,21 @@
     pc.append(pa);
     const ba=el('div','opsSupply defenseWide');
     for (const k of ['a545', 'nails', 'gas', 'powder']) if ((game.p.inv[k] || 0) >= 1) {
-      const deposit=act('На склад: ' + ammoName(k) + ' ×' + Math.floor(game.p.inv[k]), () => api.deposit(k));deposit.dataset.defenseDeposit=k;ba.append(deposit);
+      const deposit=act('На склад: ' + ammoName(k) + ' ×' + Math.floor(game.p.inv[k]), () => api.deposit(k));deposit.dataset.defenseDeposit=k;deposit.dataset.defenseFocus='deposit-'+k;ba.append(deposit);
     }
-    if (ba.children.length) list.append(ba);
-    list.append(el('div','opsSectionLabel',st.limit.used ? 'ДОБАВИТЬ ОГНЕВУЮ ТОЧКУ' : 'ВЫБРАТЬ ЧЕРТЁЖ / ТУРЕЛЕЙ ПОКА НЕТ'));
+    const supply=el('div','perimeterSupply');supply.append(supplyStock(s),ba,pc);
+    if(!ba.children.length)ba.append(el('small',null,'В рюкзаке нет боеприпасов для склада.'));
     const catalog=el('div','opsCatalog');
     for (const c of st.catalog) {
-      const card=el('article','campItemCard'),head=el('div','opsGun');head.append(silhouette(c.dk),el('strong',null,c.name));
+      const card=el('article','campItemCard'),head=el('div','opsGun');head.append(gunDrawing(c.dk),el('strong',null,c.name));
       const price=el('div','opsCost');price.append(el('span',null,'Ур. героя '+c.lvlReq+' · '+c.ammoName),el('br'),el('span',null,costText(c.cost)));
       const build=act('Разместить',()=>{const r=api.build(c.dk);if(r.ok) document.querySelector('#campPanel .panelFoot [data-close]')?.click();return r;});
       build.dataset.defenseBuild=c.dk;build.setAttribute('aria-label','Разместить: '+c.name);
       if (st.limit.used>=st.limit.max) {build.disabled=true;price.append(el('br'),el('span',null,'Лимит турелей достигнут'));}
       card.append(head,price,build);catalog.append(card);
     }
-    list.append(catalog,pc);
+    if(st.turrets.length)list.append(deskFold('supply','Снабжение · склад и подносчики',supply),deskFold('plans','Добавить огневую точку',catalog));
+    else list.append(el('h3','perimeterEmpty','Выберите чертёж обороны'),catalog,deskFold('supply','Снабжение · склад и подносчики',supply));
   }
   function updateBadge() {
     const ui = window.terraCampUI;

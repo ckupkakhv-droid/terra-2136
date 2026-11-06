@@ -1,0 +1,75 @@
+{
+  "views": [
+    {
+      "size": [
+        390,
+        844
+      ],
+      "defense": {
+        "width": 370,
+        "scroll": 370,
+        "bodyHeight": 701,
+        "header": true,
+        "footer": true,
+        "buttons": []
+      }
+    },
+    {
+      "size": [
+        320,
+        568
+      ],
+      "defense": {
+        "width": 300,
+        "scroll": 300,
+        "bodyHeight": 425,
+        "header": true,
+        "footer": true,
+        "buttons": []
+      }
+    },
+    {
+      "size": [
+        844,
+        390
+      ],
+      "defense": {
+        "width": 822,
+        "scroll": 822,
+        "bodyHeight": 248,
+        "header": true,
+        "footer": true,
+        "buttons": []
+      }
+    },
+    {
+      "size": [
+        1382,
+        964
+      ],
+      "defense": {
+        "width": 1090,
+        "scroll": 1090,
+        "bodyHeight": 675,
+        "header": true,
+        "footer": true,
+        "buttons": []
+      }
+    }
+  ],
+  "orders": {
+    "saveEnvelopeVersion": 7,
+    "failedWriteRollback": true,
+    "stock": 32,
+    "magazine": 60,
+    "level": 2,
+    "upgradeCost": {
+      "scrap": 10,
+      "chem": 4
+    },
+    "porter": "s_olga",
+    "coldContinue": true,
+    "previewNoCost": true
+  },
+  "errors": []
+}
