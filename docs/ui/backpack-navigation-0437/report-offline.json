@@ -1,0 +1,355 @@
+{
+  "views": [
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "client": [
+        300,
+        56
+      ],
+      "scroll": [
+        300,
+        56
+      ],
+      "orientation": "horizontal",
+      "buttons": [
+        {
+          "id": "eq",
+          "width": 50,
+          "height": 56,
+          "label": "Снаряж.",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "items",
+          "width": 50,
+          "height": 56,
+          "label": "Вещи",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "craft",
+          "width": 50,
+          "height": 56,
+          "label": "Крафт",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "skills",
+          "width": 50,
+          "height": 56,
+          "label": "Навыки",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "settle",
+          "width": 50,
+          "height": 56,
+          "label": "Посел.",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "log",
+          "width": 50,
+          "height": 56,
+          "label": "Журнал",
+          "labelFits": true,
+          "visible": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "client": [
+        370,
+        56
+      ],
+      "scroll": [
+        370,
+        56
+      ],
+      "orientation": "horizontal",
+      "buttons": [
+        {
+          "id": "eq",
+          "width": 61.65625,
+          "height": 56,
+          "label": "Снаряж.",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "items",
+          "width": 61.671875,
+          "height": 56,
+          "label": "Вещи",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "craft",
+          "width": 61.671875,
+          "height": 56,
+          "label": "Крафт",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "skills",
+          "width": 61.65625,
+          "height": 56,
+          "label": "Навыки",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "settle",
+          "width": 61.671875,
+          "height": 56,
+          "label": "Посел.",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "log",
+          "width": 61.671875,
+          "height": 56,
+          "label": "Журнал",
+          "labelFits": true,
+          "visible": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "client": [
+        108,
+        328
+      ],
+      "scroll": [
+        108,
+        328
+      ],
+      "orientation": "vertical",
+      "buttons": [
+        {
+          "id": "eq",
+          "width": 108,
+          "height": 44,
+          "label": "Экипировка",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "items",
+          "width": 108,
+          "height": 44,
+          "label": "Вещи",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "craft",
+          "width": 108,
+          "height": 44,
+          "label": "Крафт",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "skills",
+          "width": 108,
+          "height": 44,
+          "label": "Навыки",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "settle",
+          "width": 108,
+          "height": 44,
+          "label": "Поселение",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "log",
+          "width": 108,
+          "height": 44,
+          "label": "Журнал",
+          "labelFits": true,
+          "visible": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "client": [
+        894,
+        50
+      ],
+      "scroll": [
+        894,
+        50
+      ],
+      "orientation": "horizontal",
+      "buttons": [
+        {
+          "id": "eq",
+          "width": 87.328125,
+          "height": 50,
+          "label": "Экипировка",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "items",
+          "width": 52.109375,
+          "height": 50,
+          "label": "Вещи",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "craft",
+          "width": 56.421875,
+          "height": 50,
+          "label": "Крафт",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "skills",
+          "width": 64.5,
+          "height": 50,
+          "label": "Навыки",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "settle",
+          "width": 81.203125,
+          "height": 50,
+          "label": "Поселение",
+          "labelFits": true,
+          "visible": 1
+        },
+        {
+          "id": "log",
+          "width": 64.390625,
+          "height": 50,
+          "label": "Журнал",
+          "labelFits": true,
+          "visible": 1
+        }
+      ]
+    }
+  ],
+  "keyboard": [
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "manualActivation": true,
+      "wrap": true,
+      "homeEnd": true
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "manualActivation": true,
+      "wrap": true,
+      "homeEnd": true
+    }
+  ],
+  "shortLandscape": {
+    "viewport": [
+      812,
+      320
+    ],
+    "client": [
+      108,
+      258
+    ],
+    "scroll": [
+      108,
+      264
+    ],
+    "orientation": "vertical",
+    "buttons": [
+      {
+        "id": "eq",
+        "width": 108,
+        "height": 44,
+        "label": "Экипировка",
+        "labelFits": true,
+        "visible": 0.8636363636363636
+      },
+      {
+        "id": "items",
+        "width": 108,
+        "height": 44,
+        "label": "Вещи",
+        "labelFits": true,
+        "visible": 1
+      },
+      {
+        "id": "craft",
+        "width": 108,
+        "height": 44,
+        "label": "Крафт",
+        "labelFits": true,
+        "visible": 1
+      },
+      {
+        "id": "skills",
+        "width": 108,
+        "height": 44,
+        "label": "Навыки",
+        "labelFits": true,
+        "visible": 1
+      },
+      {
+        "id": "settle",
+        "width": 108,
+        "height": 44,
+        "label": "Поселение",
+        "labelFits": true,
+        "visible": 1
+      },
+      {
+        "id": "log",
+        "width": 108,
+        "height": 44,
+        "label": "Журнал",
+        "labelFits": true,
+        "visible": 1
+      }
+    ]
+  },
+  "asyncClassFocus": {
+    "focusRetained": true,
+    "nativeClassSaved": true,
+    "activationAfterCommit": true
+  },
+  "errors": []
+}

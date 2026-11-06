@@ -1,0 +1,63 @@
+{
+  "views": [
+    {
+      "viewport": "desktop",
+      "fit": {
+        "width": 890,
+        "scroll": 890,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "portrait",
+      "fit": {
+        "width": 366,
+        "scroll": 366,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "landscape",
+      "fit": {
+        "width": 698,
+        "scroll": 698,
+        "escaped": []
+      }
+    }
+  ],
+  "confirmViews": [
+    {
+      "viewport": "desktop",
+      "fit": {
+        "width": 890,
+        "scroll": 890,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "portrait",
+      "fit": {
+        "width": 366,
+        "scroll": 366,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "landscape",
+      "fit": {
+        "width": 698,
+        "scroll": 698,
+        "escaped": []
+      }
+    }
+  ],
+  "native": {
+    "contouristAndSkills": true,
+    "techConfirmCancel": true,
+    "technicianSavedV3": true,
+    "scoutConfirmation": true,
+    "coldContinue": true,
+    "unsupportedGuard": true
+  },
+  "errors": []
+}
