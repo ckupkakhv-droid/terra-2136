@@ -349,7 +349,7 @@
 function pumpPreview(preview) {
   clearTimeout(preview._bpPump);
   preview._bpPump = 0;
-  if (!preview.host || reduced()) return;
+  if (!preview.host || reduced() || !preview.game?.glb?.hero) return;
   if (typeof preview.visible === 'function' && !preview.visible()) return;
   preview.request?.();
   preview._bpPump = setTimeout(() => pumpPreview(preview), 80);
@@ -367,7 +367,7 @@ function hookPreview() {
   const origUnmount = preview.unmount?.bind(preview);
     preview.draw = function draw() {
       const now = performance.now();
-      if (this.inst?.mixer && !reduced()) {
+      if (this.inst?.mixer && !this.source?.isHeroFallback && !reduced()) {
         const dt = Math.min(0.05, (now - (this._bpT || now)) / 1000);
         this._bpT = now;
         try { this.inst.mixer.update(dt || 0.016); } catch (err) { /* клип недоступен — остаётся кадр */ }
@@ -375,19 +375,27 @@ function hookPreview() {
       const userYaw = this.yaw || 0;
       // Кадр считает штатный draw: полные границы позы модели, аспект окна.
       // Размер хоста не подменяем — иначе собьём этот расчёт.
-      if (!reduced() && !this._bpDrag) this.yaw = userYaw + Math.sin(now / 900) * 0.045;
-      if (this.scene && !this._bpLit) {
-        this._bpLit = true;
+      if (this.game?.glb?.hero && !reduced() && !this._bpDrag) this.yaw = userYaw + Math.sin(now / 900) * 0.045;
+      if (this.scene && this._bpLit !== this.scene) {
+        this._bpLit = this.scene;
         this.scene.traverse(obj => {
           if (obj.isHemisphereLight) obj.intensity = Math.max(obj.intensity || 0, 2.6);
         });
       }
       try { orig.call(this); }
-      finally { this.yaw = userYaw; }
+      finally {
+        this.yaw = userYaw;
+        // A newly ready GLB resumes its idle animation; the static suit waits
+        // for input, resize or the loader notification without a timer.
+        if (!this._bpPump && this.host && this.game?.glb?.hero && !reduced()) pumpPreview(this);
+      }
     };
     preview.unmount = function unmount() {
       clearTimeout(this._bpPump);
       this._bpPump = 0;
+      this._bpLit = null;
+      this._bpT = 0;
+      this._bpDrag = false;
       if (origUnmount) origUnmount();
     };
     pumpPreview(preview);

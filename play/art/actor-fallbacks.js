@@ -123,4 +123,37 @@
       return cached.builder.geometry();
     }catch(error){if(!stats.fallback++)console.warn('TERRA actor fallback:',error.message);return null;}
   };
+
+  // Inventory owns a separate standing rig, never the live world character.
+  // The loader signals its own hero result; no render/poll loop while waiting.
+  const previewSources=new WeakMap(),previewWatchers=new WeakMap();
+  const previews=ART.equipmentFallbacks={created:0,released:0,live:0,watchers:0};
+  ART.equipmentFallbackSource=function(game,Root) {
+    if(!game.heroRig)return null;
+    let source=previewSources.get(game);
+    if(source)return source;
+    const instances=new WeakMap();
+    source={isHeroFallback:true,make(){
+      const root=new Root(),rig=new game.heroRig.constructor(root,'hero',1);
+      rig.update([{x:0,y:0,z:0,yaw:0,amp:0}]);
+      const inst={root,A:{},mixer:{update(){}}};instances.set(inst,rig);
+      previews.created++;previews.live++;return inst;
+    },release(inst){
+      const rig=instances.get(inst);if(!rig)return;
+      instances.delete(inst);inst.root.removeFromParent();
+      for(const {im} of rig.parts){im.removeFromParent();im.geometry.dispose();im.dispose();}
+      // The native rig material is shared with the world; it stays alive.
+      previews.released++;previews.live--;
+    }};
+    previewSources.set(game,source);return source;
+  };
+  ART.watchEquipmentModel=function(game,preview) {
+    let set=previewWatchers.get(game);if(!set){set=new Set();previewWatchers.set(game,set);}
+    if(!set.has(preview)){set.add(preview);previews.watchers++;}
+    return()=>{if(set.delete(preview))previews.watchers--;if(!set.size)previewWatchers.delete(game);};
+  };
+  ART.equipmentModelReady=function(game,key) {
+    if(key!=='hero')return;
+    for(const preview of previewWatchers.get(game)||[])preview.request();
+  };
 })();
