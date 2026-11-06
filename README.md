@@ -20,7 +20,7 @@
 
 **ТЕРРА** соединяет вылазки за припасами, развитие персонажа и управление поселением. Исследуй мир с видом сверху, выбирай снаряжение, назначай выжившим работу и готовь периметр к следующей атаке.
 
-[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.41](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.41) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
+[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.42](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.42) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
 
 ## Три стороны одной экспедиции
 
@@ -29,6 +29,8 @@
 | Заросшие районы России, пять поясов опасности, метро и подземелья. Радиация, споры, огонь и затопленные проходы. | Жители с профессиями, навыками и состоянием. Работы, хозяйство, строительство и снабжение обороны. | Ближний бой, огнестрел, метательное оружие. Редкое снаряжение, крафт, заточка, навыки, таланты и ранги. |
 
 ## Обновления линии 0.4
+
+**Огневой рубеж.** Бумажные ярлыки выбирают одну огневую точку, синий лист показывает её настоящий вид, боезапас и команды. Снабжение и посты раскрываются отдельно; в альбомном положении ярлыки стоят сбоку. Общие подсказки и закладки лагеря продолжают полевой стиль, экран учитывает системные отступы телефона. [Проверка и кадры](docs/ui/camp-perimeter-0442/README.md).
 
 **Походная мастерская.** Вещи собраны в отделениях с ярлыками, поиском и отдельными кнопками применения. Каталог чертежей фильтруется по названию, типу и доступности. Выбор открывает лист с настоящими материалами и условиями; изготовление запускается отдельной кнопкой. [Кадры и проверка](docs/ui/field-kit-0441/README.md).
 
@@ -199,6 +201,7 @@ python3 scripts/build-offline.py
 - [Poly Haven](https://polyhaven.com), [ambientCG](https://ambientcg.com) — текстуры (CC0)
 - [Sketchfab](https://sketchfab.com), [Fab](https://www.fab.com), [Meshy](https://www.meshy.ai)
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
+- Статичные кадры орудий для интерфейса (`play/assets/ui/camp/pkm-*.webp`, `nail-*.webp`, `flame-*.webp`) сняты с собственных игровых моделей командой «Терры». Генератор — `tools/art/render-perimeter-ui.py`; в игровом интерфейсе дополнительный WebGL-контекст не создаётся.
 - Модели турелей обороны (`play/assets/defense/turrets.glb`) — собственная процедурная геометрия и атлас команды (`tools/art/turret_gen.py`): бочка, тренога, мешки, покрышки, трубы, баллоны, заплатки и трафареты. Надписи — шрифт DejaVu. Ящик подносчика по-прежнему Kenney, CC0.
 - Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
 - Векторные символы картотеки, обороны и специализаций (`play/ui/camp-operations.*`, `play/ui/class-dossier.*`, `play/ui/defense.js`) — собственные SVG команды. Штатные иконки игры сохраняют прежнюю атрибуцию.

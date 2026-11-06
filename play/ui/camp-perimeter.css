@@ -1,0 +1,141 @@
+/* Огневые точки в полевом альбоме. Общие материалы, живые данные и штатные приказы. */
+#campPanel.fieldbook { --camp-scroll:#b78a46; }
+#campPanel.fieldbook #campBody { overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:var(--camp-scroll) #201b14;scroll-behavior:smooth;scroll-padding-block:12px; }
+#campPanel.fieldbook :is(button,summary) { touch-action:manipulation; }
+#campPanel.fieldbook input { font-size:16px; }
+#campPanel.fieldbook #campTabs button { background-image:var(--fb-paper);background-size:100% 100%;color:#3a2917;border:1px solid #967348;border-radius:8px 8px 2px 2px;clip-path:none; }
+#campPanel.fieldbook #campTabs button.on { background-image:var(--fb-brass);border-color:#e8ba64;box-shadow:inset 0 -3px #8d3925; }
+#campPanel.fieldbook .campInfoSheet { background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border:2px solid #aa8653;border-radius:12px 12px 0 0;box-shadow:0 -10px 28px #0009; }
+#campPanel.fieldbook .campInfoSheet > header { border-bottom:1px solid #9c7c4e;padding-bottom:8px;font:900 20px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .campInfoSheet__body { font:16px/1.5 var(--fb-serif);scrollbar-width:thin;overscroll-behavior:contain; }
+#campPanel.fieldbook .campInfoClose { color:#3c2917;border-color:#957446;border-radius:50%; }
+#campPanel.fieldbook [data-defense-turrets] { padding:0;border:0;background:none;gap:12px; }
+#campPanel.fieldbook [data-defense-turrets] .campSection__list { display:flex;flex-direction:column;gap:18px; }
+#campPanel.fieldbook [data-defense-turrets] .campSection__summary { gap:8px;margin:8px 0 0; }
+#campPanel.fieldbook [data-defense-turrets] .defenseStat { background-image:var(--fb-paper);background-size:100% 100%;border:0;border-radius:2px 5px 2px 3px;padding:8px 12px;box-shadow:0 3px 4px #0006;text-align:center; }
+#campPanel.fieldbook [data-defense-turrets] .defenseStat b { color:#3d2b15;font:900 24px/1 var(--fb-serif); }
+#campPanel.fieldbook [data-defense-turrets] .defenseStat span { color:#6b4e2b;font:13px/1.3 var(--fb-serif); }
+#campPanel.fieldbook .perimeterRail { display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;scroll-snap-type:x proximity;padding:3px 2px 8px; }
+#campPanel.fieldbook .perimeterTag { flex:1 0 140px;display:grid;grid-template-columns:40px minmax(0,1fr);align-items:center;gap:2px 8px;text-align:left;scroll-snap-align:start;position:relative;min-height:64px;padding:10px;color:#3b2916;background-image:var(--fb-paper);background-size:100% 100%;border:2px solid #b28f58;border-radius:6px;clip-path:none;font:800 16px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .perimeterTag svg { width:40px;height:40px;fill:currentColor;grid-row:1/3; }
+#campPanel.fieldbook .perimeterTag small { font:12px/1 var(--fb-serif); }
+#campPanel.fieldbook .perimeterTag[aria-pressed=true] { background-image:var(--fb-brass);border-color:#f3c56d;box-shadow:inset 0 0 0 1px #734816,0 2px 6px #0007; }
+#campPanel.fieldbook [data-defense-id] { display:grid;grid-template-columns:minmax(0,1fr);padding:18px;gap:16px;color:#eed5ab;background-image:var(--fb-blue);background-size:100% 100%;border:2px solid #b29358;border-radius:6px 14px 5px 8px;box-shadow:0 5px 0 #765633,0 9px 12px #0008; }
+#campPanel.fieldbook [data-defense-id][hidden] { display:none!important; }
+#campPanel.fieldbook [data-defense-id] .defenseBody { gap:12px; }
+#campPanel.fieldbook [data-defense-id] .campItemCard__title { display:flex;align-items:center;justify-content:space-between;gap:12px;font:900 26px/1.15 var(--fb-serif); }
+#campPanel.fieldbook [data-defense-id] .campStatusBadge { background:none;color:#e2c295;border:2px double currentColor;border-radius:1px;padding:4px 8px;transform:rotate(-3deg);font:800 13px var(--fb-serif); }
+#campPanel.fieldbook [data-defense-id] .campStatusBadge[data-tone=bad] { color:#ffc6ac; }
+#campPanel.fieldbook [data-defense-id] .campStatusBadge[data-tone=ok] { color:#c0dfa7; }
+#campPanel.fieldbook .perimeterDrawing { color:#e4d1ad;min-width:0; }
+#campPanel.fieldbook [data-defense-id] .campMeter { display:grid;grid-template-columns:auto minmax(30px,1fr) auto;gap:12px;font:900 23px var(--fb-serif); }
+#campPanel.fieldbook [data-defense-id] .campMeter::before { display:none; }
+#campPanel.fieldbook [data-defense-id] .campMeter small { font:700 16px var(--fb-serif); }
+#campPanel.fieldbook [data-defense-id] .campMeter > i { height:14px;border:1px solid #d4b982;border-radius:1px;background:#07161d88; }
+#campPanel.fieldbook [data-defense-id] .campMeter > i::after { background:repeating-linear-gradient(125deg,#edc373 0 5px,transparent 5px 8px); }
+#campPanel.fieldbook [data-defense-id] .campItemCard__meta { display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font:14px/1.4 var(--fb-serif);color:#dfcfaf; }
+#campPanel.fieldbook [data-defense-id] .campItemCard__actions { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px;gap:10px;align-items:stretch; }
+#campPanel.fieldbook [data-defense-id] .campItemCard__actions:not(:has([data-defense-focus^=upgrade])) { grid-template-columns:minmax(0,1fr) 48px; }
+#campPanel.fieldbook :is([data-defense-turrets],.opsPerimeter) .campPrimaryAction { min-width:0;min-height:52px;background-image:var(--fb-brass);background-size:100% 100%;color:#382511;border:2px solid #b68a48;border-radius:5px;box-shadow:inset 0 0 0 1px #ffe2a677,0 3px 0 #583a1b;font:900 19px/1.2 var(--fb-serif);padding:10px 14px;clip-path:none; }
+#campPanel.fieldbook [data-defense-id] [data-defense-focus^=upgrade] { background-image:var(--fb-paper);font-size:17px; }
+#campPanel.fieldbook [data-defense-id] [data-defense-focus^=upgrade] small { display:block;font:12px/1.3 var(--fb-serif);margin-top:4px; }
+#campPanel.fieldbook [data-defense-turrets] .campInfoButton { min-width:48px;width:48px;background-image:var(--fb-leather);border:1px solid #b99b60;border-radius:4px;color:#f1d6a5;font:italic 900 24px var(--fb-serif); }
+#campPanel.fieldbook :is(.perimeterFold,.fbGuardFile,.opsArmory,.opsPosts) { background-image:var(--fb-paper);background-size:100% 100%;color:#392715;border:1px solid #9e7d4a;border-radius:4px;box-shadow:0 3px 0 #5f4327;margin-top:12px;padding:0 12px; }
+#campPanel.fieldbook :is(.perimeterFold,.fbGuardFile,.opsArmory,.opsPosts) > summary { min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:8px;font:900 20px/1.2 var(--fb-serif);color:#392715;cursor:pointer;padding:8px 0; }
+#campPanel.fieldbook :is(.perimeterFold,.fbGuardFile) > summary::after { content:'＋';font-size:24px; }
+#campPanel.fieldbook :is(.perimeterFold,.fbGuardFile)[open] > summary::after { content:'−'; }
+#campPanel.fieldbook .perimeterFold[open] > summary { border-bottom:1px solid #96724366;margin-bottom:12px; }
+#campPanel.fieldbook .perimeterSupply { padding-bottom:16px; }
+#campPanel.fieldbook .perimeterSupply .opsSupply { color:#50371d;gap:12px; }
+#campPanel.fieldbook .perimeterSupply .opsSupply b { color:#4e3216;font:900 22px var(--fb-serif); }
+#campPanel.fieldbook .perimeterSupply .opsSupply > span { flex:1;display:grid;grid-template-columns:auto auto;justify-content:center;font:14px var(--fb-serif); }
+#campPanel.fieldbook .perimeterSupply .opsSupply svg { grid-row:1/3;width:36px;height:40px; }
+#campPanel.fieldbook .perimeterSupply .opsSupply > button { flex:1 1 180px;font-size:15px; }
+#campPanel.fieldbook .perimeterSupply .opsPorters { color:#49311b;border-color:#927345; }
+#campPanel.fieldbook .perimeterSupply .opsFlow span { font:800 15px var(--fb-serif); }
+#campPanel.fieldbook .perimeterSupply .campItemCard__meta { color:#694b2c;font-size:15px; }
+#campPanel.fieldbook .opsPorters .campItemCard__actions { display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));width:100%;gap:14px; }
+#campPanel.fieldbook .opsPorters [data-porter] { display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;background-image:var(--fb-paper);padding:7px;font:800 15px/1.2 var(--fb-serif);border:1px solid #947347; }
+#campPanel.fieldbook .opsPorters [data-porter][aria-pressed=true] { border:3px solid #50642e;box-shadow:0 0 0 1px #c2bc89; }
+#campPanel.fieldbook .perimeterPortrait { display:block;width:100%;aspect-ratio:1;max-width:105px;border:3px solid #f2ddba;box-shadow:0 2px 3px #60401e55; }
+#campPanel.fieldbook .perimeterPortrait img { width:100%;height:100%;object-fit:cover; }
+#campPanel.fieldbook .opsCatalog { gap:14px;padding-bottom:16px; }
+#campPanel.fieldbook .opsCatalog .campItemCard { display:flex;flex-direction:column;color:#ecd7b2;background-image:var(--fb-blue);background-size:100% 100%;border:1px solid #a68c58;border-radius:6px; }
+#campPanel.fieldbook .opsCatalog .opsGun { display:flex;flex-direction:column;align-items:stretch;width:100%;color:#f2ddb7; }
+#campPanel.fieldbook .opsCatalog .opsGun strong { font:900 21px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .opsCatalog .opsCost { font:14px/1.5 var(--fb-serif);color:#e4cba0; }
+#campPanel.fieldbook .perimeterEmpty { color:#d8bc90;font:900 24px/1.2 var(--fb-serif);margin:8px 0; }
+#campPanel.fieldbook .opsPerimeter { padding:0;background:none;margin-top:18px; }
+#campPanel.fieldbook .opsPerimeter .defCard { color:#3b2b18;background:#e9d3ab55;border:1px solid #96744866; }
+#campPanel.fieldbook .opsPerimeter :is(.defAction,.defBtn) { color:#402b15;background-image:var(--fb-brass);border:1px solid #9a7441;font-family:var(--fb-serif);border-radius:3px; }
+#campPanel.fieldbook .opsPerimeter :is(.opsRequirement,.opsPositionNo) { color:#694b2b; }
+#campPanel.fieldbook #campBody > .opsThreat { background-image:var(--fb-leather)!important;display:flex;flex-direction:row;gap:12px;align-items:center;padding:8px 10px;margin:0;color:#e1c69a;border:1px solid #83643b!important;border-radius:3px; }
+#campPanel.fieldbook #campBody > .opsThreat h3 { font:800 15px/1.3 var(--fb-serif);margin:0; }
+#campPanel.fieldbook #campBody > .opsThreat .defAction { color:#ddc196;background:none;border:1px solid #91764d;font:14px/1.2 var(--fb-serif);min-width:80px; }
+@media(max-width:600px),(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .win { padding-top:max(5px,var(--st,env(safe-area-inset-top,0px)));padding-right:max(10px,var(--sr,env(safe-area-inset-right,0px)));padding-bottom:max(6px,var(--sb,env(safe-area-inset-bottom,0px)));padding-left:max(10px,var(--sl,env(safe-area-inset-left,0px))); }
+ #campPanel.fieldbook .panelFoot { gap:8px; }
+ #campPanel.fieldbook .panelFoot > button { font-size:17px;min-height:48px; }
+ #campPanel.fieldbook .perimeterTag { flex-basis:125px;font-size:14px;min-height:60px; }
+ #campPanel.fieldbook [data-defense-id] { padding:12px;gap:12px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__title { font-size:22px;gap:8px; }
+ #campPanel.fieldbook [data-defense-id] .campMeter { gap:8px;font-size:19px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__actions { grid-template-columns:minmax(0,1fr) 48px;gap:8px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__actions > [data-defense-focus^=reload] { grid-column:1;grid-row:1; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__actions > [data-defense-focus^=upgrade] { grid-column:1/-1;grid-row:2; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__actions > .campInfoButton { grid-column:2;grid-row:1; }
+ #campPanel.fieldbook :is(.perimeterFold,.fbGuardFile,.opsArmory,.opsPosts) > summary { font-size:18px; }
+ #campPanel.fieldbook .campInfoSheet { padding-bottom:max(12px,var(--sb,env(safe-area-inset-bottom,0px))); }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook [data-defense-id] { grid-template-columns:minmax(0,1fr) 200px;align-items:center; }
+}
+@media(prefers-reduced-motion:reduce) { #campPanel.fieldbook #campBody { scroll-behavior:auto; } }
+@media(max-width:600px) {
+ #campPanel.fieldbook .fbHeading { min-width:0;font-size:clamp(16px,4.7vw,22px);overflow-wrap:normal; }
+ #campPanel.fieldbook .win:has(#campBody:not([data-fieldbook-view=overview])) .fbMeta { display:none; }
+}
+#campPanel.fieldbook :is([data-defense-turrets],.campSection__summary,.campSection__list,.perimeterRail,[data-defense-id],.defenseBody,.perimeterFold) { min-width:0;max-width:100%;box-sizing:border-box; }
+#campPanel.fieldbook [data-defense-turrets] { width:100%; }
+#campPanel.fieldbook [data-defense-id] .campItemCard__meta { overflow-wrap:anywhere; }
+
+#campPanel.fieldbook .perimeterDrawing { height:clamp(180px,25vh,260px);background-position:center;background-repeat:no-repeat;background-size:contain; }
+#campPanel.fieldbook .opsCatalog .perimeterDrawing { height:140px; }
+@media(max-width:600px),(orientation:landscape) and (max-height:520px) { #campPanel.fieldbook [data-defense-id] .perimeterDrawing { height:160px; } }
+#campPanel.fieldbook .perimeterDrawing[data-gun=pkm][data-level="1"] { background-image:url('../assets/ui/camp/pkm-1.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=pkm][data-level="2"] { background-image:url('../assets/ui/camp/pkm-2.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=pkm][data-level="3"] { background-image:url('../assets/ui/camp/pkm-3.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=nail][data-level="1"] { background-image:url('../assets/ui/camp/nail-1.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=nail][data-level="2"] { background-image:url('../assets/ui/camp/nail-2.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=nail][data-level="3"] { background-image:url('../assets/ui/camp/nail-3.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=flame][data-level="1"] { background-image:url('../assets/ui/camp/flame-1.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=flame][data-level="2"] { background-image:url('../assets/ui/camp/flame-2.webp'); }
+#campPanel.fieldbook .perimeterDrawing[data-gun=flame][data-level="3"] { background-image:url('../assets/ui/camp/flame-3.webp'); }
+#campPanel.fieldbook [data-defense-id] .campItemCard__actions { justify-items:stretch; }
+@media(max-width:600px) { #campPanel.fieldbook [data-defense-id] .perimeterDrawing { background-size:cover; } }
+/* Короткие подписи не разрываются на узком телефоне. */
+#campPanel.fieldbook [data-defense-turrets] .defenseStat { padding:6px 4px; }
+#campPanel.fieldbook [data-defense-turrets] .defenseStat span { font-size:12px;white-space:nowrap;overflow-wrap:normal; }
+@media(max-width:350px) { #campPanel.fieldbook [data-defense-turrets] .defenseStat span { font-size:11px; } }
+/* В альбомной ориентации ярлыки стоят сбоку от орудия. */
+@media(min-width:701px) {
+ #campPanel.fieldbook [data-defense-turrets] .campSection__list { display:grid;grid-template-columns:170px minmax(0,1fr);align-items:start;gap:16px; }
+ #campPanel.fieldbook .perimeterRail { grid-row:1;grid-column:1;flex-direction:column;overflow-y:auto;overflow-x:hidden;max-height:360px; }
+ #campPanel.fieldbook .perimeterTag { flex:none;min-width:0;width:100%; }
+ #campPanel.fieldbook [data-defense-id] { grid-row:1;grid-column:2; }
+ #campPanel.fieldbook :is(.perimeterFold,.perimeterEmpty,.defenseSaveError) { grid-column:1/-1; }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook #campBody > .opsThreat { padding:2px 8px; }
+ #campPanel.fieldbook #campBody > .opsThreat h3 { font-size:13px; }
+ #campPanel.fieldbook [data-defense-turrets] .defenseStat { display:flex;align-items:baseline;justify-content:center;gap:8px;padding:4px; }
+ #campPanel.fieldbook [data-defense-turrets] .defenseStat b { font-size:20px; }
+ #campPanel.fieldbook [data-defense-turrets] .campSection__list { grid-template-columns:130px minmax(0,1fr);gap:10px; }
+ #campPanel.fieldbook .perimeterTag { grid-template-columns:26px minmax(0,1fr);padding:6px;gap:2px 4px;min-height:52px;font-size:12px; }
+ #campPanel.fieldbook .perimeterTag svg { width:26px;height:30px; }
+ #campPanel.fieldbook .perimeterRail { padding-top:0; }
+ #campPanel.fieldbook [data-defense-id] { grid-template-columns:minmax(0,1fr) 150px;gap:12px;padding:10px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__title { font-size:19px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__meta { font-size:13px; }
+ #campPanel.fieldbook [data-defense-id] .campItemCard__actions { align-self:start; }
+}

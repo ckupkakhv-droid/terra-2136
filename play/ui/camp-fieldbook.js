@@ -110,6 +110,20 @@
         (card.querySelector('.bpLevel')||card.querySelector('strong'))?.after(art);
       }
     }
+    function perimeter(){
+      const native=body.querySelector('.campDefense'),guns=body.querySelector('[data-defense-turrets]');
+      if(!native||!guns)return;
+      // The original armory and guard handlers stay in their original nodes.
+      // Their duplicate durability summary belongs behind a disclosure.
+      if(!native.querySelector(':scope > .fbGuardFile')){
+        const file=el('details','fbGuardFile');file.append(el('summary','','Сводка прочности'));
+        const durability=native.querySelector(':scope > .defGrid:not(.opsPositions)');
+        if(durability)file.append(durability);
+        native.append(file);
+      }
+      if(guns.nextElementSibling!==native)body.insertBefore(guns,native);
+      const threat=native.querySelector('.opsThreat');if(threat)body.insertBefore(threat,guns);
+    }
     let queued=false;
     const observer=new MutationObserver(schedule);
     function decorate(){
@@ -123,7 +137,7 @@
           const text=level+' · '+(c?.tier||1)+'   |   Жители '+count+'   |   Ценность '+Math.floor(c?.value||0);
           if(meta.textContent!==text)meta.textContent=text;
           body.dataset.fieldbookView=tab;
-          if(root){if(tab==='overview')home(root);if(tab==='settlers'){roster(root);if(root.querySelector('.residentIdentityHead'))dossier(root);}if(tab==='build')blueprints(root);}
+          if(root){if(tab==='overview')home(root);if(tab==='settlers'){roster(root);if(root.querySelector('.residentIdentityHead'))dossier(root);}if(tab==='build')blueprints(root);if(tab==='defense')perimeter();}
         }
       }catch(e){console.error('[camp-fieldbook]',e);}
       observer.takeRecords();observer.observe(body,{childList:true,subtree:true});

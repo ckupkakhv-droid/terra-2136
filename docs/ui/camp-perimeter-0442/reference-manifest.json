@@ -1,0 +1,190 @@
+[
+  {
+    "archive": "Terra_UI_OPT_05_Building (1).zip",
+    "sha256": "0b3d13f3266b469c21fe7394897626c6f92c256a81bcd2afa3f9d7ef0d721174",
+    "images": [
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/01_Каталог_чертежей.webp",
+        "bytes": 2323668,
+        "sha256": "e8f6c3411f8d78f92aae2206184395c77623e9f0e084ed3bd178c2b0e7c0d731"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/02_Чертеж_постройки.webp",
+        "bytes": 2197622,
+        "sha256": "6d051f5cb246b8036e63327862b43100c37d2a29f68d9d2423a89e3ddebbd0be"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/03_Размещение_постройки.webp",
+        "bytes": 2091360,
+        "sha256": "382179681a404eaff3f3eb2af9c46f40825072626ab3beb6a944587f31015f11"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/04_Расширение_лагеря.webp",
+        "bytes": 2334508,
+        "sha256": "a7afc75179f1a8831452c3cebab714279526d7192f5888c6c7f3a265e4ce4d7b"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/05_Технологии.webp",
+        "bytes": 2150318,
+        "sha256": "e9c90fc2bf679e2312778be939cc9fbc2cfd1312e9e5274fdb2d6c5c482cb254"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Вертикально/06_Оборона.webp",
+        "bytes": 1958524,
+        "sha256": "a7b228e77927b159aedd5574116608c40812532ba6339076b02642513e592c5e"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/01_Каталог_чертежей.webp",
+        "bytes": 2298426,
+        "sha256": "29c9a9aed969fab1a3a222e9ad2d4f4f465c19e272292bd60ed12b675fa4cfcc"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/02_Чертеж_постройки.webp",
+        "bytes": 2251726,
+        "sha256": "5691f7cee834a7975533c9c1b7fe8ea660f409cebc760fd7461ba391044b55be"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/03_Размещение_постройки.webp",
+        "bytes": 2037196,
+        "sha256": "73a4d60c802356e29bc74d98c33e5f434592b2976c2482fb7cbaa469939b9aa9"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/04_Расширение_лагеря.webp",
+        "bytes": 2526022,
+        "sha256": "7ce2ae657d66874f7ea79a7490c3414b728645461465d2873b385136a3e11fb5"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/05_Технологии.webp",
+        "bytes": 2166552,
+        "sha256": "960c8d7433e8ca4bac00f2de8fdb02cc6e3aeb77f79dd417deca89aa1b13c34c"
+      },
+      {
+        "path": "Terra_UI_OPT_05_Building/Горизонтально/06_Оборона.webp",
+        "bytes": 2031140,
+        "sha256": "1f6aa5c509d757dc65081d1c059e8e16dbe97f67fb2fd57ac7247a3c9282899e"
+      }
+    ]
+  },
+  {
+    "archive": "Terra_UI_OPT_04_Camp_Residents.zip",
+    "sha256": "bd91d9abd2d7656658a12a31a56ab9962b6446d4a5288fdfab4e4c163d40da96",
+    "images": [
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Вертикально/01_Обзор_лагеря.webp",
+        "bytes": 2312056,
+        "sha256": "362ae127e8cbdefaba09b2c3693b2dc719b26e572eb60232f17148e01195fe2b"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Вертикально/02_Все_разделы_лагеря.webp",
+        "bytes": 2250690,
+        "sha256": "0f194b51d69c2337827c66d2ae13d11d572c8f38d4df530114742862a84918bc"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Вертикально/03_Сводка_поселения.webp",
+        "bytes": 2381112,
+        "sha256": "2d9409c29fabd12f73abe62d79569efd7a65e16d2faf091bc4e37ce9be455e41"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Вертикально/04_Список_жителей.webp",
+        "bytes": 2120962,
+        "sha256": "aee56434324783ac5b747ea56da8665c41ffc3e007cc3dcde4eead29d6be2f6e"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Вертикально/05_Личное_дело_жителя.webp",
+        "bytes": 2096362,
+        "sha256": "83516ffc2315c31c44ea7ebff077754cf6ba38b913e3d03041ab92a9b18313cc"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Горизонтально/01_Обзор_лагеря.webp",
+        "bytes": 2214862,
+        "sha256": "a4257be589a0f2d3add039aa9d58f0f6842f4ef3a14ede13b206d181cf75e6f7"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Горизонтально/02_Все_разделы_лагеря.webp",
+        "bytes": 2269252,
+        "sha256": "9dcfb2831f8a5f56a6884c737430d10cd886c697e71cd227064a77acbcaf1840"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Горизонтально/03_Сводка_поселения.webp",
+        "bytes": 2339848,
+        "sha256": "f5412a5a983591eb3530473184f48b1a678633a87e044e23508284570c642147"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Горизонтально/04_Список_жителей.webp",
+        "bytes": 1971772,
+        "sha256": "ca679fe9cb16ce0a2316f64868c5b39882b45b4cae67c04c803018b32cada9e9"
+      },
+      {
+        "path": "Terra_UI_OPT_04_Camp_Residents/Горизонтально/05_Личное_дело_жителя.webp",
+        "bytes": 2137990,
+        "sha256": "ac1a98b513dbfd6403ec9676b867ebc3671d36ba3811c8f2c22650983d5f2f2a"
+      }
+    ]
+  },
+  {
+    "archive": "Terra_UI_OPT_06_Territories (1).zip",
+    "sha256": "3e879c2a6b877b554148c80e25e4c06b8d81cadecebf3cc3a210e066fc033271",
+    "images": [
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/01_Территории.webp",
+        "bytes": 2455950,
+        "sha256": "ec823936a2ac9a2eb31c259e8d267af26a92666fe96edb8456338dbed34877bc"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/02_Контракты.webp",
+        "bytes": 2283520,
+        "sha256": "de322c3768e3c897fd77175ab2326093f7f7cf2e07899ec6742ee600fc5b547f"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/03_Энергия_лагеря.webp",
+        "bytes": 1917838,
+        "sha256": "537222961b1421832d126ce86b3d79138a25c7c71373407d0ddcac0a9a4a32cb"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/04_Склады_и_доставка.webp",
+        "bytes": 2188610,
+        "sha256": "7e349c12354b14070e492c3d206cb5a2fe6143f94b38c8d5246b4fd6e3f2d7c7"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/05_Сосновый_узел.webp",
+        "bytes": 2499452,
+        "sha256": "0e92e0b9b52da0216e068e11d20263e6eb1b6073710656270d9c7d14f163bbdb"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Вертикально/06_Снабжение.webp",
+        "bytes": 1945620,
+        "sha256": "90f6e69f9e290803e358805f3b9d9cd517d082ac8c5e60b6135723f7d2d82e16"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/01_Территории.webp",
+        "bytes": 2437348,
+        "sha256": "2c20ba1cf7b26e4fd1e68582fb8ccba166bd842d615500181a4cfcba733e09c4"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/02_Контракты.webp",
+        "bytes": 2238318,
+        "sha256": "5245ed8534b06bc462fe29e370fcf7838228da9cce1b2c5a9c1f61888fa3f76b"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/03_Энергия_лагеря.webp",
+        "bytes": 1910750,
+        "sha256": "ca6c2bfe5545cbf379dafe71563f19662038a8c31b7ddfbac64e448e0a3f69a4"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/04_Склады_и_доставка.webp",
+        "bytes": 2110840,
+        "sha256": "63f7a3939aaf6232c7df5587f210bc428992d162268daea1b17443af68939cca"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/05_Сосновый_узел.webp",
+        "bytes": 2457934,
+        "sha256": "f90c725ad004d815ae3318155006b0d35ba31dcdbd49a4957baacfd14a647eb8"
+      },
+      {
+        "path": "Terra_UI_OPT_06_Territories/Горизонтально/06_Снабжение.webp",
+        "bytes": 1947192,
+        "sha256": "d27c7ba544e8acff27d4a7fec968d8f07e8a6314b5663a0f638d43993f815137"
+      }
+    ]
+  }
+]
