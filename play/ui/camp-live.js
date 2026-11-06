@@ -154,7 +154,7 @@
     return { text: 'простой', tone: 'idle' };
   }
   function settlerState(s) {
-    if (window.terraCampFieldbook) return {text:window.terraCampFieldbook.activity(s),tone:s.wounded||s.status==='injured'?'bad':s.status==='blocked'?'warn':s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
+    if (window.terraCampFieldbook) return {text:window.terraCampFieldbook.activity(s),tone:s.wounded||s.status==='injured'?'bad':s.status==='blocked'?'warn':s.status==='travel'||window.terraCampFieldbook.buildEnRoute?.(s)?'warn':s.job==='idle'?'idle':'ok'};
     if (s.wounded || s.status === 'injured') return { text: 'ранен', tone: 'bad' };
     if (s.job === 'idle' || s.status === 'rest') return { text: 'отдых', tone: 'idle' };
     if (s.status === 'working') return { text: 'работает', tone: 'ok' };

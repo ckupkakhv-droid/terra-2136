@@ -5,6 +5,21 @@
   const professions={scientist:'Учёный',engineer:'Инженер',medic:'Медик',scout:'Разведчик',builder:'Строитель',gatherer:'Собиратель',hauler:'Грузчик',guard:'Боец',farmer:'Фермер',crafter:'Мастер',gunsmith:'Оружейник',trader:'Торговец'};
   const jobs={'gather:wood':'Дерево','gather:scrap':'Лом','gather:water':'Вода','gather:food':'Еда',idle:'Отдых',build:'Стройка',repair:'Ремонт',craft:'Ремесло',operate:'Генератор',guard:'Охрана',patrol:'Патруль',scout:'Разведка'};
   const cfg=()=>window.TERRA_DEFENSE_CTX?.B?.camp;
+  // Обычная стройка и ремонт пишут status=working ещё на подходе.
+  // Место уже есть в сцене: тот же зазор 0.4, что у сбора. В сейв ничего не пишем.
+  function buildEnRoute(s){
+    const root=String(s?.job||'').split(':')[0];
+    if((root!=='build'&&root!=='repair')||s.status!=='working')return false;
+    const id=s.order?.target;
+    if(!id||id==='generator')return false;
+    const g=window.game,b=g?.p?.camp?.buildings?.[id];
+    if(!b||b.project?.paused||b.type==='segment'||b.type==='warehouse')return false;
+    let site=null;
+    try{const ctx=g.workerSceneContext?.();site=ctx?.worksites?.[id]||ctx?.facilityPositions?.[id];}catch(e){return false;}
+    if(!Number.isFinite(site?.x)||!Number.isFinite(site?.z))return false;
+    if(!Number.isFinite(s.pos?.x)||!Number.isFinite(s.pos?.z))return true;
+    return Math.hypot(s.pos.x-site.x,s.pos.z-site.z)>0.4;
+  }
   function activity(s) {
     if(s.wounded||s.status==='injured')return 'Ранен';
     if(s.status==='blocked')return s.workBlock==='unloaded'?'Маршрут не загружен':s.workBlock==='obstacle'?'Проход перекрыт':'Простой';
@@ -14,6 +29,7 @@
       return s.status==='travel'?(returning?'Несёт припасы':'Идёт за ресурсом'):(returning?'Сдаёт припасы':'Собирает');
     }
     if(s.status==='travel')return 'В пути';
+    if(buildEnRoute(s))return s.job==='repair'?'Идёт к ремонту':'Идёт к стройке';
     return s.job==='idle'?'Свободен':s.status==='working'?'Работает':'Ожидает';
   }
   function portrait(node,s) {
@@ -82,6 +98,8 @@
       const head=root.querySelector('.residentIdentityHead');
       if(!s||!head)return;
       portrait(head.querySelector('.residentPortrait'),s);
+      const act=root.querySelector('.fbActivity'),actText=activity(s);
+      if(act&&act.textContent!==actText)act.textContent=actText;
       if(!root.querySelector(':scope > .fbAssignment')){
         const assignment=el('section','fbAssignment');assignment.setAttribute('aria-label','Текущее назначение');
         const line=el('div','');line.append(el('small','','Назначение'),el('strong','fbAssignmentStamp',jobs[s.job]||s.facility||s.job||'Отдых'),el('span','fbActivity',activity(s)));
@@ -145,7 +163,7 @@
     function schedule(){if(!queued){queued=true;queueMicrotask(decorate);}}
     panel.addEventListener('terra:camp-tab',schedule);panel.addEventListener('terra:camp-refresh',schedule);
     new MutationObserver(schedule).observe(panel,{attributes:true,attributeFilter:['class']});decorate();
-    window.terraCampFieldbook=Object.freeze({activity,portrait});
+    window.terraCampFieldbook=Object.freeze({activity,portrait,buildEnRoute});
   }
   if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 })();
