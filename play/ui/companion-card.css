@@ -1,0 +1,75 @@
+/* Только карточка напарника. Общие стили лагеря и меню не меняются. */
+#campPanel .ccPilot {
+  min-width: 0;
+  color: #342313;
+}
+#campPanel .ccPilot .ccLayout { display: grid; gap: 6px; min-width: 0; }
+#campPanel .ccPilot .ccFace { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; align-items: start; }
+#campPanel .ccPilot .companionHeader strong { color: #342313; font: 800 18px/1.2 Georgia, 'DejaVu Serif', serif; }
+#campPanel .ccPilot { scroll-margin-top: 52px; }
+#campPanel .ccPilot .ccPhoto {
+  width: 64px; height: 76px; border: 4px solid #eadbbd; box-sizing: border-box; background: #d8c7a4 center/cover no-repeat;
+}
+#campPanel .ccPilot .ccId { min-width: 0; display: grid; gap: 3px; align-content: center; }
+#campPanel .ccPilot .ccId :is(strong, small, b, span, p) { min-width: 0; overflow-wrap: anywhere; }
+#campPanel .ccPilot .ccProf {
+  justify-self: start; margin: 0; padding: 2px 5px; border: 2px solid #893323; color: #893323;
+  font: 900 12px/1.2 Georgia, 'DejaVu Serif', serif; text-transform: uppercase;
+}
+#campPanel .ccPilot .ccNow {
+  margin: 0; min-height: 44px; display: flex; align-items: center; padding: 4px 8px;
+  border: 2px solid #2f6b35; background: #e7f0dc; color: #21401f; font: 700 15px/1.2 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel .ccPilot .ccShoot,
+#campPanel .ccPilot .ccStatus,
+#campPanel .ccPilot .ccDefense { font: 13px/1.35 Georgia, 'DejaVu Serif', serif; }
+#campPanel .ccPilot .ccDefense { margin: 0; padding: 6px 8px; background: #f6e8c4; border-left: 3px solid #6d542c; }
+#campPanel .ccPilot .ccMeter {
+  display: block; height: 8px; background: #e4d3ae; border: 1px solid #8a7049;
+}
+#campPanel .ccPilot .ccMeter > i { display: block; height: 100%; background: #3e5330; }
+#campPanel .ccPilot .ccModes,
+#campPanel .ccPilot .ccNear,
+#campPanel .ccPilot .ccGear { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+#campPanel .ccPilot .companionAction { flex: 1 1 148px; min-width: 0; }
+#campPanel .ccPilot .companionAction .campButton,
+#campPanel .ccPilot .ccDrawer > summary {
+  width: 100%; min-height: 44px; min-width: 44px; white-space: normal; overflow-wrap: anywhere;
+}
+#campPanel .ccPilot .campButton:disabled,
+#campPanel .ccPilot .campButton[aria-disabled="true"] {
+  opacity: 1; filter: none; border-style: dashed;
+}
+#campPanel .ccPilot .companionAction > small { display: block; color: #6a3a28; font: 12px/1.3 Georgia, 'DejaVu Serif', serif; }
+#campPanel .ccPilot .ccDrawer { min-width: 0; border-top: 1px solid #8a704955; }
+#campPanel .ccPilot .ccDrawer > summary { display: flex; align-items: center; cursor: pointer; color: #3f2d1b; font: 700 15px/1.3 Georgia, 'DejaVu Serif', serif; }
+#campPanel .ccPilot .ccWeaponList { list-style: none; margin: 6px 0; padding: 0; display: grid; gap: 4px; }
+#campPanel .ccPilot .ccWeapon {
+  min-height: 44px; display: flex; align-items: center; padding: 4px 8px; border: 1px solid #c8b48a; background: #f8efd8;
+  font: 14px/1.3 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel .ccPilot .ccWeapon-carried,
+#campPanel .ccPilot .ccWeapon-chosen { border-color: #2f6b35; background: #e7f0dc; }
+#campPanel.fieldbook .dossier > .campCompanion.ccPilot .companionTraining,
+#campPanel.fieldbook .dossier > .campCompanion.ccPilot .companionAction > small,
+#campPanel.fieldbook .dossier > .campCompanion.ccPilot .ccId small { display: block; }
+#campPanel.fieldbook .dossier > .campCompanion.ccPilot {
+  grid-column: 2; grid-row: 4; align-self: start; min-width: 0;
+  background: #f6e8c477; border: 1px dashed #8a704955; padding: 8px;
+}
+#campPanel.fieldbook .fbHomeBoard > .campCompanion.ccPilot {
+  background-image: var(--fb-paper); background-size: 100% 100%; padding: 10px 12px; border-radius: 6px;
+  box-shadow: 0 4px 0 #8a6840;
+}
+@media (min-width: 700px) and (max-height: 520px) {
+  #campPanel .fbHomeBoard > .ccPilot .ccLayout { grid-template-columns: minmax(0, 1.05fr) minmax(240px, .95fr); align-items: start; }
+  #campPanel .fbHomeBoard > .ccPilot .ccFace { grid-column: 1; grid-row: 1 / span 4; }
+  #campPanel .fbHomeBoard > .ccPilot :is(.ccModes, .ccNear, .ccDrawer) { grid-column: 2; }
+  #campPanel .fbHomeBoard > .ccPilot :is(.ccExtra, details:not(.ccDrawer)) { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+  #campPanel.fieldbook .dossier > .campCompanion.ccPilot { grid-column: 1; grid-row: auto; }
+  #campPanel .ccPilot .ccFace { grid-template-columns: 52px minmax(0, 1fr); }
+  #campPanel .ccPilot .ccPhoto { width: 52px; height: 62px; }
+  #campPanel .ccPilot .companionAction { flex-basis: 132px; }
+}
