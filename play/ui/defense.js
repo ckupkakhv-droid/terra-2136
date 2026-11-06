@@ -854,7 +854,7 @@
       const r = fn();
       if (r && (r.reason === 'save-failed' || r.reason === 'save-unconfirmed')) game.ui?.toast?.(saveErrorText(r), '#ff6a5a');
       else if (r && r.ok === false) game.ui?.toast?.('Нельзя: ' + (REASON[r.reason] || r.reason), '#ffba66');
-      renderDefense(lastContainer);
+      if (!info) renderDefense(lastContainer);
     });
     return b;
   }
@@ -879,13 +879,26 @@
       + '#campPanel .defenseWide{grid-column:1/-1}#campPanel .defenseWide .campItemCard__actions{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:flex-start}';
     document.head.append(st);
   }
-  function iconNode() {
-    const d = el('div', 'campItemCard__icon');
-    const g = document.querySelector('#campTabs [data-camp-tab="defense"] svg');
-    if (g) d.append(g.cloneNode(true));
-    return d;
-  }
   function stat(value, label) { const d = el('div', 'defenseStat'); d.append(el('b', null, String(value)), el('span', null, label)); return d; }
+  // Own compact silhouettes: the catalogue reads as equipment, not text links.
+  const UI_SHAPES = {
+    pkm: 'M9 20h22v-6h7v4h22v4H38v4h22v4H33v5H17V20zm13 15h8v6h10v4H10v-4h12z',
+    nail: 'M10 21h29v-6h8v7h13v5H47v8H29v5h12v5H9v-5h12V24H10z',
+    flame: 'M8 23h26v-5h9v4h13v6H43v6H29v6h11v5H7v-5h13V28H8zm43-7 6-8 3 8-3 4z',
+    ammo: 'M10 37V16l4-7 4 7v21zm12 0V16l4-7 4 7v21zm12 0V16l4-7 4 7v21z',
+    nails: 'M10 14h17v5h-6v25h-5V19h-6zm23 3h16v5h-6v22h-5V22h-5z',
+    gas: 'M18 15h21l5 7v23H13V22zm6-7h10v7H24z',
+  };
+  function silhouette(kind) {
+    const span = el('span');span.innerHTML='<svg viewBox="0 0 64 48" aria-hidden="true"><path d="'+UI_SHAPES[kind]+'"/></svg>';return span.firstChild;
+  }
+  function supplyStock(stock) {
+    const row=el('div','opsSupply');row.setAttribute('aria-label','Боеприпасы на складе');
+    for (const [key,icon,label] of [['a545','ammo','5.45'],['nails','nails','Гвозди'],['gas','gas','Газ']]) {
+      const item=el('span');item.append(silhouette(icon),el('span',null,label),el('b',null,Math.floor(stock[key]||0)));row.append(item);
+    }
+    return row;
+  }
   function renderDefense(container) {
     if (!container || !container.isConnected) return;
     lastContainer = container;
@@ -908,8 +921,8 @@
       e.setAttribute('role', 'alert');
       list.append(e);
     }
-    summary.append(stat(st.limit.used + '/' + st.limit.max, 'турелей (лимит по уровню лагеря)'), stat(st.summary.porters, 'подносчиков'),
-      stat(st.summary.needAmmo, 'ждут боеприпасы'), stat(s.a545 + ' · ' + s.nails + ' · ' + s.gas, 'склад: 5.45 · гвозди · газ'));
+    summary.append(el('div','opsDefenseHeader','ОГНЕВЫЕ ТОЧКИ'),stat(st.limit.used + '/' + st.limit.max, 'турели / лимит'), stat(st.summary.porters, 'подносчики'),
+      stat(st.summary.needAmmo, 'нужны боеприпасы'), supplyStock(s));
     for (const t of st.turrets) {
       const card = el('article', 'campItemCard');
       card.dataset.tone = TONE[t.state] || 'idle';
@@ -940,13 +953,19 @@
       }, true);
       info.setAttribute('aria-label', 'Подробности: ' + t.name);
       a.append(info);
-      card.append(iconNode(), body, a);
+      const silhouetteBox=el('div','opsGun');silhouetteBox.append(silhouette(t.dk));
+      card.append(silhouetteBox, body, a);
       list.append(card);
     }
-    const pc = el('article', 'campItemCard defenseWide');
+    const pc = el('article', 'campItemCard defenseWide opsPorters');
     const pb = el('div', 'defenseBody');
-    pb.append(el('div', 'campItemCard__title', 'Подносчики'), el('div', 'campItemCard__meta', 'Носят 5.45, гвозди и газ со склада лагеря к турелям, магазин которых опустел больше чем на треть.'));
-    pc.append(iconNode(), pb);
+    const flow=el('div','opsFlow');flow.append(el('span',null,'Склад'),el('b',null,'→'),el('span',null,'Подносчик'),el('b',null,'→'),el('span',null,'Турель'));
+    pb.append(flow);
+    const porterInfo=act('i',()=>{
+      const box=el('div');box.append(el('p',null,'Подносчики несут 5.45, гвозди и газ со склада к турелям, магазин которых опустел больше чем на треть. Назначение сохраняется.'),el('p',null,'Порох используется в рецепте «5.45 ×30 на порохе». Гвозди — Гвоздомёту, газ — Огнемёту. Сдайте припасы на склад кнопками ниже.'));
+      window.terraCampUI?.openInfo?.('Снабжение обороны',box);return {ok:true};
+    },true);porterInfo.setAttribute('aria-label','Как работает снабжение обороны');
+    pc.append(pb,porterInfo);
     const pa = el('div', 'campItemCard__actions');
     for (const sv of Object.values(game.p.camp?.settlers || {})) {
       if (sv.dead) continue;
@@ -955,18 +974,27 @@
       b.setAttribute('aria-pressed', String(on)); b.dataset.porter = sv.id;
       pa.append(b);
     }
-    if (!pa.children.length) pb.append(el('div', 'campItemCard__meta', 'В лагере пока нет жителей.'));
+    if (!pa.children.length) {
+      pb.append(el('div', 'campItemCard__meta', 'Нет подносчиков — нужны жители.'));
+      pa.append(act('К жителям →',()=>{game.ui.campPanel.select('settlers');return {ok:true};}));
+    }
     pc.append(pa);
-    list.append(pc);
-    const bc = el('article', 'campItemCard defenseWide');
-    const bb = el('div', 'defenseBody');
-    bb.append(el('div', 'campItemCard__title', 'Снабжение и стройка'), el('div', 'campItemCard__meta', 'Порох — в патроны 5.45 (рецепт «5.45 ×30 на порохе»), гвозди — Гвоздомёту, газ — Огнемёту. Сдайте их на склад, чтобы подносчики могли носить.'));
-    bc.append(iconNode(), bb);
-    const ba = el('div', 'campItemCard__actions');
-    for (const k of ['a545', 'nails', 'gas', 'powder']) if ((game.p.inv[k] || 0) >= 1) ba.append(act('На склад: ' + ammoName(k) + ' ×' + Math.floor(game.p.inv[k]), () => api.deposit(k)));
-    if (st.limit.used < st.limit.max) for (const c of st.catalog) ba.append(act('Построить: ' + c.name, () => { const r = api.build(c.dk); if (r.ok) document.querySelector('#campPanel .panelFoot [data-close]')?.click(); return r; }));
-    bc.append(ba);
-    list.append(bc);
+    const ba=el('div','opsSupply defenseWide');
+    for (const k of ['a545', 'nails', 'gas', 'powder']) if ((game.p.inv[k] || 0) >= 1) {
+      const deposit=act('На склад: ' + ammoName(k) + ' ×' + Math.floor(game.p.inv[k]), () => api.deposit(k));deposit.dataset.defenseDeposit=k;ba.append(deposit);
+    }
+    if (ba.children.length) list.append(ba);
+    list.append(el('div','opsSectionLabel',st.limit.used ? 'ДОБАВИТЬ ОГНЕВУЮ ТОЧКУ' : 'ВЫБРАТЬ ЧЕРТЁЖ / ТУРЕЛЕЙ ПОКА НЕТ'));
+    const catalog=el('div','opsCatalog');
+    for (const c of st.catalog) {
+      const card=el('article','campItemCard'),head=el('div','opsGun');head.append(silhouette(c.dk),el('strong',null,c.name));
+      const price=el('div','opsCost');price.append(el('span',null,'Ур. героя '+c.lvlReq+' · '+c.ammoName),el('br'),el('span',null,costText(c.cost)));
+      const build=act('Разместить',()=>{const r=api.build(c.dk);if(r.ok) document.querySelector('#campPanel .panelFoot [data-close]')?.click();return r;});
+      build.dataset.defenseBuild=c.dk;build.setAttribute('aria-label','Разместить: '+c.name);
+      if (st.limit.used>=st.limit.max) {build.disabled=true;price.append(el('br'),el('span',null,'Лимит турелей достигнут'));}
+      card.append(head,price,build);catalog.append(card);
+    }
+    list.append(catalog,pc);
   }
   function updateBadge() {
     const ui = window.terraCampUI;

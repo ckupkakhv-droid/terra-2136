@@ -146,7 +146,7 @@ html, scripts = re.subn(
     r'<script([^>]*?)src="((?:ui|art)/[^"]+)"([^>]*)>\s*</script>', inline_script, html)
 html, styles = re.subn(
     r'<link rel="stylesheet" href="(ui/[^"]+)">',
-    lambda match: '<style>' + (PLAY / match.group(1)).read_text(encoding='utf-8') + '</style>', html)
+    lambda match: '<style>' + (PLAY / urlsplit(match.group(1)).path).read_text(encoding='utf-8') + '</style>', html)
 if re.search(r'<(?:script|link)\b[^>]*(?:src|href)="(?:ui|art|assets)/', html):
     raise ValueError('Unresolved local script or stylesheet in offline HTML')
 raw = html.encode('utf-8')
