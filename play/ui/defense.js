@@ -558,12 +558,38 @@
   /* ---------- подносчики ---------- */
   function porterIds() { return dstate().porters.filter((id) => settler(id)); }
   function needFor(o) { return magMax(o) - magOf(o); }
+  // Штатный segmentNav. «obstacle» — отрезок закрыт, склад не трогаем.
+  // unloaded/unavailable не считаем стеной: далеко от героя клетки ещё не собраны, прежняя доставка живёт.
+  // Крайние 2.1 м — след склада и самой турели (их коллайдер шире точки выдачи). Стена между ними остаётся стеной.
+  const NAV_PAD = 2.1;
+  function segmentNav() {
+    const cached = game.campWorkerContext?.segmentNav;
+    if (typeof cached?.check === 'function') return cached;
+    if (typeof S.nav?.check === 'function') return S.nav;
+    try {
+      const built = game.workerSceneContext?.();
+      if (typeof built?.segmentNav?.check === 'function') { S.nav = built.segmentNav; return S.nav; }
+    } catch {}
+    return null;
+  }
+  function routeBlocked(a, b) {
+    if (!a || !b) return false;
+    const dx = b.x - a.x, dz = b.z - a.z, len = Math.hypot(dx, dz);
+    if (len <= NAV_PAD * 2 + 0.05) return false;
+    const start = { x: a.x + dx / len * NAV_PAD, z: a.z + dz / len * NAV_PAD };
+    const end = { x: b.x - dx / len * NAV_PAD, z: b.z - dz / len * NAV_PAD };
+    const nav = segmentNav();
+    if (!nav) return false;
+    let res = null;
+    try { res = nav.check(start, end); } catch { return false; }
+    return res?.ok === false && res.reason === 'obstacle';
+  }
   function planTrips() {
     const dp = depot();
     if (!dp) return;
     const res = campRes();
     const busy = new Set([...S.trips.values()].map((t) => t.turret));
-    const list = turrets().filter((o) => !busy.has(idOf(o)) && Math.hypot(o.x - dp.x, o.z - dp.z) <= SUPPLY_R && needFor(o) >= Math.max(1, magMax(o) * 0.35) && (res[TYPES[dkOf(o)].ammo] || 0) >= 1)
+    const list = turrets().filter((o) => !busy.has(idOf(o)) && Math.hypot(o.x - dp.x, o.z - dp.z) <= SUPPLY_R && needFor(o) >= Math.max(1, magMax(o) * 0.35) && (res[TYPES[dkOf(o)].ammo] || 0) >= 1 && !routeBlocked(dp, { x: o.x, z: o.z }))
       .sort((a, b) => num(b.dprio, 0) - num(a.dprio, 0) || magOf(a) / magMax(a) - magOf(b) / magMax(b));
     for (const id of porterIds()) {
       if (S.trips.has(id) || !list.length) continue;
@@ -599,6 +625,8 @@
       const o = turrets().find((x) => idOf(x) === trip.turret);
       if (!available(s) || !o || !dstate().porters.includes(trip.id)) { endTrip(trip); emit('porter-cancel', { settlerId: trip.id }); continue; }
       const a = trip.phase === 'go' ? trip.from : trip.to, b = trip.phase === 'go' ? trip.to : trip.from;
+      const here = { x: a.x + (b.x - a.x) * trip.k, z: a.z + (b.z - a.z) * trip.k };
+      if (routeBlocked(here, b)) { endTrip(trip); emit('porter-cancel', { settlerId: trip.id, reason: 'obstacle' }); continue; }
       const len = Math.max(0.5, Math.hypot(b.x - a.x, b.z - a.z));
       trip.k = Math.min(1, trip.k + (trip.speed * dt) / len);
       const x = a.x + (b.x - a.x) * trip.k, z = a.z + (b.z - a.z) * trip.k;
