@@ -104,7 +104,8 @@
 #campPanel.fieldbook .fbWarning { position:absolute;top:-10px;right:-4px;color:#552b15;background-image:var(--fb-brass);padding:5px 10px;font:900 24px/1 var(--fb-serif);transform:rotate(8deg); }
 #campPanel.fieldbook .fbCardOrder { margin-top:auto;padding-top:8px;border-top:1px solid #85684477; }
 #campPanel.fieldbook .fbCardOrder > summary { text-align:center;cursor:pointer;min-height:44px;display:grid;place-items:center;font:700 12px var(--fb-serif);color:#674a2e; }
-#campPanel.fieldbook .fbCardOrder button { width:100%;color:#412d19;background:#f0dfbd;border-color:#947046; }
+#campPanel.fieldbook .fbCardOrder button { width:100%;min-height:48px;color:#412d19;background:#f0dfbd;border-color:#947046; }
+#campPanel.fieldbook .fbCardOrder .residentOrderReason { display:block;margin:6px 0 0;color:#6d3224;font:13px/1.35 var(--fb-serif);overflow-wrap:anywhere; }
 #campPanel.fieldbook .opsRoster > .campFold { margin-top:24px; }
 #campPanel.fieldbook .opsRoster > .campFold > summary { background-image:var(--fb-brass);border:2px solid #b88a49;padding:14px;text-align:center;color:#342313;min-height:56px;font:900 21px/1.1 var(--fb-stamp);box-shadow:0 3px 0 #4a2e15; }
 #campPanel.fieldbook .opsRosterEmpty .opsEmptyRoster { background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border-radius:6px;box-shadow:0 5px 0 #87603c,0 10px 15px #0008; }
@@ -113,7 +114,7 @@
 /* Разворот личного дела: фото, потребности, назначение. Приказы по запросу. */
 #campPanel.fieldbook .campResidents.dossier { display:grid;grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr);gap:16px 28px;padding:24px;color:var(--fb-ink);background-image:var(--fb-paper);background-size:100% 100%;border-radius:10px;box-shadow:0 5px 0 #bc9c6a,0 9px 0 #5e442a,0 12px 20px #0009; }
 #campPanel.fieldbook .dossier > * { order:0;min-width:0; }
-#campPanel.fieldbook .dossier > [data-camp-back] { grid-column:1/-1;width:auto;margin:0;background:none;color:#583d25;border:0;box-shadow:none;min-height:44px;padding:0;text-align:left; }
+#campPanel.fieldbook .dossier > [data-camp-back] { position:static;z-index:auto;grid-column:1/-1;width:auto;margin:0;background:none;color:#583d25;border:0;box-shadow:none;min-height:44px;padding:0;text-align:left; }
 #campPanel.fieldbook .dossier .residentIdentityHead { order:0;grid-column:1;grid-row:2/5;display:flex;flex-direction:column;margin:0;padding:0;gap:20px; }
 #campPanel.fieldbook .dossier .residentIdentityHead .residentPortrait { width:min(100%,280px);height:auto;aspect-ratio:1/1.1;border:9px solid #eadbbd;border-bottom-width:23px;box-sizing:border-box;padding:0; }
 #campPanel.fieldbook .dossier .residentIdentityInfo h3 { font:800 32px/1.1 var(--fb-serif); }
