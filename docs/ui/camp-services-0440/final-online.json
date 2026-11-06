@@ -1,0 +1,69 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "costText": "Из местного запаса: Дерево: 16 · Лом: 12",
+      "costPreserved": true,
+      "navigationOneLine": true,
+      "geometry": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "costText": "Из местного запаса: Дерево: 16 · Лом: 12",
+      "costPreserved": true,
+      "navigationOneLine": true,
+      "geometry": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "costText": "Из местного запаса: Дерево: 16 · Лом: 12",
+      "costPreserved": true,
+      "navigationOneLine": true,
+      "geometry": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "costText": "Из местного запаса: Дерево: 16 · Лом: 12",
+      "costPreserved": true,
+      "navigationOneLine": true,
+      "geometry": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    }
+  ],
+  "errors": []
+}
