@@ -1,0 +1,154 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "items": {
+        "width": 1094,
+        "scroll": 1094,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "catalog": {
+        "width": 1094,
+        "scroll": 1094,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "recipe": {
+        "width": 1094,
+        "scroll": 1094,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "items": {
+        "width": 368,
+        "scroll": 368,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "catalog": {
+        "width": 368,
+        "scroll": 368,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "recipe": {
+        "width": 368,
+        "scroll": 368,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      }
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "items": {
+        "width": 298,
+        "scroll": 298,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "catalog": {
+        "width": 298,
+        "scroll": 298,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "recipe": {
+        "width": 298,
+        "scroll": 298,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      }
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "items": {
+        "width": 702,
+        "scroll": 702,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "catalog": {
+        "width": 702,
+        "scroll": 702,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      },
+      "recipe": {
+        "width": 702,
+        "scroll": 702,
+        "winOverflow": 0,
+        "headAbove": true,
+        "footerBelow": true,
+        "bad": [],
+        "overflowCards": []
+      }
+    }
+  ],
+  "recipes": 56,
+  "available": 21,
+  "actions": {
+    "bandageCost": {
+      "cloth": 2
+    },
+    "bandageOutput": 2,
+    "weapon": "spear",
+    "weaponCost": {
+      "wood": 4,
+      "scrap": 2
+    },
+    "keyboardUse": true,
+    "lastItemFocus": true,
+    "otherFocusPreserved": true,
+    "coldContinue": true
+  },
+  "errors": []
+}

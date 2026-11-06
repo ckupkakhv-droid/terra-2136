@@ -1,7 +1,7 @@
 /* Кожа, бумага, фотокарточки и рабочие чертежи. Все надписи остаются живыми. */
-:root { --terra-camp-paper:url('../assets/ui/camp/paper.webp');--terra-camp-leather:url('../assets/ui/camp/leather.webp');--terra-camp-brass:url('../assets/ui/camp/brass.webp'); }
+:root { --terra-camp-paper:url('../assets/ui/camp/paper.webp');--terra-camp-leather:url('../assets/ui/camp/leather.webp');--terra-camp-brass:url('../assets/ui/camp/brass.webp');--terra-camp-blue:url('../assets/ui/camp/blueprint.webp'); }
 #campPanel.fieldbook {
-  --fb-paper:var(--terra-camp-paper);--fb-blue:url('../assets/ui/camp/blueprint.webp');
+  --fb-paper:var(--terra-camp-paper);--fb-blue:var(--terra-camp-blue);
   --fb-leather:var(--terra-camp-leather);--fb-brass:var(--terra-camp-brass);
   --fb-ink:#342313;--fb-light:#ecd1a0;
   --fb-serif:Georgia,'DejaVu Serif',serif;--fb-stamp:'DejaVu Serif',Georgia,serif;
