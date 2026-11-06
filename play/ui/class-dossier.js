@@ -73,7 +73,12 @@
         const key=pendingFocus,selector='['+key.attr+(key.value==null?'':'="'+CSS.escape(key.value)+'"')+']',target=root.querySelector(selector);
         if(target&&!target.disabled) {
           pendingFocus=null;
-          queueMicrotask(()=>{if(!target.isConnected||inv.classList.contains('hidden'))return;target.focus({preventScroll:true});const notice=target.closest('.classConfirmation');(notice||target).scrollIntoView({block:'nearest'});});
+          queueMicrotask(()=>{
+            if(!target.isConnected||inv.classList.contains('hidden'))return;
+            const focused=document.activeElement;
+            if(focused?.isConnected&&![document.body,document.documentElement,body,inv,target].includes(focused))return;
+            target.focus({preventScroll:true});const notice=target.closest('.classConfirmation');(notice||target).scrollIntoView({block:'nearest'});
+          });
         }
       }
     }

@@ -1,0 +1,70 @@
+[
+  {
+    "viewport": [
+      390,
+      844
+    ],
+    "clientWidth": 370,
+    "scrollWidth": 436,
+    "buttons": [
+      {
+        "id": "eq",
+        "visible": 1
+      },
+      {
+        "id": "items",
+        "visible": 1
+      },
+      {
+        "id": "craft",
+        "visible": 1
+      },
+      {
+        "id": "skills",
+        "visible": 1
+      },
+      {
+        "id": "settle",
+        "visible": 1
+      },
+      {
+        "id": "log",
+        "visible": 0
+      }
+    ]
+  },
+  {
+    "viewport": [
+      320,
+      568
+    ],
+    "clientWidth": 300,
+    "scrollWidth": 436,
+    "buttons": [
+      {
+        "id": "eq",
+        "visible": 1
+      },
+      {
+        "id": "items",
+        "visible": 1
+      },
+      {
+        "id": "craft",
+        "visible": 1
+      },
+      {
+        "id": "skills",
+        "visible": 1
+      },
+      {
+        "id": "settle",
+        "visible": 0.19261112180103906
+      },
+      {
+        "id": "log",
+        "visible": 0
+      }
+    ]
+  }
+]

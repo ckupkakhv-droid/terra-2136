@@ -559,10 +559,74 @@ function hookPreview() {
     mo.observe(inv, { attributes: true, attributeFilter: ['class'] });
   }
 
+  function bindTabs(inv) {
+    const tabs = inv.querySelector('.tabs'), panel = document.getElementById('invBody');
+    if (!tabs || !panel) return;
+    const names = {eq: ['Экипировка', 'Снаряж.'], items: ['Вещи', 'Вещи'], craft: ['Крафт', 'Крафт'],
+      skills: ['Навыки', 'Навыки'], settle: ['Поселение', 'Посел.'], log: ['Журнал', 'Журнал']};
+    const decorated = new WeakSet();
+    const vertical = matchMedia('(orientation: landscape) and (max-height: 520px)');
+    const buttons = () => [...tabs.querySelectorAll('button[data-tab]')];
+    const enabled = () => buttons().filter(b => !b.disabled);
+    let queued = false, reveal = true, lastSelected = null;
+    function tabStop(target) { for (const b of buttons()) b.tabIndex = b === target ? 0 : -1; }
+    function sync() {
+      queued = false;
+      const all = buttons();
+      if (!all.length) return;
+      tabs.setAttribute('role', 'tablist');
+      tabs.setAttribute('aria-label', 'Разделы рюкзака');
+      tabs.setAttribute('aria-orientation', vertical.matches ? 'vertical' : 'horizontal');
+      for (const b of all) {
+        if (!decorated.has(b)) {
+          decorated.add(b);
+          const name = names[b.dataset.tab] || [b.textContent.trim(), b.textContent.trim()];
+          if (!b.id) b.id = 'inventory-tab-' + b.dataset.tab;
+          b.setAttribute('role', 'tab');
+          b.setAttribute('aria-controls', panel.id);
+          if (!b.hasAttribute('aria-label')) b.setAttribute('aria-label', name[0]);
+          if (!b.title) b.title = name[0];
+          const short = document.createElement('span');
+          short.className = 'bpNavShort';short.textContent = name[1];short.setAttribute('aria-hidden', 'true');b.append(short);
+        }
+      }
+      const selected = all.find(b => b.classList.contains('on')) || all[0];
+      for (const b of all) b.setAttribute('aria-selected', String(b === selected));
+      panel.setAttribute('role', 'tabpanel');panel.setAttribute('aria-labelledby', selected.id);
+      const focus = all.includes(document.activeElement) && !document.activeElement.disabled ? document.activeElement : null;
+      tabStop(focus || (selected.disabled ? enabled()[0] : selected));
+      if (reveal || selected !== lastSelected) {
+        reveal = false;lastSelected = selected;
+        const target = focus || selected;
+        queueMicrotask(() => { if (target.isConnected && !inv.classList.contains('hidden')) target.scrollIntoView({block:'nearest', inline:'nearest'}); });
+      }
+    }
+    function queue() { if (!queued) { queued = true;queueMicrotask(sync); } }
+    tabs.addEventListener('keydown', event => {
+      if (inv.classList.contains('hidden') || window.game?.state !== 'modal' || event.altKey || event.ctrlKey || event.metaKey) return;
+      const all = enabled(), index = all.indexOf(event.target);
+      if (index < 0) return;
+      if (event.key === 'Enter' || event.key === ' ') { event.stopPropagation();return; }
+      const previous = vertical.matches ? 'ArrowUp' : 'ArrowLeft';
+      const next = vertical.matches ? 'ArrowDown' : 'ArrowRight';
+      if (![previous, next, 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();event.stopPropagation();
+      const at = event.key === 'Home' ? 0 : event.key === 'End' ? all.length - 1 : (index + (event.key === previous ? -1 : 1) + all.length) % all.length;
+      tabStop(all[at]);all[at].focus({preventScroll: true});all[at].scrollIntoView({block: 'nearest', inline: 'nearest'});
+    });
+    tabs.addEventListener('focusin', event => { if (enabled().includes(event.target)) tabStop(event.target); });
+    tabs.addEventListener('focusout', event => { if (!tabs.contains(event.relatedTarget)) queue(); });
+    new MutationObserver(queue).observe(tabs, {childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'disabled']});
+    new MutationObserver(() => { reveal = true;queue(); }).observe(inv, {attributes: true, attributeFilter: ['class']});
+    const resize = () => { if (!inv.classList.contains('hidden')) { reveal = true;queue(); } };
+    vertical.addEventListener('change', resize);window.addEventListener('resize', resize, {passive:true});sync();
+  }
+
   function boot() {
     const inv = document.getElementById('inv');
     if (!inv) return;
     bind(inv);
+    bindTabs(inv);
     schedule();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

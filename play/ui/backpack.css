@@ -504,3 +504,22 @@
     overflow: visible;
   }
 }
+
+/* Все шесть разделов видны на телефоне; полные названия остаются в aria-label. */
+#inv .tabs .bpNavShort { display:none; }
+#inv .tabs [role="tab"] { transition:color .15s,border-color .15s,box-shadow .15s; }
+@media (orientation:portrait) and (max-width:600px) {
+  #inv.gamePanel .tabs[role="tablist"] {
+    display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;
+    overflow:visible;touch-action:manipulation;
+  }
+  #inv.gamePanel .tabs[role="tablist"] button { width:100%;min-width:0;min-height:56px;padding:4px 1px;gap:3px; }
+  #inv.gamePanel .tabs[role="tablist"] button > span:not(.bpNavShort) { display:none; }
+  #inv.gamePanel .tabs[role="tablist"] button .bpNavShort { display:block;max-width:100%;font-size:9.5px;line-height:1.1;white-space:nowrap; }
+}
+@media (orientation:landscape) and (max-height:520px) {
+  #inv.gamePanel .tabs[role="tablist"] button { height:48px;min-height:44px; }
+}
+@media (orientation:landscape) and (max-height:360px) {
+  #inv.bp .tabs { overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:var(--bp-edge) transparent;touch-action:pan-y; }
+}
