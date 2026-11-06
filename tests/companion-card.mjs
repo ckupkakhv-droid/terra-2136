@@ -96,7 +96,8 @@ test('чужой uid не списывает первый свободный с�
   const second = gun(2, 'shotgun', 'Двустволка', 2);
   player.weapons = [first, second];
   player.x = 1;
-  const refused = context.wm(player, 2, false);
+  // Собранный приказ отдаёт ствол по его uid. Чужой номер — тот, которого в рюкзаке нет.
+  const refused = context.wm(player, 99, false);
   assert.equal(refused.ok, false);
   assert.deepEqual(player.weapons.map(item => item.uid), [1, 2]);
   assert.equal(resident.gear.weapon, null);

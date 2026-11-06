@@ -114,7 +114,7 @@
 /* Разворот личного дела: фото, потребности, назначение. Приказы по запросу. */
 #campPanel.fieldbook .campResidents.dossier { display:grid;grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr);gap:16px 28px;padding:24px;color:var(--fb-ink);background-image:var(--fb-paper);background-size:100% 100%;border-radius:10px;box-shadow:0 5px 0 #bc9c6a,0 9px 0 #5e442a,0 12px 20px #0009; }
 #campPanel.fieldbook .dossier > * { order:0;min-width:0; }
-#campPanel.fieldbook .dossier > [data-camp-back] { grid-column:1/-1;width:auto;margin:0;background:none;color:#583d25;border:0;box-shadow:none;min-height:44px;padding:0;text-align:left; }
+#campPanel.fieldbook .dossier > [data-camp-back] { position:static;z-index:auto;grid-column:1/-1;width:auto;margin:0;background:none;color:#583d25;border:0;box-shadow:none;min-height:44px;padding:0;text-align:left; }
 #campPanel.fieldbook .dossier .residentIdentityHead { order:0;grid-column:1;grid-row:2/5;display:flex;flex-direction:column;margin:0;padding:0;gap:20px; }
 #campPanel.fieldbook .dossier .residentIdentityHead .residentPortrait { width:min(100%,280px);height:auto;aspect-ratio:1/1.1;border:9px solid #eadbbd;border-bottom-width:23px;box-sizing:border-box;padding:0; }
 #campPanel.fieldbook .dossier .residentIdentityInfo h3 { font:800 32px/1.1 var(--fb-serif); }
