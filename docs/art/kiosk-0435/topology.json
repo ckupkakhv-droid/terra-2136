@@ -1,0 +1,26 @@
+[
+  {
+    "lod": 0,
+    "vertices": 2009,
+    "triangles": 1159,
+    "beforeTriangles": 2599,
+    "closedSolids": 41,
+    "minimumNormalDot": 0.999117360696251
+  },
+  {
+    "lod": 1,
+    "vertices": 1076,
+    "triangles": 568,
+    "beforeTriangles": 1167,
+    "closedSolids": 35,
+    "minimumNormalDot": 0.9960222799337294
+  },
+  {
+    "lod": 2,
+    "vertices": 524,
+    "triangles": 262,
+    "beforeTriangles": 340,
+    "closedSolids": 16,
+    "minimumNormalDot": 0.9991245552926765
+  }
+]

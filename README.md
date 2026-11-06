@@ -20,7 +20,7 @@
 
 **ТЕРРА** соединяет вылазки за припасами, развитие персонажа и управление поселением. Исследуй мир с видом сверху, выбирай снаряжение, назначай выжившим работу и готовь периметр к следующей атаке.
 
-[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.34](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.34) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
+[Сюжетный трейлер](assets/media/terra_trailer1.mp4) · [Трейлер игры](assets/media/terra_trailer2.mp4) · [Что изменилось](CHANGELOG.md) · [Выпуск 0.4.35](https://github.com/ckupkakhv-droid/terra-2136/releases/tag/v0.4.35) · [Сообщить об ошибке](https://github.com/ckupkakhv-droid/terra-2136/issues/new?template=bug.yml)
 
 ## Три стороны одной экспедиции
 
@@ -29,6 +29,8 @@
 | Заросшие районы России, пять поясов опасности, метро и подземелья. Радиация, споры, огонь и затопленные проходы. | Жители с профессиями, навыками и состоянием. Работы, хозяйство, строительство и снабжение обороны. | Ближний бой, огнестрел, метательное оружие. Редкое снаряжение, крафт, заточка, навыки, таланты и ранги. |
 
 ## Обновления линии 0.4
+
+**Забытый киоск.** Повреждённая модель заменена металлическим павильоном: открытые окна, прилавок, дверь, гофрированная крыша, следы ржавчины и старая вывеска «ХЛЕБ». Все три варианта детализации сохраняют проёмы, а треугольников стало меньше. [Кадры и проверка](docs/art/kiosk-0435/README.md).
 
 **Земля под ногами.** Резервный скафандр стоит на грунте и следует лестницам метро: больше не висит над низиной и не уходит под склон, пока ожидается основная модель. [Кадры и проверка](docs/art/hero-ground-0434/README.md).
 
@@ -187,6 +189,7 @@ python3 scripts/build-offline.py
 - Авторы на itch.io: [atomicrealm](https://atomicrealm.itch.io), [cebisathecreator](https://cebisathecreator.itch.io), [gbstwo](https://gbstwo.itch.io), [grigory-petrov](https://grigory-petrov.itch.io), [retrostylegames](https://retrostylegames.itch.io), [tako4short](https://tako4short.itch.io)
 - Модели турелей обороны (`play/assets/defense/turrets.glb`) — собственная процедурная геометрия и атлас команды (`tools/art/turret_gen.py`): бочка, тренога, мешки, покрышки, трубы, баллоны, заплатки и трафареты. Надписи — шрифт DejaVu. Ящик подносчика по-прежнему Kenney, CC0.
 - Модели оружия и инструментов в руках героя (`play/assets/art/held.glb`) — собственная процедурная геометрия команды (`tools/art/weapons_gen.py`)
+- Киоск «ХЛЕБ» (`tools/art/kiosk/`) — собственная процедурная геометрия команды; используются неизменённые карты существующего атласа игры. Надпись собрана из собственных штрихов.
 - Мелкие контейнеры и мебель (`play/art/salvage-props.js`) — собственная процедурная геометрия команды; используются существующие материалы и пакеты отрисовки.
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Мутант коллекторов «Рафаэль» (`play/assets/sewer/mutant.glb`): тело, риг и анимации — [Quaternius](https://quaternius.com) Universal Base Characters и Universal Animation Library 1 (CC0 1.0); голова, панцирь, одежда, саи, текстуры, клипы scream/emerge — собственные (`tools/art/sewer_mutant/`). Подробно: `play/assets/sewer/CREDITS.md`
