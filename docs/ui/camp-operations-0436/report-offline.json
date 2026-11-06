@@ -1,0 +1,92 @@
+{
+  "empty": [
+    {
+      "viewport": "desktop",
+      "roster": {
+        "width": 894,
+        "scroll": 894,
+        "escaped": []
+      },
+      "defense": {
+        "width": 894,
+        "scroll": 894,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "portrait",
+      "roster": {
+        "width": 370,
+        "scroll": 370,
+        "escaped": []
+      },
+      "defense": {
+        "width": 370,
+        "scroll": 370,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "landscape",
+      "roster": {
+        "width": 742,
+        "scroll": 742,
+        "escaped": []
+      },
+      "defense": {
+        "width": 742,
+        "scroll": 742,
+        "escaped": []
+      }
+    }
+  ],
+  "populated": [
+    {
+      "viewport": "desktop",
+      "roster": {
+        "width": 894,
+        "scroll": 894,
+        "escaped": []
+      },
+      "defense": {
+        "width": 894,
+        "scroll": 894,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "portrait",
+      "roster": {
+        "width": 370,
+        "scroll": 370,
+        "escaped": []
+      },
+      "defense": {
+        "width": 370,
+        "scroll": 370,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": "landscape",
+      "roster": {
+        "width": 742,
+        "scroll": 742,
+        "escaped": []
+      },
+      "defense": {
+        "width": 742,
+        "scroll": 742,
+        "escaped": []
+      }
+    }
+  ],
+  "orders": {
+    "failedTransferRollback": true,
+    "retryStock": 32,
+    "reloadMagazine": 60,
+    "coldContinuation": true,
+    "previewOnly": true
+  },
+  "errors": []
+}

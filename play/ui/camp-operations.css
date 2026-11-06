@@ -1,0 +1,123 @@
+/* Paper files and perimeter drawings, matching the existing work blueprints. */
+#campPanel.campOperations { --ops-paper:#daceaa; --ops-ink:#302b20; --ops-blue:#19394a; --ops-rule:#9fc5d326; --ops-mono:"Courier New","Liberation Mono",monospace; }
+#campPanel .opsRoster { padding:14px; background:repeating-linear-gradient(0deg,#0000 0 31px,#5a4c3512 31px 32px),linear-gradient(135deg,#e5d8b4,#c6b68d);color:var(--ops-ink);box-shadow:0 4px 12px #0006;min-width:0; }
+#campPanel .opsRosterHead { display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 0 12px;margin-bottom:10px;border-bottom:2px solid #5a4c3566; }
+#campPanel .opsSerial { font:700 10px/1.5 var(--ops-mono);letter-spacing:.13em; }
+#campPanel .opsRoster h3 { margin:4px 0;font:700 21px/1.2 var(--ops-mono);color:var(--ops-ink); }
+#campPanel .opsPersonnel { display:flex;align-items:center;gap:10px;font:700 32px/1 var(--ops-mono); }
+#campPanel .opsRoster svg:not(.gi) { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;flex-shrink:0; }
+#campPanel .opsPersonnel svg { width:44px;height:44px; }
+#campPanel .opsRoster .residentFilters { gap:0;border-bottom:1px solid #62533766;margin-bottom:12px; }
+#campPanel .opsRoster .residentFilters button { background:#554a3220;color:var(--ops-ink);border:0;border-bottom:3px solid transparent;border-radius:0;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:6px; }
+#campPanel .opsRoster .residentFilters button[aria-pressed=true] { background:#f4e9c5;border-bottom-color:#8e332b;box-shadow:0 2px 4px #33220026; }
+#campPanel .opsRoster .residentFilters b { font:700 19px/1 var(--ops-mono); }
+#campPanel .opsRoster .residentFilters span { font-size:12px; }
+#campPanel .opsRoster .residentTasks { margin:0; }
+#campPanel .opsQuickOrder { margin:0 0 10px;border-bottom:1px solid #7e6c4c88; }
+#campPanel .opsQuickOrder > summary { cursor:pointer;font:700 13px var(--ops-mono);color:#5a3627; }
+#campPanel .opsQuickOrder[open] > summary { margin-bottom:8px; }
+#campPanel .opsRoster .residentTasks button { display:flex;align-items:center;justify-content:center;gap:6px;background:#e9dfbf;border:1px solid #6c6047;color:#302b20;border-radius:1px; }
+#campPanel .opsRoster .residentTasks button[aria-pressed=true] { border:2px solid #8e332b; }
+#campPanel .opsRoster .residentTasks button:disabled { opacity:.65; }
+#campPanel .opsRoster .residentTaskHint { display:block;color:#534934;padding:8px 0 4px; }
+#campPanel .opsRoster .residentRecommendation { margin:0 0 14px;background:#f5ebce70;color:#302b20;border:0;border-left:3px solid #7a382d;border-radius:0; }
+#campPanel .opsRoster .residentRecommendation :is(small,.campReason) { color:#583c2b; }
+#campPanel .opsRules { grid-column:1/-1;font-size:12px; }
+#campPanel .opsRules summary { min-height:44px;cursor:pointer;font-size:12px; }
+#campPanel .opsRules small { display:block;padding:4px 0; }
+#campPanel .opsRoster .residentSearch { grid-template-columns:minmax(0,1fr) 48px;padding:0;margin:10px 0;background:none;border:0;gap:4px; }
+#campPanel .opsRoster .residentSearch label { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+#campPanel .opsRoster .residentSearch input { border:0;border-bottom:1px solid #79694d;background:#fff9e660;color:#302b20;border-radius:0; }
+#campPanel .opsRoster .residentSearch input::placeholder { color:#695c45; }
+#campPanel .opsRoster .residentSearch button { font-size:26px;background:#79694d22;color:#302b20;border:0;border-radius:0; }
+#campPanel .opsRoster .residentSearchStatus { color:#62533c;font-size:11px; }
+#campPanel .opsRoster .residentRows { gap:10px;margin-top:10px; }
+#campPanel .opsRoster .residentRow { position:relative;border:0;border-top:3px solid #79694d;border-radius:0;background:#f6eccb;color:#302b20;box-shadow:1px 3px 4px #53452833;padding:8px 8px 8px 32px; }
+#campPanel .opsRoster .residentRow::before { content:attr(data-file-number);position:absolute;left:6px;top:12px;font:700 11px var(--ops-mono);color:#8c372c; }
+#campPanel .opsRoster .residentSummary { background:none;color:#302b20;border:0; }
+#campPanel .opsRoster .residentSummary :is(strong,small,span) { color:inherit; }
+#campPanel .opsRoster .residentSummary .residentMonogram { color:#e9dfc1; }
+#campPanel .opsRoster .residentSummary .residentMonogram span { color:inherit; }
+#campPanel .opsRoster .residentRow .residentQuick { background:#6a604622;border-color:#8c7854;color:#302b20; }
+#campPanel .opsRoster .campFold { border-color:#7e6c4c88; }
+#campPanel .opsRoster .campFold > summary { color:#302b20; }
+#campPanel .opsRosterEmpty > :is(.residentFilters,.residentTasks,.residentTaskHint,.residentRecommendation,.residentSearch,.residentRows) { display:none!important; }
+#campPanel .opsEmptyRoster { display:flex;flex-direction:column;align-items:center;text-align:center;min-height:320px;padding:20px 8px 26px; }
+#campPanel .opsEmptyRoster svg.opsSignal { width:240px;max-width:100%;height:120px;stroke-width:1.5;color:#7d7254;margin:4px 0 18px; }
+#campPanel .opsEmptyRoster .opsSerial { color:#8a3c30; }
+#campPanel .opsEmptyRoster p { font-size:13px;color:#62533c;margin:10px 0 20px; }
+#campPanel .opsRoster .opsRecruit { width:min(100%,520px);border:0;margin:0; }
+#campPanel .opsRecruit > summary { justify-content:center;cursor:pointer;background:#5a5139;color:#f1e7c8;box-shadow:0 3px 0 #342e22;font:700 14px var(--ops-mono);padding:12px; }
+#campPanel .opsRoster .opsRecruit > summary { color:#f1e7c8; }
+#campPanel .opsRecruit > .campGrid { margin-top:16px;text-align:left; }
+#campPanel .opsRecruit .campCard { background:#f5ebce;border-color:#8c7854;color:#302b20; }
+#campPanel .opsRecruit .campCard :is(small,.campReason) { color:#583c2b; }
+#campPanel .opsPerimeter { padding:12px;background:linear-gradient(var(--ops-rule) 1px,#0000 1px),linear-gradient(90deg,var(--ops-rule) 1px,#0000 1px),var(--ops-blue);background-size:24px 24px;color:#dce9e9; }
+#campPanel .opsPerimeter .defCard { border-radius:0;background:#0b2131b3;border-color:#a8d7e04a; }
+#campPanel .opsThreat { display:flex;justify-content:space-between;align-items:center;gap:8px;border:0!important;border-bottom:1px solid #9fc5d366!important;background:transparent!important; }
+#campPanel .opsThreat h3 { font:700 15px var(--ops-mono); }
+#campPanel .opsPerimeter .defAction { border-radius:1px;background:#09243699;color:#deebed;border-color:#9fc5d380; }
+#campPanel .opsArmory { padding:0 10px;border-bottom:1px solid #9fc5d350; }
+#campPanel .opsArmory > summary { cursor:pointer;font:700 12px var(--ops-mono); }
+#campPanel .opsPosts > summary { cursor:pointer;font:700 12px var(--ops-mono);padding:0 10px; }
+#campPanel .opsPosts .opsPositions { margin-top:8px; }
+#campPanel .opsPerimeter > .defGrid:empty { display:none; }
+#campPanel .opsPerimeterTools { display:flex;flex-wrap:wrap;gap:6px;align-items:center; }
+#campPanel .opsPerimeterTools > small { flex-basis:100%;font-size:11px;color:#d2dbcc; }
+#campPanel .opsPositions { grid-template-columns:repeat(4,minmax(0,1fr));gap:8px; }
+#campPanel .opsPositions > .defCard { border:1px dashed #afd1dc80;padding:8px; }
+#campPanel .opsPositionNo { font:700 10px/1.5 var(--ops-mono);letter-spacing:.07em;color:#bdd4df; }
+#campPanel .opsPositions .defAction { width:100%;background:#0b1f2a88; }
+#campPanel [data-defense-turrets] { padding:12px;background:#161c1b;border-top:2px solid #9b8356; }
+#campPanel .opsDefenseHeader { display:flex;justify-content:space-between;align-items:center;gap:8px;font:700 13px var(--ops-mono);color:#d9c698;grid-column:1/-1; }
+#campPanel [data-defense-turrets] .defenseStat { background:none;border:0;border-radius:0;border-right:1px solid #6a715c66;padding:4px 8px; }
+#campPanel [data-defense-turrets] .defenseStat b { font:700 23px var(--ops-mono); }
+#campPanel [data-defense-turrets] .campSection__summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
+#campPanel .opsSupply { display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;grid-column:1/-1;padding:10px 0;color:#c9c8b5; }
+#campPanel .opsSupply > span { display:flex;align-items:center;gap:6px;font-size:12px; }
+#campPanel .opsSupply b { color:#f1dfbd;font:700 16px var(--ops-mono); }
+#campPanel .opsSupply svg,.opsGun svg { width:40px;height:32px;fill:currentColor;flex:none; }
+#campPanel .opsGun { display:flex;gap:10px;align-items:center;color:#d5c59d; }
+#campPanel .opsGun svg { width:64px;height:48px; }
+#campPanel .opsCatalog { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;grid-column:1/-1; }
+#campPanel .opsCatalog .campItemCard { display:flex;flex-direction:column;gap:8px;border:1px dashed #8da5a280;border-radius:0;background:linear-gradient(#ffffff04,#00000020),linear-gradient(#b1d4ec12 1px,#0000 1px),linear-gradient(90deg,#b1d4ec12 1px,#0000 1px),#244459;background-size:auto,16px 16px,16px 16px,auto;padding:12px; }
+#campPanel .opsCatalog .opsGun { flex-direction:column;align-items:flex-start;min-height:80px;color:#e5eff5; }
+#campPanel .opsCatalog .opsGun strong { font-size:14px; }
+#campPanel .opsCatalog .opsGun svg { width:100%;height:56px; }
+#campPanel .opsCatalog .opsCost { font:12px/1.5 var(--ops-mono);color:#c3c8b1; }
+#campPanel .opsCatalog button { margin-top:auto;width:100%;border-radius:1px; }
+#campPanel.campOperations .opsCatalog button { height:48px;min-height:48px;flex:0 0 auto; }
+#campPanel.campOperations [data-defense-id] { grid-template-columns:64px minmax(0,1fr) auto; }
+#campPanel .opsFlow { display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;flex-wrap:wrap; }
+#campPanel .opsFlow span { font:700 12px var(--ops-mono); }
+#campPanel.campOperations .opsPorters { border:0;border-radius:0;border-top:1px solid #6a715c66;background:none;grid-template-columns:minmax(0,1fr) auto; }
+#campPanel .opsPorters .campItemCard__actions { grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:flex-start; }
+#campPanel .opsSectionLabel { grid-column:1/-1;color:#b5c0b2;font:700 10px/1.5 var(--ops-mono);letter-spacing:.1em;margin:2px 0; }
+#campPanel :is(.opsQuickOrder,.opsArmory,.opsPosts,.opsRules) > summary::after { content:'⌄';margin-left:auto;padding-left:10px; }
+#campPanel :is(.opsQuickOrder,.opsArmory,.opsPosts,.opsRules)[open] > summary::after { content:'⌃'; }
+@media(min-width:701px) and (min-height:501px) {
+ #campPanel.campOperations .win:has(.opsRosterEmpty) { height:auto;min-height:0;max-height:calc(100dvh - 32px); }
+ #campPanel .opsEmptyRoster { min-height:280px; }
+}
+@media(max-width:700px) {
+ #campPanel .opsRoster { padding:10px; }
+ #campPanel .opsRoster .residentFilters button { flex-direction:column;gap:3px; }
+ #campPanel .opsRoster .residentFilters svg { display:none; }
+ #campPanel .opsRoster .residentTasks button { flex-direction:column;gap:3px;font-size:11px;padding:5px; }
+ #campPanel .opsPositions { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #campPanel .opsCatalog { grid-template-columns:1fr; }
+ #campPanel .opsCatalog .campItemCard { display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:8px;align-items:center; }
+ #campPanel .opsCatalog .opsGun { flex-direction:row;align-items:center;min-height:0;grid-column:1;grid-row:1; }
+ #campPanel .opsCatalog .opsGun svg { width:70px;height:48px; }
+ #campPanel .opsCatalog .opsCost { grid-column:1/-1;grid-row:2; }
+ #campPanel .opsCatalog button { grid-row:1;grid-column:2;margin:0;white-space:nowrap; }
+ #campPanel .opsThreat { align-items:flex-start;flex-direction:column; }
+ #campPanel .opsEmptyRoster { min-height:260px;padding:12px 2px 22px; }
+ #campPanel .opsRoster h3 { font-size:18px; }
+}
+@media(orientation:landscape) and (max-height:500px) {
+ #campPanel .opsEmptyRoster { display:grid;grid-template-columns:160px minmax(0,1fr);gap:6px 14px;min-height:0;text-align:left; }
+ #campPanel .opsEmptyRoster .opsSignal { grid-row:1/5;margin:0; }
+ #campPanel .opsEmptyRoster p { margin:4px 0; }
+ #campPanel .opsEmptyRoster .opsRecruit { grid-column:2; }
+}
