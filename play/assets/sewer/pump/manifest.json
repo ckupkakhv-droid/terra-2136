@@ -1,0 +1,48 @@
+{
+  "id": "sewer_pump_1",
+  "name": "Насос I · аварийный агрегат коллектора",
+  "file": "pump/pump1.glb",
+  "bytes": 19724,
+  "sha256": "57b0c03e8917cbb729b20833627e5f101107b0af1bcb8fd34be3ff8ed2754191",
+  "author": "Команда «Терры»",
+  "license": "© 2026 Команда «Терры». Все права защищены.",
+  "source": "tools/art/sewer_pump/pump_gen.py",
+  "third_party": [],
+  "plate": "НАСОС I",
+  "plate_note": "Кириллица собрана из собственных прямых штрихов. Файла шрифта нет.",
+  "materials": "Отдельных текстур нет. В игре меш берёт статический материал сцены: vertex color, aux, mt и уже подключённые карты грязи.",
+  "triangles": {
+    "lod0": 774,
+    "lod1": 483,
+    "lod2": 158
+  },
+  "budget_lod0": 2000,
+  "envelope_m": {
+    "x": [
+      -0.7,
+      0.7
+    ],
+    "y": [
+      0.2,
+      1.76
+    ],
+    "z": [
+      -0.6,
+      0.6
+    ]
+  },
+  "floor_local_y": 0.2,
+  "lod_camera_m": [
+    34,
+    52
+  ],
+  "compression": [
+    "EXT_meshopt_compression",
+    "KHR_mesh_quantization"
+  ],
+  "nodes": [
+    "pump1|lod0|s",
+    "pump1|lod1|s",
+    "pump1|lod2|s"
+  ]
+}

@@ -213,6 +213,7 @@ python3 scripts/build-offline.py
 - Модели ориентиров (`play/assets/art/landmarks.glb`) — собственная процедурная геометрия команды (`tools/art/`), текстуры — уже встроенные ambientCG (CC0)
 - Мутант коллекторов «Рафаэль» (`play/assets/sewer/mutant.glb`): тело, риг и анимации — [Quaternius](https://quaternius.com) Universal Base Characters и Universal Animation Library 1 (CC0 1.0); голова, панцирь, одежда, саи, текстуры, клипы scream/emerge — собственные (`tools/art/sewer_mutant/`). Подробно: `play/assets/sewer/CREDITS.md`
 - Набор лаборатории «Объект 7 · НИИ „Полынь“» (`play/assets/sewer/lab/lab_kit.glb`): собственная процедурная геометрия, текстуры и логотип Ambrala (`tools/art/sewer_lab/`); надписи RU/CN набраны шрифтом [Noto Sans CJK SC](https://github.com/notofonts/noto-cjk) (SIL OFL 1.1). Подробно: `play/assets/sewer/CREDITS.md`
+- Насос I коллектора (`play/assets/sewer/pump/pump1.glb`): собственная процедурная геометрия команды (`tools/art/sewer_pump/`). Надпись «НАСОС I» собрана из собственных штрихов, без шрифта и без новых текстур: в игре используется прежний статический материал и его карты грязи. Подробно: `play/assets/sewer/CREDITS.md`
 - Шрифт [DejaVu](https://dejavu-fonts.github.io)
 - Библиотеки: [three.js](https://threejs.org) (MIT), [fflate](https://github.com/101arrowz/fflate) (MIT), [PeerJS](https://peerjs.com) (MIT)
 
