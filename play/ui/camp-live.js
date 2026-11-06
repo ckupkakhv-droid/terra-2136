@@ -44,7 +44,7 @@
     const key=item.kind==='settler'?(s?.wounded?'med':s?.job?.startsWith('gather:')?({water:'water',wood:'wood',food:'food',scrap:'tools'}[s.job.slice(7)]||'tools'):({build:'tools',repair:'tools',craft:'tools',operate:'bolt',guard:'defense',patrol:'defense'}[s?.job]||'person')):item.kind==='defense'?'defense':({sawmill:'wood',pump:'water',cistern:'water',lab:'med',generator:'bolt',farm:'food',kitchen:'food',workshop:'tools',watch:'defense'}[item.id]||'house');
     return BADGE_PATHS[key];
   }
-  const why = value => REASON[value] || (typeof value === 'string' && /[а-яё]/i.test(value) ? value : 'Сейчас нельзя');
+  const why = value => REASON[value] || window.terraCampFieldbook?.denialText?.(value) || (typeof value === 'string' && /[а-яё]/i.test(value) ? value : 'Сейчас нельзя');
   const game = () => window.game;
   const num = (v, d = 0) => (Number.isFinite(v) ? v : d);
 
@@ -154,7 +154,11 @@
     return { text: 'простой', tone: 'idle' };
   }
   function settlerState(s) {
-    if (window.terraCampFieldbook) return {text:window.terraCampFieldbook.activity(s),tone:s.wounded||s.status==='injured'?'bad':s.status==='blocked'?'warn':s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
+    if (window.terraCampFieldbook) {
+      const camp = game()?.p?.camp;
+      const hurt = !!(s.wounded || s.status === 'injured' || s.injuredUntil > (camp?.sim?.tick || 0));
+      return {text:window.terraCampFieldbook.activity(s, camp),tone:hurt?'bad':s.status==='blocked'||s.trip?.amount?'warn':s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
+    }
     if (s.wounded || s.status === 'injured') return { text: 'ранен', tone: 'bad' };
     if (s.job === 'idle' || s.status === 'rest') return { text: 'отдых', tone: 'idle' };
     if (s.status === 'working') return { text: 'работает', tone: 'ok' };
