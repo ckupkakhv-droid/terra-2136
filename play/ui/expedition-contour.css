@@ -52,6 +52,8 @@
 }
 #hud.contourHud #evHud.on {
   z-index: 6;
+  animation: none;
+  transform: none;
 }
 #hud.contourHud #evHud.on :is(.evh b, .evn span, .evw span, .evd span) {
   white-space: normal;
@@ -61,6 +63,8 @@
 #hud.contourHud #radio {
   z-index: 6;
   align-items: flex-start;
+  animation: none;
+  transform: none;
 }
 #hud.contourHud #radioT {
   min-width: 0;
