@@ -1,0 +1,86 @@
+{
+  "generator": "OpenAI Image Generation",
+  "date": "2026-11-06",
+  "source": {
+    "file": "exec-a5979b48-4772-4584-a6c6-8309f1966c3c.png",
+    "sha256": "a5feec36b7a991e487dd63ff984bb2e980b5f060bed0152d45b3978ea6008af5",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  "exports": {
+    "scene-camp.webp": {
+      "size": [
+        486,
+        301
+      ],
+      "bytes": 48590,
+      "sha256": "b7c03a3ea85ed0057663528cf9b3038cee48e92aebe6e31cf7ead63330876fe2"
+    },
+    "scene-outpost.webp": {
+      "size": [
+        492,
+        301
+      ],
+      "bytes": 43474,
+      "sha256": "255008c6e9d698e487b015bee51cc1133c9dfb7e277556f1fc6c4a07e7f771bb"
+    },
+    "scene-map.webp": {
+      "size": [
+        484,
+        301
+      ],
+      "bytes": 49034,
+      "sha256": "b081ad21f0da340e38888500c63b9cde29eebe12da1e55399cb9f688775186aa"
+    },
+    "scene-defense.webp": {
+      "size": [
+        486,
+        307
+      ],
+      "bytes": 47748,
+      "sha256": "a1fccdb391b14751c9a716c1da5eaea38ce8ee5f86688cbc8c82f961c0120481"
+    },
+    "scene-tech.webp": {
+      "size": [
+        492,
+        307
+      ],
+      "bytes": 42260,
+      "sha256": "22ff8051f20e0c930dac30cc159353a5530bb9feff628cf525a902e8f91abbe4"
+    },
+    "scene-power.webp": {
+      "size": [
+        484,
+        307
+      ],
+      "bytes": 47538,
+      "sha256": "1d51eb484de9ff03f104cfcfe38acc25baec2996c4a4b3bfccc2d1cbe82486fe"
+    },
+    "scene-warehouse.webp": {
+      "size": [
+        455,
+        312
+      ],
+      "bytes": 44614,
+      "sha256": "b80062eea792244a6316528adfbcd5a76550309cff77fb2697578b85b7c03d3d"
+    },
+    "scene-convoy.webp": {
+      "size": [
+        461,
+        312
+      ],
+      "bytes": 45334,
+      "sha256": "920c969b5ad64a0a37dada0b57303c6a21d8add0f137a3f67352f476004c3ddf"
+    },
+    "scene-trail.webp": {
+      "size": [
+        453,
+        312
+      ],
+      "bytes": 43280,
+      "sha256": "e8ca8d11e29aabb3beb579675f3c6af2eb817bcf33c9d11783edfbddc14734ba"
+    }
+  }
+}

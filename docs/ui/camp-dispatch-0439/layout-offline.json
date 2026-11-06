@@ -1,0 +1,181 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "tabs": [
+        {
+          "tab": "more",
+          "geometry": {
+            "width": 1090,
+            "scroll": 1090,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "expansion",
+          "geometry": {
+            "width": 1090,
+            "scroll": 1090,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "contracts",
+          "geometry": {
+            "width": 1090,
+            "scroll": 1090,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "tabs": [
+        {
+          "tab": "more",
+          "geometry": {
+            "width": 370,
+            "scroll": 370,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "expansion",
+          "geometry": {
+            "width": 370,
+            "scroll": 370,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "contracts",
+          "geometry": {
+            "width": 370,
+            "scroll": 370,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "tabs": [
+        {
+          "tab": "more",
+          "geometry": {
+            "width": 300,
+            "scroll": 300,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "expansion",
+          "geometry": {
+            "width": 300,
+            "scroll": 300,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "contracts",
+          "geometry": {
+            "width": 300,
+            "scroll": 300,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": 1
+        }
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "tabs": [
+        {
+          "tab": "more",
+          "geometry": {
+            "width": 818,
+            "scroll": 818,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "expansion",
+          "geometry": {
+            "width": 818,
+            "scroll": 818,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": null
+        },
+        {
+          "tab": "contracts",
+          "geometry": {
+            "width": 818,
+            "scroll": 818,
+            "headerAbove": true,
+            "footerBelow": true,
+            "escaped": []
+          },
+          "footerLines": 1,
+          "counterLines": 1
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,142 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "index": {
+        "width": 1090,
+        "scroll": 1090,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "expansion": {
+        "width": 1090,
+        "scroll": 1090,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "contracts": {
+        "width": 1090,
+        "scroll": 1090,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "index": {
+        "width": 370,
+        "scroll": 370,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "expansion": {
+        "width": 370,
+        "scroll": 370,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "contracts": {
+        "width": 370,
+        "scroll": 370,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "index": {
+        "width": 300,
+        "scroll": 300,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "expansion": {
+        "width": 300,
+        "scroll": 300,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "contracts": {
+        "width": 300,
+        "scroll": 300,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "index": {
+        "width": 818,
+        "scroll": 818,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "expansion": {
+        "width": 818,
+        "scroll": 818,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "contracts": {
+        "width": 818,
+        "scroll": 818,
+        "headerAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    }
+  ],
+  "sameNativePortrait": true,
+  "ranks": [
+    {
+      "tier": 1,
+      "next": 3
+    },
+    {
+      "tier": 2,
+      "next": 3
+    },
+    {
+      "tier": 3,
+      "next": 2
+    },
+    {
+      "tier": 4,
+      "next": 1
+    },
+    {
+      "tier": 5,
+      "next": 0
+    }
+  ],
+  "actions": {
+    "rerollDebit": 8,
+    "playerActive": true,
+    "squadActive": true,
+    "nativeMission": true
+  },
+  "errors": []
+}

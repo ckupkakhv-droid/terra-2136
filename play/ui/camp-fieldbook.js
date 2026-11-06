@@ -18,6 +18,8 @@
   }
   function portrait(node,s) {
     if(!node||node.querySelector('img')||node.classList.contains('fbPhoto'))return;
+    const image=window.TERRA_CAMP_ALBUM_DATA?.portrait(s)?.querySelector('img');
+    if(image){node.classList.add('fbPhoto');image.alt='Портрет: '+(s.name||'Житель');node.append(image);return;}
     let hash=0;for(const c of String(s.id||s.name||''))hash=(hash*31+c.charCodeAt(0))>>>0;
     const female=/^(Ольга|Анна|Мария|Марина|Елена|Наталья|Татьяна|Ирина|Светлана|Людмила|Марфа|Вера|Надежда|Валентина|Дарья|Алина)(?:\s|$)/u.test(s.name||'');
     const index=female?[1,4,6][hash%3]:({scientist:0,medic:2,scout:3,guard:3,engineer:7,builder:7}[s.prof]??[0,2,3,5,7][hash%5]);
@@ -29,12 +31,14 @@
     if(!panel||!body||!tabs)return;
     panel.classList.add('fieldbook');
     const select=id=>{if(window.game?.state==='modal'&&!panel.classList.contains('hidden'))window.game.ui.campPanel.select(id);};
+    const currentTab=()=>window.terraCampUI?.tab||window.game?.ui?.campPanel?.tab||'overview';
+    const secondary=id=>!['overview','settlers','build','expansion','more'].includes(id);
     const h=panel.querySelector('h2'),back=el('button','fbBack','←'),heading=el('span','fbHeading','ЛАГЕРЬ'),sections=el('button','fbSections','☰'),meta=el('output','fbMeta');
-    back.type=sections.type='button';back.setAttribute('aria-label','Назад к лагерю');back.addEventListener('click',()=>select('overview'));
+    back.type=sections.type='button';back.setAttribute('aria-label','Назад к лагерю');back.addEventListener('click',()=>select(secondary(currentTab())?'more':'overview'));
     sections.setAttribute('aria-label','Разделы лагеря');sections.setAttribute('aria-controls','campTabs');sections.setAttribute('aria-expanded','false');tabs.hidden=true;
     sections.addEventListener('click',()=>{tabs.hidden=!tabs.hidden;sections.setAttribute('aria-expanded',String(!tabs.hidden));if(!tabs.hidden)tabs.querySelector('button.on')?.focus();});
     h.prepend(back,heading);h.insertBefore(sections,h.querySelector('.x'));h.after(meta);
-    const more=el('button','fbMore','ЕЩЁ');more.type='button';more.addEventListener('click',()=>select('more'));
+    const more=el('button','fbMore','ЕЩЁ');more.type='button';more.addEventListener('click',()=>select(currentTab()==='more'?'overview':'more'));
     const pause=el('button','fbPauseInfo','Ⅱ');pause.type='button';pause.setAttribute('aria-label','Лагерь на паузе: когда жители начнут работу');
     pause.addEventListener('click',()=>window.terraCampUI?.openInfo('Лагерь на паузе',el('p','','Пока открыт альбом, мир стоит на паузе. После «В игру» жители продолжат назначенные работы.')));
     panel.querySelector('footer')?.prepend(more,pause);
@@ -112,9 +116,9 @@
       queued=false;observer.disconnect();
       try{
         if(!panel.classList.contains('hidden')){
-          const tab=window.game?.ui?.campPanel?.tab||'overview',root=body.firstElementChild,c=window.game?.p?.camp;
-          const title={overview:'ЛАГЕРЬ',settlers:'ЖИТЕЛИ',build:'РАБОТЫ',expansion:'РАСШИРЕНИЕ',defense:'ОБОРОНА',more:'ПОЛЕВОЙ ЖУРНАЛ'}[tab]||'ЛАГЕРЬ';
-          if(heading.textContent!==title)heading.textContent=title;back.disabled=tab==='overview';
+          const tab=currentTab(),root=body.firstElementChild,c=window.game?.p?.camp;
+          const title={overview:'ЛАГЕРЬ',settlers:'ЖИТЕЛИ',build:'РАБОТЫ',expansion:'РАСШИРЕНИЕ',defense:'ОБОРОНА',more:'ВСЕ РАЗДЕЛЫ',contracts:'КОНТРАКТЫ',tech:'ТЕХНОЛОГИИ',territories:'ТЕРРИТОРИИ',power:'ЭНЕРГИЯ',warehouses:'СКЛАДЫ',pine:'СОСНОВЫЙ УЗЕЛ'}[tab]||panel.querySelector('[data-camp-tab="'+CSS.escape(tab)+'"]')?.getAttribute('aria-label')?.toLocaleUpperCase('ru')||'ЛАГЕРЬ';
+          if(heading.textContent!==title)heading.textContent=title;back.disabled=tab==='overview';back.setAttribute('aria-label',secondary(tab)?'Назад ко всем разделам':'Назад к лагерю');if(more.textContent!==(tab==='more'?'← Обзор':'ЕЩЁ'))more.textContent=tab==='more'?'← Обзор':'ЕЩЁ';
           const count=Object.values(c?.settlers||{}).filter(s=>s&&!s.dead).length,level=cfg()?.tiers?.[(c?.tier||1)-1]?.name||'Лагерь';
           const text=level+' · '+(c?.tier||1)+'   |   Жители '+count+'   |   Ценность '+Math.floor(c?.value||0);
           if(meta.textContent!==text)meta.textContent=text;
@@ -127,7 +131,7 @@
     function schedule(){if(!queued){queued=true;queueMicrotask(decorate);}}
     panel.addEventListener('terra:camp-tab',schedule);panel.addEventListener('terra:camp-refresh',schedule);
     new MutationObserver(schedule).observe(panel,{attributes:true,attributeFilter:['class']});decorate();
-    window.terraCampFieldbook=Object.freeze({activity});
+    window.terraCampFieldbook=Object.freeze({activity,portrait});
   }
   if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 })();
