@@ -1,0 +1,204 @@
+{
+  "mode": "before",
+  "intro": {
+    "inst": false,
+    "parts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "early": {
+    "pool": false,
+    "inst": false,
+    "visible": 6
+  },
+  "final": {
+    "pool": false,
+    "inst": false,
+    "rig": 0,
+    "visible": false,
+    "roots": 0,
+    "created": 0,
+    "heroOnly": false
+  },
+  "session": null,
+  "geometry": {
+    "parts": [
+      {
+        "name": "torso",
+        "pivot": [
+          0,
+          0.95,
+          0
+        ],
+        "lo": [
+          -0.33000001311302185,
+          -0.009999999776482582,
+          -0.46000000834465027
+        ],
+        "hi": [
+          0.33000001311302185,
+          0.6100000143051147,
+          0.2199999988079071
+        ],
+        "vertices": 216,
+        "triangles": 72,
+        "unit": 0,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      },
+      {
+        "name": "head",
+        "pivot": [
+          0,
+          1.58,
+          0
+        ],
+        "lo": [
+          -0.25,
+          -0.07999999821186066,
+          -0.25
+        ],
+        "hi": [
+          0.25,
+          0.41999998688697815,
+          0.25999999046325684
+        ],
+        "vertices": 312,
+        "triangles": 104,
+        "unit": 3.074087517873636e-08,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      },
+      {
+        "name": "armL",
+        "pivot": [
+          0.36,
+          1.45,
+          0
+        ],
+        "lo": [
+          -0.11999999731779099,
+          -0.6800000071525574,
+          -0.12999999523162842
+        ],
+        "hi": [
+          0.11999999731779099,
+          0.009999999776482582,
+          0.12999999523162842
+        ],
+        "vertices": 108,
+        "triangles": 36,
+        "unit": 0,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      },
+      {
+        "name": "armR",
+        "pivot": [
+          -0.36,
+          1.45,
+          0
+        ],
+        "lo": [
+          -0.11999999731779099,
+          -0.6800000071525574,
+          -0.12999999523162842
+        ],
+        "hi": [
+          0.11999999731779099,
+          0.009999999776482582,
+          0.12999999523162842
+        ],
+        "vertices": 108,
+        "triangles": 36,
+        "unit": 0,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      },
+      {
+        "name": "legL",
+        "pivot": [
+          0.16,
+          0.92,
+          0
+        ],
+        "lo": [
+          -0.11999999731779099,
+          -0.9300000071525574,
+          -0.12999999523162842
+        ],
+        "hi": [
+          0.11999999731779099,
+          0,
+          0.1899999976158142
+        ],
+        "vertices": 108,
+        "triangles": 36,
+        "unit": 0,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      },
+      {
+        "name": "legR",
+        "pivot": [
+          -0.16,
+          0.92,
+          0
+        ],
+        "lo": [
+          -0.11999999731779099,
+          -0.9300000071525574,
+          -0.12999999523162842
+        ],
+        "hi": [
+          0.11999999731779099,
+          0,
+          0.1899999976158142
+        ],
+        "vertices": 108,
+        "triangles": 36,
+        "unit": 0,
+        "winding": 0,
+        "degenerate": 0,
+        "finite": true,
+        "aligned": true
+      }
+    ],
+    "matrices": [
+      "61e30ab08bf4b2d8ffdb153b36baba1fab8b208752b05cd1c5b3408726dfa613",
+      "35352e9c6846272103207b7df86e33329928a87fd39b22510a45dc9f1baa1d26",
+      "b6bb99c1de9e02764ccdd7caad055f9ae951702439c682cd9a3b7dc7ea44ddd6",
+      "2f2cb0e29a6349870ff6334791ad90a3d62d68b96b804a4df1db1f62d23af61b"
+    ],
+    "bypass": null,
+    "nativeHash": "e56e1f634e898f286dbbd6bb29bcea027abb63b029245839c99b5435c9f3aa8a",
+    "other": true,
+    "independent": true,
+    "rng": true,
+    "cache": null,
+    "render": {
+      "calls": 7,
+      "triangles": 332,
+      "glError": 0
+    }
+  },
+  "errors": [],
+  "warnings": [
+    "GLB hero TypeError: Failed to fetch\n    at hr.loadModels (<anonymous>:4107:12416)\n    at new hr (<anonymous>:4107:9270)\n    at window.TERRA_START_GAME (<anonymous>:4238:16024)\n    at start (http://127.0.0.1:8180/play/assets/boot.js?v=2d11d3bbaa9a4d610247bb60a5836dead86bb531d02fe633c87e7696f4c9767f:130:84)"
+  ]
+}
