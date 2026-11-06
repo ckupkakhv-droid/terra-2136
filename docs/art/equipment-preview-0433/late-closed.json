@@ -1,0 +1,154 @@
+{
+  "mode": "late-closed",
+  "initial": {
+    "width": 200,
+    "height": 303,
+    "pixels": 19758,
+    "hash": 2713598603,
+    "left": 39,
+    "right": 38,
+    "top": 27,
+    "bottom": 21,
+    "span": 0.8382838283828383,
+    "label": "",
+    "fallback": true,
+    "localRoot": true,
+    "worldRoot": false,
+    "timer": false
+  },
+  "rotated": {
+    "width": 399,
+    "height": 460,
+    "pixels": 45594,
+    "hash": 3760194434,
+    "left": 108,
+    "right": 105,
+    "top": 40,
+    "bottom": 32,
+    "span": 0.841304347826087,
+    "label": "",
+    "fallback": true,
+    "localRoot": true,
+    "worldRoot": false,
+    "timer": false
+  },
+  "ownership": {
+    "parts": 6,
+    "separate": true,
+    "material": true,
+    "stats": {
+      "created": 1,
+      "released": 0,
+      "live": 1,
+      "watchers": 1
+    }
+  },
+  "renderer": {
+    "checked": 3,
+    "fault": true,
+    "worldUnchanged": true,
+    "gl": 0
+  },
+  "final": {
+    "width": 399,
+    "height": 460,
+    "pixels": 37430,
+    "hash": 2057884860,
+    "left": 118,
+    "right": 116,
+    "top": 29,
+    "bottom": 40,
+    "span": 0.8478260869565217,
+    "label": "",
+    "fallback": false,
+    "localRoot": true,
+    "worldRoot": false,
+    "timer": false
+  },
+  "sizes": [
+    {
+      "name": "desktop",
+      "width": 399,
+      "height": 460,
+      "pixels": 37430,
+      "hash": 1814850454,
+      "left": 118,
+      "right": 116,
+      "top": 29,
+      "bottom": 40,
+      "span": 0.8478260869565217,
+      "label": "",
+      "fallback": false,
+      "localRoot": true,
+      "worldRoot": false,
+      "timer": false
+    },
+    {
+      "name": "portrait",
+      "width": 399,
+      "height": 460,
+      "pixels": 37430,
+      "hash": 1814850454,
+      "left": 118,
+      "right": 116,
+      "top": 29,
+      "bottom": 40,
+      "span": 0.8478260869565217,
+      "label": "",
+      "fallback": false,
+      "localRoot": true,
+      "worldRoot": false,
+      "timer": false
+    },
+    {
+      "name": "landscape",
+      "width": 225,
+      "height": 510,
+      "pixels": 43983,
+      "hash": 3902380657,
+      "left": 24,
+      "right": 22,
+      "top": 38,
+      "bottom": 49,
+      "span": 0.8274509803921568,
+      "label": "",
+      "fallback": false,
+      "localRoot": true,
+      "worldRoot": false,
+      "timer": false
+    }
+  ],
+  "closed": {
+    "stats": {
+      "created": 1,
+      "released": 1,
+      "live": 0,
+      "watchers": 0
+    },
+    "disposed": {
+      "geometry": 6,
+      "mesh": 6,
+      "material": 0,
+      "target": 1
+    },
+    "refs": false
+  },
+  "motion": {
+    "draws": 12,
+    "pump": false,
+    "timer": false,
+    "reduced": true
+  },
+  "motionCorrect": true,
+  "saveUnchanged": true,
+  "cache": {
+    "templates": 6,
+    "bytes": 76296,
+    "fallback": 0
+  },
+  "errors": [],
+  "warnings": [
+    "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently",
+    "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+  ]
+}

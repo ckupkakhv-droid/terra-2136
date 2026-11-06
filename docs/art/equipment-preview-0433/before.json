@@ -1,0 +1,11 @@
+{
+  "mode": "before",
+  "instance": false,
+  "label": "Загрузка модели…",
+  "timer": false,
+  "frame": true,
+  "errors": [],
+  "warnings": [
+    "GLB hero TypeError: Failed to fetch\n    at hr.loadModels (<anonymous>:4107:12416)\n    at new hr (<anonymous>:4107:9270)\n    at window.TERRA_START_GAME (<anonymous>:4238:16024)\n    at start (http://127.0.0.1:8180/play/assets/boot.js?v=2d11d3bbaa9a4d610247bb60a5836dead86bb531d02fe633c87e7696f4c9767f:1"
+  ]
+}

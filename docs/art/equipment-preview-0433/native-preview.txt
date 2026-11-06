@@ -1,0 +1,4 @@
+desktop 0.75 {'restored': True, 'top': 36, 'bottom': 39, 'left': 126, 'right': 121, 'span': 0.8347826086956521}
+portrait 1.1 {'restored': True, 'top': 39, 'bottom': 43, 'left': 33, 'right': 28, 'span': 0.8372549019607843}
+landscape 2 {'restored': True, 'top': 15, 'bottom': 17, 'left': 87, 'right': 85, 'span': 0.8341708542713567}
+PASS кадр, состояние renderer, возврат в игру
