@@ -50,6 +50,22 @@
   bottom: auto;
   top: -4px;
 }
+#hud.contourHud #evHud.on {
+  z-index: 6;
+}
+#hud.contourHud #evHud.on :is(.evh b, .evn span, .evw span, .evd span) {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+#hud.contourHud #radio {
+  z-index: 6;
+  align-items: flex-start;
+}
+#hud.contourHud #radioT {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 #hud.contourHud #mm { box-shadow: 0 0 0 2px rgba(196, 164, 106, .45), 0 0 0 5px rgba(0, 0, 0, .55); }
 
 /* Портрет: столбик карты и кнопки друг под другом, без наложения на зону. */
