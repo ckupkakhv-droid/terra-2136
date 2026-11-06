@@ -14,6 +14,7 @@
     const menu = document.querySelector('#menu .mbtns');
     if (menu) new MutationObserver(() => { groupBackups(); markPrimary(); }).observe(menu, {childList: true, attributes: true, subtree: true, attributeFilter: ['class', 'hidden', 'disabled']});
     watchCamp();
+    watchWarnings();
     const pulseHost = document.getElementById('mmW') || document.getElementById('tr');
     if (pulseHost) new MutationObserver(labelPulse).observe(pulseHost, {childList: true, subtree: true});
   }
@@ -121,6 +122,108 @@
     if (!button || button.dataset.contourPause) return;
     button.dataset.contourPause = '1';
     button.textContent = 'Пауза';
+  }
+
+  const WARNING_BLOCKS = '#bCamp,#bMap,#bPause,#objectiveToggle,#tBag,#weap,#lvlW,#evPulse,#tInteract,#tBuild,#tSprint,#tDodge,#tSwap,#tThrow,#tReload,#tCycle,#obj,#tl,#zone,#mmW';
+
+  function shown(el) {
+    if (!el) return false;
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 1 && rect.height > 1;
+  }
+
+  function rectOf(el) {
+    const rect = el.getBoundingClientRect();
+    return {left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom};
+  }
+
+  function intersects(a, b) {
+    return a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1;
+  }
+
+  function clearLane(el) {
+    el.style.left = '';
+    el.style.top = '';
+    el.style.width = '';
+    el.style.maxWidth = '';
+    el.style.transform = '';
+  }
+
+  let settling = false;
+  function settleWarnings() {
+    if (settling) return;
+    const hud = document.getElementById('evHud');
+    const radio = document.getElementById('radio');
+    if (!hud || !radio) return;
+    const live = hud.classList.contains('on') || shown(radio);
+    if (!live) {
+      clearLane(hud);
+      clearLane(radio);
+      return;
+    }
+    settling = true;
+    try {
+      const blocks = [...document.querySelectorAll(WARNING_BLOCKS)].filter(shown).map(rectOf);
+      const margin = 8;
+      const rights = blocks.filter(box => box.left > innerWidth * 0.55).map(box => box.left);
+      const rightLimit = Math.min(innerWidth - margin, ...(rights.length ? rights : [innerWidth - margin]));
+      const left = margin;
+      const width = Math.max(168, Math.min(340, rightLimit - left));
+      const head = Math.max(
+        document.getElementById('tl')?.getBoundingClientRect().bottom || 0,
+        document.getElementById('obj')?.getBoundingClientRect().bottom || 0,
+        document.getElementById('mmW')?.getBoundingClientRect().bottom || 0
+      );
+      const taken = [];
+      const park = (el, minTop) => {
+        if (el === hud && !hud.classList.contains('on')) return minTop;
+        if (el === radio && !shown(radio)) return minTop;
+        el.style.left = left + 'px';
+        el.style.transform = 'none';
+        el.style.width = width + 'px';
+        el.style.maxWidth = width + 'px';
+        const height = el.getBoundingClientRect().height;
+        let top = Math.max(minTop, head + margin);
+        for (let step = 0; step < 50; step++) {
+          const spot = {left, top, right: left + width, bottom: top + height};
+          const busy = blocks.concat(taken).some(box => intersects(spot, box));
+          if (!busy && spot.bottom < innerHeight - margin) {
+            el.style.top = top + 'px';
+            taken.push(spot);
+            return spot.bottom + 6;
+          }
+          top += 8;
+        }
+        el.style.top = top + 'px';
+        taken.push({left, top, right: left + width, bottom: top + height});
+        return top + height + 6;
+      };
+      let cursor = head + margin;
+      if (hud.classList.contains('on')) cursor = park(hud, cursor);
+      if (shown(radio)) park(radio, cursor);
+    } finally {
+      settling = false;
+    }
+  }
+
+  function watchWarnings() {
+    const arm = () => {
+      const hud = document.getElementById('evHud');
+      const radio = document.getElementById('radio');
+      if (!hud || !radio || hud.dataset.contourLane) return !!hud && false;
+      hud.dataset.contourLane = '1';
+      const observer = new MutationObserver(() => settleWarnings());
+      observer.observe(hud, {attributes: true, attributeFilter: ['class']});
+      observer.observe(radio, {attributes: true, attributeFilter: ['style', 'class']});
+      window.addEventListener('resize', settleWarnings);
+      settleWarnings();
+      return true;
+    };
+    if (arm()) return;
+    const observer = new MutationObserver(() => { if (arm()) observer.disconnect(); });
+    observer.observe(document.body, {childList: true, subtree: true});
   }
 
   function watchCamp() {
