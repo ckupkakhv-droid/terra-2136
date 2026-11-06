@@ -1,0 +1,242 @@
+/* Полевая папка: иллюстрации отделены от живых данных и штатных кнопок. */
+#campPanel.fieldbook {
+ --dispatch-scene-camp:url('../assets/ui/camp/scene-camp.webp');
+ --dispatch-scene-outpost:url('../assets/ui/camp/scene-outpost.webp');
+ --dispatch-scene-map:url('../assets/ui/camp/scene-map.webp');
+ --dispatch-scene-defense:url('../assets/ui/camp/scene-defense.webp');
+ --dispatch-scene-tech:url('../assets/ui/camp/scene-tech.webp');
+ --dispatch-scene-power:url('../assets/ui/camp/scene-power.webp');
+ --dispatch-scene-warehouse:url('../assets/ui/camp/scene-warehouse.webp');
+ --dispatch-scene-convoy:url('../assets/ui/camp/scene-convoy.webp');
+ --dispatch-scene-trail:url('../assets/ui/camp/scene-trail.webp');
+}
+#campPanel [data-dispatch-art=camp] { --dispatch-art:var(--dispatch-scene-camp); }
+#campPanel [data-dispatch-art=outpost] { --dispatch-art:var(--dispatch-scene-outpost); }
+#campPanel [data-dispatch-art=map] { --dispatch-art:var(--dispatch-scene-map); }
+#campPanel [data-dispatch-art=defense] { --dispatch-art:var(--dispatch-scene-defense); }
+#campPanel [data-dispatch-art=tech] { --dispatch-art:var(--dispatch-scene-tech); }
+#campPanel [data-dispatch-art=power] { --dispatch-art:var(--dispatch-scene-power); }
+#campPanel [data-dispatch-art=warehouse] { --dispatch-art:var(--dispatch-scene-warehouse); }
+#campPanel [data-dispatch-art=convoy] { --dispatch-art:var(--dispatch-scene-convoy); }
+#campPanel [data-dispatch-art=trail] { --dispatch-art:var(--dispatch-scene-trail); }
+#campPanel.fieldbook .dispatchArt { display:block;background:var(--dispatch-art) center/cover no-repeat; }
+#campPanel.fieldbook .campSectionBack { display:none; } /* Заголовок альбома уже содержит прежний переход назад. */
+
+/* Семь крупных закладок, включая все прежние разделы. */
+#campPanel.fieldbook .dispatchIndex { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;padding:12px 16px 24px;background-image:var(--fb-leather);border:1px solid #927248;border-radius:14px;box-shadow:inset 0 0 0 5px #1e190f,0 5px 0 #5e452a; }
+#campPanel.fieldbook .dispatchIndex > .campDestination { display:grid;grid-template-columns:40% minmax(0,1fr) 32px;align-items:center;gap:12px;min-width:0;min-height:145px;border:1px solid #b79b6f;border-radius:8px 3px 10px 3px;padding:8px;color:var(--fb-ink);background-image:var(--fb-paper);background-size:100% 100%;box-shadow:0 3px 0 #80603d,0 7px 10px #0008;clip-path:none;transition:box-shadow .15s,border-color .15s; }
+#campPanel.fieldbook .dispatchIndex > .campDestination > .gi { display:none; }
+#campPanel.fieldbook .dispatchIndexArt { width:100%;aspect-ratio:1.3;border-radius:4px;box-shadow:0 2px 5px #4c351b88; }
+#campPanel.fieldbook .dispatchIndexText { min-width:0;display:grid;gap:10px; }
+#campPanel.fieldbook .dispatchIndexText strong { font:900 clamp(20px,2.2vw,29px)/1.1 var(--fb-serif);overflow-wrap:anywhere; }
+#campPanel.fieldbook .dispatchIndexText small { color:#675034;font:13px/1.3 var(--fb-serif); }
+#campPanel.fieldbook .dispatchIndexArrow { align-self:stretch;display:grid;place-items:center;border-left:1px solid #ad8250;font:900 45px/1 var(--fb-serif);color:#4a311a; }
+#campPanel.fieldbook .dispatchIndex > .campDestination:hover { border-color:#f5c767;box-shadow:0 3px 0 #80603d,0 0 12px #e8ad5066; }
+
+/* Пять настоящих ступеней поселения и требования из штатного запроса WL. */
+#campPanel.fieldbook .dispatchExpansion { display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.8fr);gap:22px; }
+#campPanel.fieldbook .dispatchJourney { grid-column:1/-1;list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:8px 0 18px;margin:0; }
+#campPanel.fieldbook .dispatchJourney li { min-width:0;text-align:center;position:relative;display:grid;justify-items:center;gap:8px;color:#a18f6e;font:700 14px var(--fb-serif); }
+#campPanel.fieldbook .dispatchJourney li::before { content:'';position:absolute;top:22px;left:0;right:0;border-top:1px dashed #a68a57; }
+#campPanel.fieldbook .dispatchJourney li:first-child::before { left:50%; }
+#campPanel.fieldbook .dispatchJourney li:last-child::before { right:50%; }
+#campPanel.fieldbook .dispatchTierMark { position:relative;z-index:1;width:44px;height:44px;display:grid;place-items:center;background:#252216;border:1px solid #9d8153;border-radius:50%;font:900 20px var(--fb-serif); }
+#campPanel.fieldbook .dispatchJourney [data-reached=true] { color:#e7c991; }
+#campPanel.fieldbook .dispatchJourney [aria-current=step] .dispatchTierMark { color:#2d1d0b;background-image:var(--fb-brass);border:2px solid #ffd487;box-shadow:0 0 16px #e8ad5066; }
+#campPanel.fieldbook .dispatchJourney strong { font:inherit;overflow-wrap:anywhere; }
+#campPanel.fieldbook .dispatchCampScene { grid-column:1;grid-row:2;margin:0;min-width:0;position:relative;border:1px solid #a58a57;padding:8px;background-image:var(--fb-leather);border-radius:10px;box-shadow:0 5px 12px #0008; }
+#campPanel.fieldbook .dispatchCampScene > .dispatchArt { width:100%;height:100%;min-height:300px; }
+#campPanel.fieldbook .dispatchCampScene figcaption { position:absolute;bottom:16px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;color:#eed6ab;background:#211c13e8;border:1px solid #a78958;font:italic 17px var(--fb-serif); }
+#campPanel.fieldbook .dispatchCampScene figcaption strong { font:900 27px var(--fb-serif); }
+#campPanel.fieldbook .dispatchNext { grid-column:2;grid-row:2;position:relative;display:grid;align-content:start;gap:12px;color:var(--fb-ink);background-image:var(--fb-paper);background-size:100% 100%;border:1px solid #a58552;border-radius:9px;padding:18px;box-shadow:0 4px 0 #997347,0 8px 9px #0008; }
+#campPanel.fieldbook .dispatchNext h3 { display:grid;gap:6px;margin:0;font:italic 15px var(--fb-serif);color:#65492b; }
+#campPanel.fieldbook .dispatchNext h3 strong { font:900 26px var(--fb-serif);color:#3d2914; }
+#campPanel.fieldbook .dispatchNextDrawing { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;background-image:var(--fb-blue);border:1px solid #6b654d;padding:8px;border-radius:4px; }
+#campPanel.fieldbook .dispatchNextDrawing .fbBlueprintArt { grid-column:auto;width:100%;height:95px; }
+#campPanel.fieldbook .dispatchTierChecks { list-style:none;padding:0;margin:0; }
+#campPanel.fieldbook .dispatchTierChecks li { display:grid;grid-template-columns:20px minmax(0,1fr) auto;align-items:center;gap:7px;border-top:1px solid #9f835c66;padding:10px 0;font:700 15px/1.25 var(--fb-serif); }
+#campPanel.fieldbook .dispatchTierChecks li[data-met=true] { color:#35502a; }
+#campPanel.fieldbook .dispatchTierChecks b { font-variant-numeric:tabular-nums;white-space:nowrap; }
+#campPanel.fieldbook .dispatchExpansion > .dispatchTask { grid-column:1/-1;background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border:1px solid #a88a57;padding:18px 24px;gap:12px;font-family:var(--fb-serif);box-shadow:0 4px 0 #967043; }
+#campPanel.fieldbook .dispatchTask > strong { font:900 24px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .dispatchTask > small { color:#675035;font-size:14px; }
+#campPanel.fieldbook .dispatchTask[data-dispatch-stage=tier] > small:first-of-type { display:none; }
+#campPanel.fieldbook .dispatchTask > .campButton { color:#32220e;background-image:var(--fb-brass);border:2px solid #98713c;font:800 18px/1.3 var(--fb-serif);box-shadow:0 3px 3px #3a260955; }
+#campPanel.fieldbook .dispatchTask .campFold { color:#563d22; }
+#campPanel.fieldbook .dispatchTask .campReason { color:#8e3325; }
+#campPanel.fieldbook .dispatchTask .campFold .campButton { background:#6e563127;color:#4a341d;border-color:#a18454; }
+
+/* Доска: одна читаемая бумага, переключение нарядов сбоку / сверху. */
+#campPanel.fieldbook .dispatchBoard { display:flex;flex-direction:column;gap:18px;font-family:var(--fb-serif); }
+#campPanel.fieldbook .dispatchBoardSummary { order:0;padding:10px 16px;background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);box-shadow:0 4px 6px #0008;border-radius:4px; }
+#campPanel.fieldbook .dispatchBoardSummary .contractLegend { min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;color:#4a341c;font:700 15px/1.4 var(--fb-serif); }
+#campPanel.fieldbook .dispatchBoardSummary .contractLegend + .contractLegend { margin-top:7px;border-top:1px solid #a1865c66;padding-top:7px; }
+#campPanel.fieldbook .dispatchBoardSummary button { color:#3d2912;background-image:var(--fb-brass);border:1px solid #9d793f;border-radius:5px;padding:8px 14px;font:700 15px var(--fb-serif); }
+#campPanel.fieldbook .dispatchDeck { display:grid;grid-template-columns:minmax(150px,.28fr) minmax(0,1fr);gap:12px 20px;align-items:start; }
+#campPanel.fieldbook .dispatchContractRail { grid-column:1;grid-row:1/3;display:flex;flex-direction:column;gap:12px;min-width:0; }
+#campPanel.fieldbook .dispatchContractTab { display:grid;grid-template-columns:64px minmax(0,1fr);gap:5px 10px;align-items:center;width:100%;min-width:0;padding:7px 12px 7px 7px;text-align:left;background-image:var(--fb-paper);background-size:100% 100%;border:2px solid #997a4c;color:#513a20;box-shadow:0 4px 4px #0007; }
+#campPanel.fieldbook .dispatchContractTab .dispatchArt { grid-row:1/3;aspect-ratio:1;width:64px;border:1px solid #8a7045; }
+#campPanel.fieldbook .dispatchContractTab strong { font:800 17px/1.1 var(--fb-serif);overflow-wrap:anywhere; }
+#campPanel.fieldbook .dispatchContractTab small { color:#675133;font:12px var(--fb-serif); }
+#campPanel.fieldbook .dispatchContractTab[aria-selected=true] { border-color:#ffcd74;box-shadow:inset 0 0 0 1px #744c1f,0 0 14px #e7aa4655;transform:rotate(-1deg); }
+#campPanel.fieldbook .dispatchSheets { grid-column:2;grid-row:2;min-width:0; }
+#campPanel.fieldbook .dispatchDeckControls { grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:space-between;gap:14px; }
+#campPanel.fieldbook .dispatchDeckControls button { width:48px;flex:none;background:none;border:1px solid #9b7d4b;color:#edd4a7;font:900 28px var(--fb-serif); }
+#campPanel.fieldbook .dispatchDeckCount { color:#d9bd8d;font:700 16px var(--desk-type,monospace); }
+#campPanel.fieldbook .dispatchBoard .contractCard { position:relative;display:flex;flex-direction:column;gap:12px;background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border:1px solid #aa8856;border-radius:5px 12px 5px 8px;padding:22px;box-shadow:0 5px 0 #ad8858,0 9px 0 #634729,0 12px 16px #0009; }
+#campPanel.fieldbook .dispatchBoard .contractCard[hidden] { display:none!important; }
+#campPanel.fieldbook .dispatchStateStamp { position:absolute;right:12px;top:-8px;z-index:1;padding:3px 7px;border:2px double #6f5030;color:#67462a;background:#ead1a4;font:900 12px var(--fb-stamp);text-transform:uppercase;transform:rotate(3deg); }
+#campPanel.fieldbook .dispatchStateStamp[data-state=done] { color:#375a2f;border-color:#46673c; }
+#campPanel.fieldbook .dispatchStateStamp[data-state=failed] { color:#963c29;border-color:#963c29; }
+#campPanel.fieldbook .dispatchBoard .contractHead { justify-content:flex-start;color:#3d522b; }
+#campPanel.fieldbook .dispatchBoard .contractHead > b { padding:4px 10px;border:3px double #607048;font:900 29px/1.15 var(--fb-stamp);text-transform:uppercase;transform:rotate(-2deg); }
+#campPanel.fieldbook .dispatchBoard .contractHead > span { color:#45552e; }
+#campPanel.fieldbook .dispatchContractImage { width:100%;aspect-ratio:1.9;box-shadow:0 3px 5px #72512d66; }
+#campPanel.fieldbook .dispatchContractFacts { display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:7px 12px;padding:8px 0;border-bottom:1px solid #9d7e5266;font:700 14px var(--fb-serif);color:#65482b; }
+#campPanel.fieldbook .dispatchContractFacts > small { font:700 15px var(--desk-type,monospace);color:#584125; }
+#campPanel.fieldbook .dispatchDanger { grid-column:1/-1;position:relative;width:100%;height:8px;background:repeating-linear-gradient(125deg,#8e775255 0 4px,transparent 4px 7px); }
+#campPanel.fieldbook .dispatchDanger::before { content:'';display:block;width:calc(var(--danger)*100%);height:100%;background:repeating-linear-gradient(125deg,#68412b 0 4px,transparent 4px 7px); }
+#campPanel.fieldbook .dispatchBoard .contractRegion { margin:0;color:#594228;font:700 16px/1.3 var(--fb-serif); }
+#campPanel.fieldbook .dispatchObjective { display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid #9d7e5266;border-bottom:1px solid #9d7e5266;font:800 18px var(--fb-serif); }
+#campPanel.fieldbook .dispatchBoard .contractReward { gap:12px 22px;margin:0;padding:8px 0; }
+#campPanel.fieldbook .dispatchBoard .contractReward > span { display:grid;grid-template-columns:auto auto;column-gap:5px;align-items:center;justify-content:start; }
+#campPanel.fieldbook .dispatchBoard .contractReward .gi { width:24px;height:24px; }
+#campPanel.fieldbook .dispatchBoard .contractReward b { font:900 22px var(--fb-serif); }
+#campPanel.fieldbook .dispatchRewardName { grid-column:1/-1;font:12px/1.2 var(--fb-serif);color:#6d5436; }
+#campPanel.fieldbook .dispatchBoard .contractSquad { margin:0;padding-top:12px;border-top:1px solid #9d7e5266;gap:10px; }
+#campPanel.fieldbook .dispatchBoard .contractSquad:empty { display:none; }
+#campPanel.fieldbook .dispatchBoard .contractSquad button { width:66px;height:auto;min-height:88px;position:relative;display:grid;gap:4px;justify-items:center;padding:4px 3px;border:1px solid #967548;border-radius:0;background:#eddabb;color:#43301b; }
+#campPanel.fieldbook .dispatchBoard .contractSquad button > .gi { display:none; }
+#campPanel.fieldbook .dispatchMemberPhoto { display:block;width:54px;height:58px; }
+#campPanel.fieldbook .dispatchMemberName { max-width:100%;font:12px/1 var(--fb-serif);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+#campPanel.fieldbook .dispatchBoard .contractSquad button b { right:2px;top:46px;bottom:auto;min-width:14px;background:#e9d3a9;color:#412d19;font:700 10px var(--fb-serif); }
+#campPanel.fieldbook .dispatchBoard .contractSquad button[aria-pressed=true] { border:2px solid #40572b;background:#d9c59e;box-shadow:0 0 0 2px #8f9e6b; }
+#campPanel.fieldbook .dispatchBoard .contractSquad button[aria-pressed=true]::after { content:'✓';position:absolute;right:-4px;top:-7px;border-radius:50%;background:#3e562e;color:#f5dfb7;width:24px;height:24px;display:grid;place-items:center;font-weight:900; }
+#campPanel.fieldbook .dispatchBoard .contractChance { color:#45582f;font:800 16px/1.3 var(--fb-serif);margin:0; }
+#campPanel.fieldbook .dispatchBoard .contractActions { padding-top:14px;border-top:1px solid #9d7e5266;gap:12px; }
+#campPanel.fieldbook .dispatchBoard .contractActions button { min-height:56px;padding:10px 12px;background-image:var(--fb-brass);border:2px solid #ad8142;border-radius:7px;color:#35230f;font:900 22px/1.2 var(--fb-stamp);box-shadow:inset 0 0 0 1px #ffe1a48a,0 3px 0 #5b3b1c; }
+#campPanel.fieldbook .dispatchBoard button:disabled { opacity:.6;filter:saturate(.35); }
+#campPanel.fieldbook .dispatchBoard .contractCard progress { height:14px;accent-color:#5a6b3e; }
+#campPanel.fieldbook .dispatchHunt { order:2;border-top:1px solid #8c7047;padding-top:14px; }
+#campPanel.fieldbook .dispatchHunt > summary { min-height:48px;cursor:pointer;display:flex;align-items:center;gap:12px;color:#ead4ae;font:800 18px var(--fb-serif); }
+#campPanel.fieldbook .dispatchHunt > summary::before { content:'＋';font-size:25px; }
+#campPanel.fieldbook .dispatchHunt[open] > summary::before { content:'−'; }
+#campPanel.fieldbook .dispatchHunt .campHunting { margin:8px 0;background-image:var(--fb-paper);background-size:100% 100%;color:#3f2c17;border:1px solid #a88751;padding:16px;font-family:var(--fb-serif); }
+#campPanel.fieldbook .dispatchHunt .campHunting > small { color:#654b2f; }
+#campPanel.fieldbook .dispatchHunt select { color:#33240f;background:#ead2a8;border:1px solid #8d703d; }
+#campPanel.fieldbook .dispatchHunt .campButton { color:#36240f;background-image:var(--fb-brass);font-family:var(--fb-serif); }
+#campPanel.fieldbook .dispatchHunt .huntNotice { font-weight:700; }
+@media(max-width:900px) {
+ #campPanel.fieldbook .dispatchIndex { grid-template-columns:1fr;gap:15px;padding:12px; }
+ #campPanel.fieldbook .dispatchIndex > .campDestination { grid-template-columns:34% minmax(0,1fr) 32px;min-height:128px; }
+ #campPanel.fieldbook .dispatchExpansion { grid-template-columns:1fr;gap:20px; }
+ #campPanel.fieldbook .dispatchCampScene { grid-column:1;grid-row:auto; }
+ #campPanel.fieldbook .dispatchNext { grid-column:1;grid-row:auto; }
+ #campPanel.fieldbook .dispatchNextDrawing { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #campPanel.fieldbook .dispatchNextDrawing .fbBlueprintArt { height:115px; }
+ #campPanel.fieldbook .dispatchNext { grid-template-columns:1fr 1fr;gap:16px; }
+ #campPanel.fieldbook .dispatchNext h3 { grid-column:1/-1; }
+ #campPanel.fieldbook .dispatchDeck { grid-template-columns:minmax(0,1fr);gap:14px; }
+ #campPanel.fieldbook .dispatchContractRail { grid-column:1;grid-row:1;flex-direction:row;overflow-x:auto;scroll-snap-type:x proximity;padding:7px 4px 12px;scrollbar-width:thin; }
+ #campPanel.fieldbook .dispatchContractTab { flex:0 0 150px;grid-template-columns:44px minmax(0,1fr);padding:5px;scroll-snap-align:start; }
+ #campPanel.fieldbook .dispatchContractTab .dispatchArt { width:44px; }
+ #campPanel.fieldbook .dispatchContractTab strong { font-size:15px; }
+ #campPanel.fieldbook .dispatchContractTab small { font-size:11px; }
+ #campPanel.fieldbook .dispatchDeckControls { grid-column:1;grid-row:2; }
+ #campPanel.fieldbook .dispatchSheets { grid-column:1;grid-row:3; }
+}
+@media(max-width:600px) {
+ #campPanel.fieldbook .dispatchIndex { padding:9px; }
+ #campPanel.fieldbook .dispatchIndex > .campDestination { grid-template-columns:35% minmax(0,1fr) 22px;gap:10px;padding:6px;min-height:110px; }
+ #campPanel.fieldbook .dispatchIndexText strong { font-size:23px; }
+ #campPanel.fieldbook .dispatchIndexText small { font-size:12px; }
+ #campPanel.fieldbook .dispatchIndexArrow { font-size:38px; }
+ #campPanel.fieldbook .dispatchJourney { padding:6px 0 9px; }
+ #campPanel.fieldbook .dispatchJourney li { font-size:11px; }
+ #campPanel.fieldbook .dispatchJourney li::before { top:18px; }
+ #campPanel.fieldbook .dispatchTierMark { width:36px;height:36px;font-size:17px; }
+ #campPanel.fieldbook .dispatchCampScene > .dispatchArt { min-height:235px; }
+ #campPanel.fieldbook .dispatchCampScene figcaption { padding:10px;left:12px;right:12px;bottom:12px; }
+ #campPanel.fieldbook .dispatchCampScene figcaption strong { font-size:23px; }
+ #campPanel.fieldbook .dispatchCampScene figcaption span { font-size:14px; }
+ #campPanel.fieldbook .dispatchNext { grid-template-columns:minmax(0,1fr);padding:16px; }
+ #campPanel.fieldbook .dispatchNext h3 { grid-column:1; }
+ #campPanel.fieldbook .dispatchNextDrawing .fbBlueprintArt { height:100px; }
+ #campPanel.fieldbook .dispatchExpansion > .dispatchTask { padding:16px; }
+ #campPanel.fieldbook .dispatchTask > strong { font-size:22px; }
+ #campPanel.fieldbook .dispatchBoardSummary { padding:10px 12px; }
+ #campPanel.fieldbook .dispatchBoardSummary .contractLegend { font-size:13px;gap:6px; }
+ #campPanel.fieldbook .dispatchBoardSummary .contractLegend > button { width:100%; }
+ #campPanel.fieldbook .dispatchBoard .contractCard { padding:20px 14px 16px;gap:11px; }
+ #campPanel.fieldbook .dispatchBoard .contractHead > b { font-size:25px; }
+ #campPanel.fieldbook .dispatchContractImage { aspect-ratio:1.55; }
+ #campPanel.fieldbook .dispatchContractFacts { font-size:12px;gap:7px; }
+ #campPanel.fieldbook .dispatchContractFacts > small { font-size:13px; }
+ #campPanel.fieldbook .dispatchBoard .contractReward { gap:10px 17px; }
+ #campPanel.fieldbook .dispatchBoard .contractActions button { font-size:19px; }
+ #campPanel.fieldbook .dispatchBoard .contractSquad { gap:8px; }
+ #campPanel.fieldbook .dispatchBoard .contractSquad button { width:60px; }
+ #campPanel.fieldbook .dispatchMemberPhoto { width:48px;height:54px; }
+ #campPanel.fieldbook .dispatchMemberName { font-size:11px; }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .dispatchIndex { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #campPanel.fieldbook .dispatchIndexText strong { font-size:22px; }
+ #campPanel.fieldbook .dispatchExpansion { grid-template-columns:minmax(0,1fr) minmax(260px,1fr);gap:16px; }
+ #campPanel.fieldbook .dispatchCampScene { grid-row:2; }
+ #campPanel.fieldbook .dispatchCampScene > .dispatchArt { min-height:260px; }
+ #campPanel.fieldbook .dispatchNext { grid-column:2;grid-row:2;grid-template-columns:1fr; }
+ #campPanel.fieldbook .dispatchDeck { grid-template-columns:160px minmax(0,1fr); }
+ #campPanel.fieldbook .dispatchContractRail { grid-column:1;grid-row:1/3;flex-direction:column;overflow:visible; }
+ #campPanel.fieldbook .dispatchContractTab { flex:auto; }
+ #campPanel.fieldbook .dispatchDeckControls { grid-column:2;grid-row:1; }
+ #campPanel.fieldbook .dispatchSheets { grid-column:2;grid-row:2; }
+ #campPanel.fieldbook .dispatchContractImage { aspect-ratio:2.5; }
+}
+@media(prefers-reduced-motion:reduce) { #campPanel.fieldbook .dispatchIndex > .campDestination { transition:none; } }
+#campPanel.fieldbook .dispatchBoardRep { display:block;margin-top:6px;color:#6e5231;font:12px var(--fb-serif); }
+#campPanel.fieldbook .dispatchExpansion > :not(.dispatchJourney,.dispatchCampScene,.dispatchNext,.dispatchTask) { grid-column:1/-1; }
+@media(max-width:360px) { #campPanel.fieldbook .fbHeading { font-size:17px;letter-spacing:.02em; } }
+#campPanel.fieldbook .dispatchTask .campFold > summary { color:#62492e; }
+@media(min-width:901px) and (min-height:521px) {
+ #campPanel.fieldbook .dispatchBoard .contractCard { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 22px; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > * { grid-column:1/-1;min-width:0; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .contractHead { grid-row:1; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .dispatchContractImage { grid-column:1;grid-row:2/6;height:100%;min-height:210px;max-height:280px;aspect-ratio:auto; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .dispatchContractFacts { grid-column:2;grid-row:2;align-self:start; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .dispatchPrimaryRegion { grid-column:2;grid-row:3; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .dispatchObjective { grid-column:2;grid-row:4; }
+ #campPanel.fieldbook .dispatchBoard .contractCard > .contractReward { grid-column:2;grid-row:5; }
+}
+#campPanel.fieldbook .fbPhoto > img { display:block;width:100%;height:100%;object-fit:cover; }
+/* Длинные названия остаются словами, выход помещается в одну строку. */
+@media(max-width:900px) {
+ #campPanel.fieldbook .dispatchContractTab { flex-basis:168px; }
+ #campPanel.fieldbook .dispatchContractTab strong { font-size:14px;overflow-wrap:normal; }
+}
+@media(max-width:600px) {
+ #campPanel.fieldbook .dispatchIndexText strong { font-size:clamp(18px,5.5vw,23px); }
+ #campPanel.fieldbook .panelFoot { gap:8px; }
+ #campPanel.fieldbook .panelFoot > .fbMore { padding:8px 10px;font-size:17px;white-space:nowrap; }
+ #campPanel.fieldbook .panelFoot > [data-close] { white-space:nowrap; }
+}
+@media(max-width:360px) {
+ #campPanel.fieldbook .dispatchIndex > .campDestination { grid-template-columns:30% minmax(0,1fr) 20px;gap:8px; }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .dispatchBoardSummary { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 18px;padding:8px 12px; }
+ #campPanel.fieldbook .dispatchBoardSummary > .contractLegend:first-child { grid-column:1;grid-row:1;font-size:13px; }
+ #campPanel.fieldbook .dispatchBoardSummary > .contractLegend:nth-child(2) { display:contents; }
+ #campPanel.fieldbook .dispatchBoardSummary > .contractLegend:nth-child(2) > span { grid-column:1;grid-row:2;font:13px var(--fb-serif); }
+ #campPanel.fieldbook .dispatchBoardSummary > .contractLegend:nth-child(2) > button { grid-column:2;grid-row:1/4;align-self:center;font-size:14px; }
+ #campPanel.fieldbook .dispatchBoardRep { grid-column:1;grid-row:3;margin:0; }
+ #campPanel.fieldbook .dispatchDeckControls { grid-column:1;grid-row:1; }
+ #campPanel.fieldbook .dispatchContractRail { grid-column:1;grid-row:2; }
+ #campPanel.fieldbook .dispatchContractTab { flex-basis:auto; }
+ #campPanel.fieldbook .dispatchSheets { grid-column:2;grid-row:1/3; }
+}
+#campPanel.fieldbook .dispatchDeckCount { white-space:nowrap; }
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .dispatchDeckControls { gap:6px; }
+ #campPanel.fieldbook .dispatchDeckCount { font-size:12px; }
+}
