@@ -206,6 +206,8 @@
 #campPanel .blueprints .bp > strong { font: 700 16px/1.15 var(--desk-type); color: #fff; }
 #campPanel .blueprints .bp > .bpLevel { align-self: flex-start; font: 700 11px/1 var(--desk-type); color: #cfe0f2; }
 #campPanel .blueprints .bp > small.bpNote { display: none; }
+#campPanel .blueprints .campCrewProgress { min-width: 0; overflow-wrap: anywhere; padding-top: 4px; border-top: 1px solid #ffffff33; }
+#campPanel .blueprints .campCrewProgress small { display: block; overflow-wrap: anywhere; color: #f4f7fb; font: 600 12px/1.35 var(--desk-type, sans-serif); }
 #campPanel .blueprints .bp .bpCost { display: flex; flex-wrap: wrap; gap: 4px 10px; }
 #campPanel .blueprints .bp .bpChip { display: inline-flex; align-items: center; gap: 3px; font: 700 14px/1 var(--desk-type); }
 #campPanel .blueprints .bp .bpChip .gi { width: 18px; height: 18px; fill: #f1f7fd; }

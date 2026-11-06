@@ -154,6 +154,7 @@
 #campPanel.fieldbook .blueprints .bp:has(.fbBlueprintArt) > .campIcon { display:none; }
 #campPanel.fieldbook .blueprints .bp > strong { font:900 18px/1.2 var(--fb-stamp);text-transform:uppercase; }
 #campPanel.fieldbook .fbBlueprintArt { height:160px;background:center/contain no-repeat;grid-column:1/-1; }
+#campPanel.fieldbook .blueprints .campCrewProgress small { font-family: var(--fb-serif, serif); color: #f6efe2; }
 #campPanel.fieldbook .fbBlueprintArt[data-plan=sawmill] { background-image:url('../assets/ui/camp/sawmill.webp'); }
 #campPanel.fieldbook .fbBlueprintArt[data-plan=generator] { background-image:url('../assets/ui/camp/generator.webp'); }
 #campPanel.fieldbook .fbBlueprintArt[data-plan=pump] { background-image:url('../assets/ui/camp/pump.webp'); }
