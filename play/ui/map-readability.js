@@ -2,6 +2,7 @@
 (() => {
   'use strict';
   const RANKS = ['I', 'II', 'III', 'IV', 'V'];
+  const canvasCaptionNames = new Set();
 
   function start() {
     const map = document.getElementById('wmap');
@@ -28,8 +29,10 @@
           placeLegend(leg, narrow);
           markHere(leg);
           placeNames(layer);
+          hookCanvasCaptions(window.game?.ui?.mapView);
         } else {
           layer.replaceChildren();
+          canvasCaptionNames.clear();
         }
       } catch (error) {
         if (!logged) { logged = true; console.error('[map-readability]', error); }
@@ -210,6 +213,48 @@
     for (const node of [...layer.children]) {
       if (!seen.has(node.dataset.marker)) node.remove();
     }
+    canvasCaptionNames.clear();
+    for (const node of layer.children) canvasCaptionNames.add(node.textContent);
+  }
+
+  function hookCanvasCaptions(view) {
+    if (!view || view.drawMap?.terraEdgeCaption) return;
+    const canvas = document.getElementById('wmC');
+    const context = canvas?.getContext('2d');
+    if (!context) return;
+    const measureText = context.measureText;
+    const fillText = context.fillText;
+    const fillRect = context.fillRect;
+    const draw = view.drawMap;
+    function wrapped(time) {
+      if (!canvasCaptionNames.size) return draw.call(this, time);
+      let skipBars = 0;
+      context.measureText = function(text) {
+        if (canvasCaptionNames.has(String(text))) {
+          skipBars = 2;
+          return {width: 0};
+        }
+        skipBars = 0;
+        return measureText.call(this, text);
+      };
+      context.fillRect = function(x, y, width, height) {
+        if (skipBars && height === 14 && width <= 8) { skipBars--; return; }
+        skipBars = 0;
+        return fillRect.call(this, x, y, width, height);
+      };
+      context.fillText = function(text, x, y, maxWidth) {
+        if (canvasCaptionNames.has(String(text))) return;
+        return fillText.call(this, text, x, y, maxWidth);
+      };
+      try { return draw.call(this, time); }
+      finally {
+        context.measureText = measureText;
+        context.fillRect = fillRect;
+        context.fillText = fillText;
+      }
+    }
+    wrapped.terraEdgeCaption = true;
+    view.drawMap = wrapped;
   }
 
   function clamp(value, min, max) {
