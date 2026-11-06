@@ -27,6 +27,23 @@
   };
   const FAR = 38;
   const MAX = 12;
+  const BADGE_PATHS={
+    person:'M16 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10M6 28v-4c0-10 20-10 20 0v4',
+    house:'M3 15 16 4l13 11M7 13v15h18V13M13 28v-9h6v9',
+    defense:'M4 14h24M12 14V8h15v7H12m4 0v12m-8 1h16',
+    water:'M16 3C9 13 6 17 6 21a10 10 0 0 0 20 0c0-4-3-8-10-18M11 21c0 3 2 5 5 5',
+    wood:'M7 12h18v8H7m0 0a4 4 0 1 1 0-8m18 8a4 4 0 1 0 0-8M5 23h21v6H5m0 0a3 3 0 1 1 0-6',
+    med:'M12 3h8v9h9v8h-9v9h-8v-9H3v-8h9z',
+    bolt:'m19 2-14 17h10l-3 11 15-18H17z',
+    food:'M6 3v10m4-10v10M3 3v7c0 5 10 5 10 0V3M8 14v16M24 3c-7 3-7 15 0 15V3m0 15v12',
+    tools:'m5 4 23 23M4 25 23 6l5 5L9 30M2 5l6-3 6 6-3 6-6-3z',
+  };
+  function badgePath(item,group){
+    if(group)return BADGE_PATHS.person;
+    const s=game()?.p?.camp?.settlers?.[item.id];
+    const key=item.kind==='settler'?(s?.wounded?'med':s?.job?.startsWith('gather:')?({water:'water',wood:'wood',food:'food',scrap:'tools'}[s.job.slice(7)]||'tools'):({build:'tools',repair:'tools',craft:'tools',operate:'bolt',guard:'defense',patrol:'defense'}[s?.job]||'person')):item.kind==='defense'?'defense':({sawmill:'wood',pump:'water',cistern:'water',lab:'med',generator:'bolt',farm:'food',kitchen:'food',workshop:'tools',watch:'defense'}[item.id]||'house');
+    return BADGE_PATHS[key];
+  }
   const why = value => REASON[value] || (typeof value === 'string' && /[а-яё]/i.test(value) ? value : 'Сейчас нельзя');
   const game = () => window.game;
   const num = (v, d = 0) => (Number.isFinite(v) ? v : d);
@@ -35,6 +52,16 @@
   layer.id = 'campLiveLayer';
   const tags = new Map();
   let menu = null;
+  let menuOrigin = null;
+  let preview = null;
+  function hidePreview(){preview?.remove();preview=null;for(const b of tags.values())b.removeAttribute('aria-describedby');}
+  function showPreview(button){
+    if(menu||!button._anchor||button.hidden||!current(session()))return;
+    hidePreview();preview=document.createElement('div');preview.id='campLivePreview';preview.setAttribute('role','tooltip');
+    const title=document.createElement('strong'),status=document.createElement('span');title.textContent=button._anchor.name;status.textContent=button._anchor.kind==='group'?'Нажмите: выбрать жителя':button._anchor.text;
+    preview.append(title,status);document.body.append(preview);button.setAttribute('aria-describedby',preview.id);
+    const b=button.getBoundingClientRect(),r=preview.getBoundingClientRect();preview.style.left=Math.max(12,Math.min(b.left+b.width/2-r.width/2,innerWidth-r.width-12))+'px';preview.style.top=Math.max(12,Math.min(b.top-r.height-10>=12?b.top-r.height-10:b.bottom+10,innerHeight-r.height-12))+'px';
+  }
   let menuOwner = null;
   let back = null;
   let note = null;
@@ -50,6 +77,8 @@
   let pickDown = null;
   let selectedCell = null;
   const ghostHooks = new WeakSet();
+  const labelHooks = new WeakSet();
+  function hideResidentNames(g){for(const s of Object.values(g?.p?.camp?.settlers||{})){const v=g.npcV?.[s.id];if(v?.tag)v.tag.visible=false;}}
 
   function session(g = game()) { return { game: g, player: g?.p, world: g?.world }; }
   function current(owner) {
@@ -64,6 +93,9 @@
       g.build.demo === selectedCell.demo;
   }
   function installGhostHook(g) {
+    if(g&&!labelHooks.has(g)&&typeof g.campLifeUpdate==='function'){
+      const nativeLife=g.campLifeUpdate;g.campLifeUpdate=function(...args){const result=nativeLife.apply(this,args);if(this===g&&g.state==='play'&&!g.world?.inDungeon)hideResidentNames(g);return result;};labelHooks.add(g);
+    }
     if (!g || ghostHooks.has(g) || typeof g.ghostPos !== 'function') return;
     const native = g.ghostPos;
     g.ghostPos = function (...args) {
@@ -122,6 +154,7 @@
     return { text: 'простой', tone: 'idle' };
   }
   function settlerState(s) {
+    if (window.terraCampFieldbook) return {text:window.terraCampFieldbook.activity(s),tone:s.wounded||s.status==='injured'?'bad':s.status==='blocked'?'warn':s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
     if (s.wounded || s.status === 'injured') return { text: 'ранен', tone: 'bad' };
     if (s.job === 'idle' || s.status === 'rest') return { text: 'отдых', tone: 'idle' };
     if (s.status === 'working') return { text: 'работает', tone: 'ok' };
@@ -170,7 +203,7 @@
     obj.getWorldPosition(tmp);
     into.push({
       id: String(id), kind: kind === 'settler' || kind === 'defense' ? kind : 'building',
-      x: tmp.x, y: tmp.y + num(data?.top, 0.4), z: tmp.z, explicit: true,
+      x: tmp.x, y: tmp.y + (kind==='settler'&&!obj.userData?.noT?ground(tmp.x,tmp.z):0) + num(data?.top, 0.4), z: tmp.z, explicit: true,
     });
   }
   function scanExplicit() {
@@ -194,6 +227,7 @@
     const list = [];
     const seen = new Set();
     for (const item of explicit) {
+      if(item.kind==='settler'){const s=camp.settlers?.[item.id];if(!s||s.dead||s.captive||s.mission)continue;}
       const state = item.kind === 'settler' ? settlerState(camp.settlers?.[item.id] || {}) : item.kind === 'defense' ? defenseState(item.id) : buildingState(camp, item.id);
       pushAnchor(list, { ...item, name: NAMES[item.id] || camp.settlers?.[item.id]?.name || item.id, ...stateLabel(state) });
       seen.add(item.kind + ':' + item.id);
@@ -230,12 +264,12 @@
       });
     }
     for (const settler of Object.values(camp.settlers || {})) {
-      if (!settler || settler.dead || seen.has('settler:' + settler.id)) continue;
+      if (!settler || settler.dead || settler.captive || settler.mission || seen.has('settler:' + settler.id)) continue;
       const view = g.npcV?.[settler.id];
       let x, y, z;
       if (vectors() && view?.root?.getWorldPosition && view.root.visible !== false) {
         view.root.getWorldPosition(tmp);
-        x = tmp.x; y = tmp.y + 2.05; z = tmp.z;
+        x = tmp.x; z = tmp.z;y = tmp.y + (view.root.userData?.noT ? 0 : ground(x,z)) + 2.05;
       } else if (Number.isFinite(settler.pos?.x)) {
         x = settler.pos.x; z = settler.pos.z; y = ground(x, z) + 2.05;
       } else continue;
@@ -263,7 +297,8 @@
     if (x < -40 || y < -40 || x > w + 40 || y > h + 40) return null;
     return { x, y };
   }
-  function hudBlocks(x, y) {
+  function hudBlocks(x, y, reserved=[]) {
+    if(reserved.some(r=>x+24>r.left-4&&x-24<r.right+4&&y>r.top-4&&y-48<r.bottom+4))return true;
     const w = innerWidth, h = innerHeight;
     const touch = document.body.classList.contains('touchUI') || document.body.classList.contains('building');
     if (touch && y > h - 120) return true;
@@ -294,8 +329,13 @@
       button.type = 'button';
       button.className = 'campLiveTag';
       button.append(document.createElement('b'), document.createElement('i'));
+      const glyph=document.createElement('span');glyph.className='campLiveGlyph';glyph.setAttribute('aria-hidden','true');button.append(glyph);
+      const count=document.createElement('span');count.className='campLiveCount';count.setAttribute('aria-hidden','true');button.append(count);
       button.addEventListener('pointerdown', event => event.stopPropagation());
       button.addEventListener('click', () => openMenu(button._anchor));
+      button.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')showPreview(button);});
+      button.addEventListener('pointerleave',hidePreview);
+      button.addEventListener('focus',()=>{if(button.matches(':focus-visible'))showPreview(button);});button.addEventListener('blur',hidePreview);
       tags.set(item.key, button);
       layer.append(button);
     }
@@ -305,27 +345,46 @@
     const g = game();
     const show = g?.state === 'play' && !g.world?.inDungeon && !g.build?.on && !document.querySelector('.modal:not(.hidden), .screen:not(.hidden)');
     const live = show ? anchors : [];
-    const used = new Set();
+    if(!show)hidePreview();
+    const used = new Set(), placed=[];
+    const reserved=show?[...document.querySelectorAll('#tl,#obj,#tr,#mini,#mm,#weap,#stickL,#stickR,#touch .tb,#sewerAction,#moscowSignalAction')].filter(e=>e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden').map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0):[];
+    const budget=innerWidth<=600?4:6;
+    const candidates=[];
     for (const item of live) {
       const pos = project(item);
-      const button = tagFor(item);
-      used.add(item.key);
-      button._anchor = item;
-      if (!pos || pos.x < 0 || pos.y < 0 || pos.x > innerWidth || pos.y > innerHeight || hudBlocks(pos.x, pos.y)) {
-        button.hidden = true;
-        continue;
-      }
+      if(!pos||pos.x<24||pos.y<48||pos.x>innerWidth-24||pos.y>innerHeight-12||hudBlocks(pos.x,pos.y,reserved))continue;
+      candidates.push({item,pos});
+    }
+    // One badge for a screen-space group; every member remains selectable.
+    const consumed=new Set();
+    candidates.sort((a,b)=>Number(b.item.tone==='bad')-Number(a.item.tone==='bad')||Number(b.item.kind==='settler')-Number(a.item.kind==='settler')||a.item.d2-b.item.d2);
+    for(const {item,pos} of candidates){
+      if(consumed.has(item.key)||placed.length>=budget)continue;
+      const group=item.kind==='settler'?candidates.filter(c=>c.item.kind==='settler'&&!consumed.has(c.item.key)&&Math.hypot(c.pos.x-pos.x,c.pos.y-pos.y)<62):[];
+      for(const c of group)consumed.add(c.item.key);
+      const box={left:pos.x-24,right:pos.x+24,top:pos.y-48,bottom:pos.y};
+      if(placed.some(r=>box.left<r.right+8&&box.right>r.left-8&&box.top<r.bottom+8&&box.bottom>r.top-8))continue;
+      placed.push(box);
+      const button=tagFor(item);used.add(item.key);
+      const anchor=group.length>1?{...item,kind:'group',name:'Жители рядом · '+group.length,members:group.map(c=>c.item)}:item;
+      button._anchor=anchor;
       button.hidden = false;
-      button.dataset.tone = item.tone || 'idle';
+      button.dataset.tone = group.some(c=>c.item.tone==='bad')?'bad':group.some(c=>c.item.tone==='warn')?'warn':item.tone || 'idle';
       button.dataset.kind = item.kind;
       fitTag(button, pos.x, pos.y);
       const title = button.firstChild, status = title.nextSibling;
-      if (title.textContent !== item.name) title.textContent = item.name;
+      if (title.textContent !== anchor.name) title.textContent = anchor.name;
       if (status.textContent !== item.text) status.textContent = item.text;
-      const label = item.name + ', ' + item.text;
+      const path=badgePath(item,group.length>1);
+      const glyph=button.querySelector('.campLiveGlyph');
+      if(glyph._path!==path){glyph._path=path;glyph.innerHTML='<svg viewBox="0 0 32 32"><path d="'+path+'"/></svg>';}
+      const count=button.querySelector('.campLiveCount');count.textContent=group.length>1?String(group.length):'';count.hidden=group.length<2;
+      const label = anchor.name + ', ' + item.text;
       if (button.getAttribute('aria-label') !== label) button.setAttribute('aria-label', label);
     }
     for (const [key, button] of tags) if (!used.has(key)) button.hidden = true;
+    // Native sprites and DOM badges used to repeat the same resident's name.
+    if(show)hideResidentNames(g);
     styleGhost();
     paintPlace();
   }
@@ -449,14 +508,16 @@
       { label: 'Жители', run: () => { openPanel('settlers'); closeMenu(); } },
     ];
   }
-  function closeMenu() {
+  function closeMenu(restore=true) {
+    const origin=menuOrigin;menuOrigin=null;hidePreview();
     menu?.remove(); back?.remove();
     menu = null; menuOwner = null; back = null; note = null;
+    if(restore&&game()?.state==='play'&&origin?.isConnected&&!origin.hidden)origin.focus({preventScroll:true});
   }
   function openMenu(item) {
     if (!item || !current(session())) return;
-    closeMenu();
-    const acts = actionsFor(item);
+    const origin=menuOrigin||document.activeElement;closeMenu(false);menuOrigin=origin;
+    const acts = item.kind==='group'?item.members.map(member=>({label:member.name+' · '+member.text,run:()=>openMenu(member)})):actionsFor(item);
     if (!acts.length) return;
     const owner = menuOwner = session();
     back = document.createElement('button');
@@ -468,6 +529,8 @@
     menu = document.createElement('div');
     menu.id = 'campLiveMenu';
     menu.setAttribute('role', 'menu');
+    menu.dataset.kind=item.kind;
+    menu._anchor=item;
     menu.setAttribute('aria-label', item.name);
     const buttons = [];
     const close = document.createElement('button');
@@ -476,8 +539,10 @@
     close.textContent = '✕';
     close.setAttribute('aria-label', 'Закрыть');
     close.addEventListener('click', closeMenu);
-    menu.append(close);
     buttons.push(close);
+    const heading=document.createElement('h3');heading.textContent=item.name;menu.append(heading);
+    const header=document.createElement('header');header.className='campLiveHeader';header.append(heading,close);menu.append(header);
+    const state=document.createElement('small');state.className='campLiveStatus';state.textContent=item.kind==='group'?'Выберите жителя':item.text;menu.append(state);
     for (const act of acts) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -505,30 +570,10 @@
   }
   function layoutMenu(item, buttons) {
     const pos = project(item) || { x: innerWidth / 2, y: innerHeight / 2 };
-    const short = innerHeight < 520 || innerWidth < 420;
-    if (short) {
-      menu.classList.add('is-stack');
-      const rect = menu.getBoundingClientRect();
-      const left = Math.min(Math.max(12, pos.x - rect.width / 2), Math.max(12, innerWidth - rect.width - 12));
-      const top = Math.min(Math.max(12, pos.y - rect.height - 8), Math.max(12, innerHeight - rect.height - 12));
-      menu.style.left = left + 'px';
-      menu.style.top = top + 'px';
-      return;
-    }
-    const radius = 78;
-    const size = radius * 2 + 72;
-    const count = buttons.length;
-    buttons.forEach((button, index) => {
-      const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
-      button.style.left = (size / 2 - 32 + Math.cos(angle) * radius) + 'px';
-      button.style.top = (size / 2 - 32 + Math.sin(angle) * radius) + 'px';
-    });
-    const left = Math.max(8, Math.min(pos.x - size / 2, innerWidth - size - 8));
-    const top = Math.max(8, Math.min(pos.y - size / 2, innerHeight - size - 120));
-    menu.style.left = left + 'px';
-    menu.style.top = top + 'px';
-    menu.style.width = size + 'px';
-    menu.style.height = size + 'px';
+    menu.classList.add('is-stack');
+    const rect = menu.getBoundingClientRect();
+    menu.style.left=Math.min(Math.max(12,pos.x-rect.width/2),Math.max(12,innerWidth-rect.width-12))+'px';
+    menu.style.top=Math.min(Math.max(12,pos.y-rect.height-8),Math.max(12,innerHeight-rect.height-12))+'px';
   }
   function ensurePlace() {
     aim = document.createElement('div');
@@ -611,7 +656,15 @@
     return best;
   }
   function onKey(event) {
-    if (event.key === 'Escape' && menu) { event.preventDefault(); event.stopPropagation(); closeMenu(); }
+    if(!menu)return;
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeMenu();return;}
+    const controls=[...menu.querySelectorAll('button:not(:disabled)')],at=controls.indexOf(document.activeElement);
+    if(['ArrowDown','ArrowRight','ArrowUp','ArrowLeft','Home','End','Tab'].includes(event.key)&&controls.length){
+      event.preventDefault();const previous=['ArrowUp','ArrowLeft'].includes(event.key)||(event.key==='Tab'&&event.shiftKey);
+      const next=event.key==='Home'?0:event.key==='End'?controls.length-1:(Math.max(0,at)+(previous?-1:1)+controls.length)%controls.length;
+      controls[next].focus();
+    }
+    event.stopPropagation();
   }
   function onPointerDown(event) {
     if (!current(session())) return;
@@ -654,10 +707,11 @@
     window.addEventListener('keydown', onKey, true);
     window.addEventListener('pointerdown', onPointerDown, true);
     window.addEventListener('pointerup', onPointerUp, true);
+    window.addEventListener('resize',()=>{if(menu?._anchor)layoutMenu(menu._anchor);});
     window.addEventListener('blur', () => { selectedCell = null; pickDown = null; setAim(false); closeMenu(); });
     window.terraCampLive = Object.freeze({
-      version: 1,
-      anchors: () => anchors.map(item => ({ key: item.key, kind: item.kind, id: item.id, name: item.name, text: item.text, tone: item.tone, x: item.x, z: item.z })),
+      version: 2,
+      anchors: () => anchors.map(item => ({ key: item.key, kind: item.kind, id: item.id, name: item.name, text: item.text, tone: item.tone, x: item.x, y:item.y, z: item.z })),
     });
     requestAnimationFrame(frame);
   }
