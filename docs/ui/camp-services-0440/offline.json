@@ -1,0 +1,206 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "tech": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "power": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "stock": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "exchange": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "territory": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "marker": [
+        92,
+        72
+      ]
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "tech": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "power": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "stock": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "exchange": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "territory": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "marker": [
+        92,
+        72
+      ]
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "tech": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "power": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "stock": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "exchange": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "territory": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "marker": [
+        92,
+        72
+      ]
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "tech": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "power": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "stock": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "exchange": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "territory": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "marker": [
+        92,
+        72
+      ]
+    }
+  ],
+  "research": {
+    "cost": {
+      "wood": 5,
+      "scrap": 8
+    },
+    "unlocksDefense": true,
+    "focusRestored": true
+  },
+  "power": {
+    "failedWriteRollback": true,
+    "fuelSeconds": 120,
+    "chemicalDebit": 1,
+    "nativeAssignment": true
+  },
+  "supply": {
+    "deposit": 2,
+    "withdraw": 1,
+    "shipment": 3,
+    "doubleClickNoDuplicate": true,
+    "coldContinue": true
+  },
+  "errors": []
+}

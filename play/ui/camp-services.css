@@ -1,0 +1,183 @@
+/* Инженерные листы. Существующие текстуры и иллюстрации альбома. */
+#campPanel.fieldbook :is(.serviceTechnology,.servicePower,.serviceSupply,.serviceTerritories) { min-width:0;font-family:var(--fb-serif); }
+#campPanel.fieldbook :is(.serviceTechnology,.servicePower,.serviceSupply) .campButton { min-width:0;min-height:48px;white-space:normal;overflow-wrap:anywhere;clip-path:none;font-family:var(--fb-serif); }
+#campPanel.fieldbook :is(.serviceTechnology,.servicePower,.serviceSupply,.serviceTerritories) :is(button,summary,input,select):focus-visible { outline:3px solid #fbc76d;outline-offset:2px; }
+#campPanel.fieldbook .serviceArt { min-width:0; }
+#campPanel.fieldbook :is(.servicePowerControls,.serviceWarehouse,.serviceSupplyForm) > .campButton,
+#campPanel.fieldbook .serviceTechAction { background-image:var(--fb-brass);background-size:256px;color:#30210f;border:2px solid #a47c43;border-radius:5px;box-shadow:inset 0 0 0 1px #ffde9c77,0 3px 0 #5e3b1a;font:800 17px/1.25 var(--fb-serif); }
+#campPanel.fieldbook :is(.serviceTechnology,.servicePower,.serviceSupply) button:disabled { opacity:.55;filter:saturate(.3); }
+
+/* Исследования — синие листы с печатью состояния и исходными условиями. */
+#campPanel.fieldbook .serviceResearchSummary { display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:22px;padding:12px;background-image:var(--fb-paper);background-size:100% 100%;color:#423019;border:1px solid #a68857;border-radius:6px;box-shadow:0 4px 6px #0008;margin-bottom:20px; }
+#campPanel.fieldbook .serviceResearchSummary .serviceArt { height:100px; }
+#campPanel.fieldbook .serviceResearchCounts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+#campPanel.fieldbook .serviceResearchCounts > span { display:grid;gap:5px;border-left:1px solid #9e7d4c77;padding-left:14px; }
+#campPanel.fieldbook .serviceResearchCounts b { font:900 26px var(--fb-serif);white-space:nowrap; }
+#campPanel.fieldbook .serviceResearchCounts small { font:14px var(--fb-serif);color:#66502f; }
+#campPanel.fieldbook .serviceTechnology .campTree { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px; }
+#campPanel.fieldbook .serviceTechnology .campTech { position:relative;display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:18px;color:#f0dec0;background-image:var(--fb-blue);background-size:100% 100%;border:1px solid #9d8e69;border-radius:8px 3px 10px 4px;box-shadow:0 4px 0 #75613d,0 8px 10px #0008; }
+#campPanel.fieldbook .serviceTechnology .campTech.available { border:2px solid #edc271;box-shadow:0 4px 0 #75613d,0 0 15px #e6a64a44; }
+#campPanel.fieldbook .serviceTechnology .campTech.open { border-color:#94b788; }
+#campPanel.fieldbook .serviceTechStamp { align-self:flex-end;padding:4px 8px;border:2px double #c9b898;font:900 12px var(--fb-stamp);text-transform:uppercase;transform:rotate(-4deg); }
+#campPanel.fieldbook .campTech.available .serviceTechStamp { color:#ffcd6c;border-color:#ffcd6c; }
+#campPanel.fieldbook .campTech.open .serviceTechStamp { color:#b4d6a1;border-color:#b4d6a1; }
+#campPanel.fieldbook .serviceTechnology .campTech > .campIcon .gi { width:44px;height:44px; }
+#campPanel.fieldbook .serviceTechnology .campTech > strong { font:900 25px/1.1 var(--fb-serif);overflow-wrap:normal; }
+#campPanel.fieldbook .serviceTechCost { font:700 15px/1.4 var(--fb-serif);color:#dfc697; }
+#campPanel.fieldbook .serviceTechnology .campLink { color:#c7c3a7;border-left-color:#d7c49c;margin:0;padding-left:8px;font:13px/1.4 var(--fb-serif); }
+#campPanel.fieldbook .serviceTechRequirements { border-top:1px solid #bcab7b66; }
+#campPanel.fieldbook .serviceTechRequirements > summary { min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;font:700 14px var(--fb-serif);color:#eadbb9; }
+#campPanel.fieldbook .serviceTechRequirements > summary::after { content:'＋';margin-left:auto; }
+#campPanel.fieldbook .serviceTechRequirements[open] > summary::after { content:'−'; }
+#campPanel.fieldbook .serviceTechRequirements .campReason { display:block;margin:0 0 10px;font:13px/1.5 var(--fb-serif);color:#f1cba5;overflow-wrap:anywhere; }
+#campPanel.fieldbook .serviceTechnology .campTech > .serviceTechAction { margin-top:auto;width:100%; }
+#campPanel.fieldbook .serviceTechnology .campTech.open .serviceTechCost { display:none; }
+
+/* Генератор: изображение узла, настоящий бак, выключатель, заправка и инженер. */
+#campPanel.fieldbook .servicePower > h3 { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+#campPanel.fieldbook .serviceGenerator { display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr);gap:24px;padding:18px;background-image:var(--fb-paper);background-size:100% 100%;color:#3d2c18;border:1px solid #a78955;border-radius:10px;box-shadow:0 5px 0 #957143,0 10px 14px #0008; }
+#campPanel.fieldbook .serviceGenerator > .serviceArt { min-height:300px;height:100%;border:2px solid #7d6943;box-shadow:0 4px 6px #50371d55; }
+#campPanel.fieldbook .servicePowerControls { min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:14px; }
+#campPanel.fieldbook .servicePowerControls > strong { align-self:flex-start;padding:5px 10px;border:3px double currentColor;transform:rotate(-2deg);font:900 26px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .servicePowerControls > strong.campReason { color:#8b3929; }
+#campPanel.fieldbook .servicePowerControls > strong.campCheck { color:#405e30; }
+#campPanel.fieldbook .servicePowerControls > :is(small,p) { margin:0;font:15px/1.4 var(--fb-serif);color:#63482a; }
+#campPanel.fieldbook .servicePowerControls .campMeter { flex-wrap:wrap;gap:9px;font:700 15px var(--fb-serif); }
+#campPanel.fieldbook .servicePowerControls .campMeter > span:first-child { width:100%; }
+#campPanel.fieldbook .servicePowerControls .campBar { width:100%;height:14px;flex-basis:100%;background:#a3895d66;border:1px solid #795b33;border-radius:0; }
+#campPanel.fieldbook .servicePowerControls .campBar i { height:100%;background:repeating-linear-gradient(125deg,#7f5725 0 5px,#e1b359 5px 8px); }
+#campPanel.fieldbook .serviceEngineer { display:flex;align-items:center;justify-content:flex-start;gap:12px; }
+#campPanel.fieldbook .serviceEngineer > .campIcon { display:none; }
+#campPanel.fieldbook .serviceEngineerPhoto { display:block;width:44px;height:48px;flex:none;border:2px solid #e7d6b4;box-shadow:0 2px 3px #63451e77; }
+#campPanel.fieldbook .servicePower > [role=status] { background-image:var(--fb-paper);padding:12px;color:#7f3527;font:700 16px var(--fb-serif);border:1px solid #ad8955; }
+
+/* Снабжение — складская опись и два раскрывающихся бланка. */
+#campPanel.fieldbook .serviceSupply { display:flex;flex-direction:column;gap:18px; }
+#campPanel.fieldbook .serviceSupplyHead { display:grid;grid-template-columns:160px minmax(0,1fr);align-items:center;gap:22px;padding:12px;background-image:var(--fb-paper);background-size:100% 100%;color:#49331c;border:1px solid #ac8956;box-shadow:0 4px 6px #0007;border-radius:5px; }
+#campPanel.fieldbook .serviceSupplyHead .serviceArt { height:110px; }
+#campPanel.fieldbook .serviceSupplyHead h3 { margin:0 0 8px;font:900 27px/1.15 var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyRules > summary { min-height:44px;align-content:center;cursor:pointer;font:700 14px var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyRules p { margin:4px 0;font:14px/1.4 var(--fb-serif);color:#654a2c; }
+#campPanel.fieldbook .serviceSupplyNav { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px; }
+#campPanel.fieldbook .serviceSupplyNav > button { background-image:var(--fb-leather);color:#ead5ad;border:1px solid #a18351;font:800 18px var(--fb-serif); }
+#campPanel.fieldbook .serviceSupply .serviceStock { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:0; }
+#campPanel.fieldbook .serviceWarehouse { background-image:var(--fb-paper);background-size:100% 100%;color:#47311a;border:1px solid #b18e59;border-radius:5px;box-shadow:0 4px 0 #8f6c42,0 8px 9px #0007;gap:12px;padding:18px; }
+#campPanel.fieldbook .serviceWarehouse > strong { font:900 26px/1.15 var(--fb-serif); }
+#campPanel.fieldbook .serviceWarehouse > small { color:#6b5132;font:14px/1.4 var(--fb-serif); }
+#campPanel.fieldbook .serviceWarehouse .campReason { color:#8a3b2a; }
+#campPanel.fieldbook .serviceInventory { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;order:0; }
+#campPanel.fieldbook .serviceStockRow { display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:7px;border-bottom:1px solid #98774a66;padding:7px 0;font:14px/1.3 var(--fb-serif); }
+#campPanel.fieldbook .serviceStockRow > svg { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+#campPanel.fieldbook .serviceStockRow b { font:900 21px var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyFolder { min-width:0;border:1px solid #9d7c4d;border-radius:6px;box-shadow:0 4px 0 #74512e;background-image:var(--fb-paper);background-size:100% 100%;color:#49331b; }
+#campPanel.fieldbook .serviceSupplyFolder > summary { min-height:64px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;font:900 24px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyFolder > summary::after { content:'＋';margin-left:auto; }
+#campPanel.fieldbook .serviceSupplyFolder[open] > summary::after { content:'−'; }
+#campPanel.fieldbook .serviceSupplyForm { margin:0 10px 12px;border:1px solid #a8885666;background:#f1ddb655;color:#46301a;border-radius:0;padding:16px;gap:12px; }
+#campPanel.fieldbook .serviceSupplyForm > h3 { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+#campPanel.fieldbook .serviceSupplyForm > label { display:grid;gap:6px;font:700 15px var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyForm :is(select,input) { background:#f2e1c2;color:#3f2b15;border:1px solid #937142;font:16px var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyForm small { color:#674b2b;font:14px/1.4 var(--fb-serif); }
+#campPanel.fieldbook .serviceSupplyForm .campReason { color:#883b29; }
+#campPanel.fieldbook .serviceSupplyForm [data-shipment-id] { overflow-wrap:anywhere; }
+#campPanel.fieldbook .serviceSupply > :is(.campReason,.campCheck) { background-image:var(--fb-paper);margin:0;padding:12px;font:700 15px/1.4 var(--fb-serif);border:1px solid #a17f4f; }
+#campPanel.fieldbook .serviceSupply > .campReason { color:#8b3828; }
+#campPanel.fieldbook .serviceSupply > .campCheck { color:#3b5a2d; }
+#campPanel.fieldbook .serviceSupply > small { color:#cfb58b;font:13px/1.4 var(--fb-serif); }
+
+/* Координаты, размеры маркеров и жесты принадлежат исходной карте. */
+#campPanel.fieldbook .serviceTerritories .territoryMapPanel { border-color:#a18755;background-image:var(--fb-leather); }
+#campPanel.fieldbook .serviceTerritories .territoryMapHead { background-image:var(--fb-leather); }
+#campPanel.fieldbook .serviceTerritories .territoryBack { display:none; }
+#campPanel.fieldbook .serviceTerritories :is(.territoryZoom button,select) { color:#3e2b15;background-image:var(--fb-brass);border:1px solid #ab844b;border-radius:3px;font-family:var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryMapViewport { background-color:#d6bc87;background-image:linear-gradient(#7f724126 1px,transparent 1px),linear-gradient(90deg,#7f724126 1px,transparent 1px),var(--fb-paper);background-size:48px 48px,48px 48px,512px 512px;border-color:#a08350; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker { width:92px;height:72px;background:#e6d1a9f7;border:2px solid #8b4430;border-radius:2px;color:#773522;box-shadow:0 3px 3px #5e472a77; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker span:last-child { font:700 12px/14px var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker.home { color:#684515;border-color:#94703b; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker.liberated { color:#3c592d;border-color:#4b6c3a; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker.operation { color:#2c5b6b;border-color:#376879; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker.contested { color:#8a4e1b;border-color:#aa692b; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker.lost { color:#963a29;border-color:#963a29; }
+#campPanel.fieldbook .serviceTerritories .territoryMapMarker[aria-pressed=true] { outline:3px solid #e5ac4d;outline-offset:3px;background:#efd9aa; }
+#campPanel.fieldbook .serviceTerritories .territoryDetail { background-image:var(--fb-paper);background-size:100% 100%;color:#49341c;border:1px solid #a88954;border-radius:6px;padding:18px;gap:14px; }
+#campPanel.fieldbook .serviceTerritories .territoryTitle { color:#483019;font:900 27px/1.15 var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryStatus { align-self:flex-start;padding:4px 7px;border:2px double #705536;color:#614728;font:800 15px var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryValues { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;color:#4e391e; }
+#campPanel.fieldbook .serviceTerritories .territoryValues > span { display:grid;gap:4px;padding:8px 0;border-top:1px solid #a2855766; }
+#campPanel.fieldbook .serviceTerritories .territoryValues b { font:900 24px var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryValues small { font:14px var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryDetail p { font:15px/1.4 var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryDetail .campButton { background-image:var(--fb-brass);color:#3d2a12;border:1px solid #a67e42;border-radius:4px;font:800 16px/1.25 var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryDetail .campReason { color:#8b3c2a; }
+#campPanel.fieldbook .serviceTerritories .territoryFold { border-color:#9c805266; }
+#campPanel.fieldbook .serviceTerritories .territoryFold summary { color:#5a4225;font:700 16px var(--fb-serif); }
+#campPanel.fieldbook .serviceTerritories .territoryAssign { background:#b99a6033; }
+#campPanel.fieldbook .serviceTerritories .territoryCrewRow .campButton[aria-pressed=true] { background:#a4ad7799;border:2px solid #486334; }
+#campPanel.fieldbook .serviceTerritories .territoryNotice { color:#894729; }
+@media(max-width:900px) {
+ #campPanel.fieldbook .serviceTechnology .campTree { grid-template-columns:repeat(2,minmax(0,1fr));gap:16px; }
+ #campPanel.fieldbook .serviceGenerator { grid-template-columns:1fr; }
+ #campPanel.fieldbook .serviceGenerator > .serviceArt { min-height:0;height:210px; }
+ #campPanel.fieldbook .serviceSupply .serviceStock { grid-template-columns:1fr; }
+}
+@media(max-width:600px) {
+ #campPanel.fieldbook .serviceResearchSummary { grid-template-columns:80px minmax(0,1fr);gap:12px;padding:10px;margin-bottom:16px; }
+ #campPanel.fieldbook .serviceResearchSummary .serviceArt { height:80px; }
+ #campPanel.fieldbook .serviceResearchCounts { gap:8px; }
+ #campPanel.fieldbook .serviceResearchCounts > span { padding-left:7px; }
+ #campPanel.fieldbook .serviceResearchCounts b { font-size:18px; }
+ #campPanel.fieldbook .serviceResearchCounts small { font-size:11px; }
+ #campPanel.fieldbook .serviceTechnology .campTech { padding:12px;gap:10px; }
+ #campPanel.fieldbook .serviceTechnology .campTech > strong { font-size:18px; }
+ #campPanel.fieldbook .serviceTechCost { font-size:13px; }
+ #campPanel.fieldbook .serviceTechAction { font-size:15px; }
+ #campPanel.fieldbook .serviceTechStamp { font-size:10px;padding:3px 5px; }
+ #campPanel.fieldbook .servicePowerControls > strong { font-size:23px; }
+ #campPanel.fieldbook .serviceGenerator { padding:12px;gap:16px; }
+ #campPanel.fieldbook .serviceGenerator > .serviceArt { height:170px; }
+ #campPanel.fieldbook .serviceSupplyHead { grid-template-columns:90px minmax(0,1fr);gap:12px;padding:10px; }
+ #campPanel.fieldbook .serviceSupplyHead .serviceArt { height:90px; }
+ #campPanel.fieldbook .serviceSupplyHead h3 { font-size:22px; }
+ #campPanel.fieldbook .serviceSupplyNav { gap:8px; }
+ #campPanel.fieldbook .serviceSupplyNav > button { font-size:16px; }
+ #campPanel.fieldbook .serviceWarehouse { padding:14px; }
+ #campPanel.fieldbook .serviceWarehouse > strong { font-size:23px; }
+ #campPanel.fieldbook .serviceInventory { gap:6px 12px; }
+ #campPanel.fieldbook .serviceStockRow { grid-template-columns:20px minmax(0,1fr) auto;gap:5px;font-size:12px; }
+ #campPanel.fieldbook .serviceStockRow svg { width:20px;height:20px; }
+ #campPanel.fieldbook .serviceStockRow b { font-size:18px; }
+ #campPanel.fieldbook .serviceSupplyFolder > summary { min-height:60px;padding:12px;font-size:21px; }
+ #campPanel.fieldbook .serviceSupplyForm { margin:0 8px 10px;padding:12px; }
+ #campPanel.fieldbook .serviceTerritories .territoryDetail { padding:14px; }
+ #campPanel.fieldbook .serviceTerritories .territoryTitle { font-size:24px; }
+ #campPanel.fieldbook .serviceTerritories .territoryMapHead { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px; }
+ #campPanel.fieldbook .serviceTerritories .territoryRegionSelect { width:100%;min-width:0; }
+ #campPanel.fieldbook .serviceTerritories .territoryZoom { margin-left:0; }
+}
+@media(max-width:360px) {
+ #campPanel.fieldbook .serviceTechnology .campTree { grid-template-columns:1fr; }
+ #campPanel.fieldbook .serviceResearchSummary { grid-template-columns:64px minmax(0,1fr);gap:8px; }
+ #campPanel.fieldbook .serviceResearchSummary .serviceArt { height:70px; }
+ #campPanel.fieldbook .serviceResearchCounts b { font-size:16px; }
+ #campPanel.fieldbook .serviceResearchCounts small { font-size:10px; }
+ #campPanel.fieldbook .serviceInventory { grid-template-columns:1fr; }
+ #campPanel.fieldbook .serviceSupplyNav > button { padding-inline:4px;font-size:15px;white-space:nowrap; }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .serviceResearchSummary { grid-template-columns:100px minmax(0,1fr);padding:8px;gap:18px;margin-bottom:14px; }
+ #campPanel.fieldbook .serviceResearchSummary .serviceArt { height:64px; }
+ #campPanel.fieldbook .serviceTechnology .campTree { grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+ #campPanel.fieldbook .serviceTechnology .campTech > strong { font-size:19px; }
+ #campPanel.fieldbook .serviceGenerator { grid-template-columns:minmax(180px,.75fr) minmax(0,1fr);gap:18px; }
+ #campPanel.fieldbook .serviceGenerator > .serviceArt { min-height:250px;height:100%; }
+ #campPanel.fieldbook .serviceSupplyHead { grid-template-columns:100px minmax(0,1fr);padding:8px; }
+ #campPanel.fieldbook .serviceSupplyHead .serviceArt { height:70px; }
+ #campPanel.fieldbook .serviceSupplyHead h3 { margin:0;font-size:22px; }
+ #campPanel.fieldbook .serviceSupply .serviceStock { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #campPanel.fieldbook .serviceTerritories .territoryDetail { padding:12px;gap:10px; }
+ #campPanel.fieldbook .serviceTerritories .territoryTitle { font-size:23px; }
+}
+#campPanel.fieldbook .serviceSymbol { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round; }
+#campPanel.fieldbook .serviceSupply .serviceStock:has(> :only-child) { grid-template-columns:minmax(0,1fr); }
+#campPanel.fieldbook .serviceTechnology .campTech > strong:focus-visible { outline:2px solid #f5ca7d;outline-offset:4px; }
+@media(min-width:901px) { #campPanel.fieldbook .serviceStock:has(> :only-child) .serviceInventory { grid-template-columns:repeat(3,minmax(0,1fr)); } }
