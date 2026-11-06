@@ -112,7 +112,8 @@ with sync_playwright() as p:
     far.scroll_into_view_if_needed()
     far_box = far.bounding_box()
     assert far_box and far_box['height'] >= 44 and far_box['width'] >= 44, far_box
-    expect(far).to_contain_text('Вернуть оружие')
+    expect(far).to_contain_text('Вернуть: Двустволка')
+    assert far.get_attribute('data-weapon-uid') == '7'
     save_now = page.evaluate('localStorage.getItem("terra_save")')
     assert json.loads(before)['save'] == save_now
     page.screenshot(path=str(out / 'return-disabled-840.png'), animations='disabled')
