@@ -111,6 +111,18 @@ if heads != 1:
 
 def classic_source(path):
     source = (PLAY / path).read_text(encoding='utf-8')
+    if path == 'ui/camp-fieldbook.js':
+        source, count = re.subn(
+            r'/\* companion-card-loader \*/.*?/\* /companion-card-loader \*/\n',
+            '', source, count=1, flags=re.S)
+        if count != 1:
+            raise ValueError('Companion card loader was not found in camp-fieldbook.js')
+        css = (PLAY / 'ui/companion-card.css').read_text(encoding='utf-8')
+        js = (PLAY / 'ui/companion-card.js').read_text(encoding='utf-8')
+        source += ('\n;(function(){var st=document.createElement("style");st.textContent='
+                   + json_script(css) + ';document.head.append(st);'
+                   + 'var sc=document.createElement("script");sc.textContent='
+                   + json_script(js) + ';document.head.append(sc);})();')
     if path == 'ui/camp-navigation.js':
         # Camp add-ons are dynamically injected by the online camp script.
         source, count = re.subn(

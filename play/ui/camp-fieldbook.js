@@ -1,4 +1,9 @@
 /* Полевой альбом: реальные жители, штатные кнопки и данные лагеря. */
+/* companion-card-loader */
+{ const base = document.currentScript?.src || new URL('ui/', location.href);
+  const s = document.createElement('script'); s.src = new URL('companion-card.js', base).href; document.head.append(s);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('companion-card.css', base).href; document.head.append(l); }
+/* /companion-card-loader */
 (() => {
   'use strict';
   const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls;if(text!=null)n.textContent=text;return n;};
@@ -95,8 +100,6 @@
         let count=radio.querySelector('.fbFileCount');if(!count){count=el('span','fbFileCount');count.setAttribute('aria-hidden','true');radio.querySelector('.dossierDial')?.after(count);}
         const nums=radio.querySelector('.dossierDial')?.textContent.match(/\d+/g)||[],text=nums.length>1?nums[0].padStart(2,'0')+' / '+nums[1].padStart(2,'0'):nums[0]||'0';if(count.textContent!==text)count.textContent=text;
       }
-      const companion=root.querySelector(':scope > .campCompanion');
-      if(companion){const fold=el('details','fbCompanionFold');fold.append(el('summary','','Вылазка и развитие'));companion.before(fold);fold.append(companion);}
     }
     function blueprints(root){
       const grid=root.querySelector(':scope > .campGrid');
@@ -138,6 +141,7 @@
           if(meta.textContent!==text)meta.textContent=text;
           body.dataset.fieldbookView=tab;
           if(root){if(tab==='overview')home(root);if(tab==='settlers'){roster(root);if(root.querySelector('.residentIdentityHead'))dossier(root);}if(tab==='build')blueprints(root);if(tab==='defense')perimeter();}
+          window.terraCompanionCard?.paint();
         }
       }catch(e){console.error('[camp-fieldbook]',e);}
       observer.takeRecords();observer.observe(body,{childList:true,subtree:true});
