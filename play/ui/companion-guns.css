@@ -1,0 +1,17 @@
+/* Строка ствола в бумажной карточке лагеря: одна кнопка на ствол, не ниже 44px. */
+#campPanel .campCompanion .companionEquipment {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#campPanel .campCompanion .companionEquipment .companionActions {
+  grid-template-columns: minmax(0, 1fr);
+}
+#campPanel .campCompanion .companionEquipment .companionActions button {
+  min-width: 44px;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+#campPanel .campCompanion .companionEquipment .companionActions button:focus-visible {
+  outline: 2px solid #8c6a3a;
+  outline-offset: 2px;
+}
