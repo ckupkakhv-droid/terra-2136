@@ -104,7 +104,8 @@
 #campPanel.fieldbook .fbWarning { position:absolute;top:-10px;right:-4px;color:#552b15;background-image:var(--fb-brass);padding:5px 10px;font:900 24px/1 var(--fb-serif);transform:rotate(8deg); }
 #campPanel.fieldbook .fbCardOrder { margin-top:auto;padding-top:8px;border-top:1px solid #85684477; }
 #campPanel.fieldbook .fbCardOrder > summary { text-align:center;cursor:pointer;min-height:44px;display:grid;place-items:center;font:700 12px var(--fb-serif);color:#674a2e; }
-#campPanel.fieldbook .fbCardOrder button { width:100%;color:#412d19;background:#f0dfbd;border-color:#947046; }
+#campPanel.fieldbook .fbCardOrder button { width:100%;min-height:48px;color:#412d19;background:#f0dfbd;border-color:#947046; }
+#campPanel.fieldbook .fbCardOrder .residentOrderReason { display:block;margin:6px 0 0;color:#6d3224;font:13px/1.35 var(--fb-serif);overflow-wrap:anywhere; }
 #campPanel.fieldbook .opsRoster > .campFold { margin-top:24px; }
 #campPanel.fieldbook .opsRoster > .campFold > summary { background-image:var(--fb-brass);border:2px solid #b88a49;padding:14px;text-align:center;color:#342313;min-height:56px;font:900 21px/1.1 var(--fb-stamp);box-shadow:0 3px 0 #4a2e15; }
 #campPanel.fieldbook .opsRosterEmpty .opsEmptyRoster { background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border-radius:6px;box-shadow:0 5px 0 #87603c,0 10px 15px #0008; }
