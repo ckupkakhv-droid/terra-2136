@@ -1,0 +1,185 @@
+{
+  "views": [
+    {
+      "viewport": [
+        1382,
+        964
+      ],
+      "home": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "roster": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "dossier": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "plans": {
+        "width": 1090,
+        "scroll": 1090,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "home": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "roster": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "dossier": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "plans": {
+        "width": 370,
+        "scroll": 370,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "home": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "roster": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "dossier": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "plans": {
+        "width": 300,
+        "scroll": 300,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "home": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "roster": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "dossier": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      },
+      "plans": {
+        "width": 818,
+        "scroll": 818,
+        "headAbove": true,
+        "footerBelow": true,
+        "escaped": []
+      }
+    }
+  ],
+  "badges": [
+    {
+      "label": "Жители рядом · 6, Свободен",
+      "rect": {
+        "x": 171,
+        "y": 371.765625,
+        "width": 48,
+        "height": 48,
+        "top": 371.765625,
+        "right": 219,
+        "bottom": 419.765625,
+        "left": 171
+      },
+      "nameClipped": true
+    },
+    {
+      "label": "Жители рядом · 2, Свободен",
+      "rect": {
+        "x": 233.640625,
+        "y": 371.765625,
+        "width": 48,
+        "height": 48,
+        "top": 371.765625,
+        "right": 281.640625,
+        "bottom": 419.765625,
+        "left": 233.640625
+      },
+      "nameClipped": true
+    },
+    {
+      "label": "Лаборатория, не построено",
+      "rect": {
+        "x": 313.75,
+        "y": 219.203125,
+        "width": 48,
+        "height": 48,
+        "top": 219.203125,
+        "right": 361.75,
+        "bottom": 267.203125,
+        "left": 313.75
+      },
+      "nameClipped": true
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,241 @@
+/* Кожа, бумага, фотокарточки и рабочие чертежи. Все надписи остаются живыми. */
+:root { --terra-camp-paper:url('../assets/ui/camp/paper.webp');--terra-camp-leather:url('../assets/ui/camp/leather.webp');--terra-camp-brass:url('../assets/ui/camp/brass.webp'); }
+#campPanel.fieldbook {
+  --fb-paper:var(--terra-camp-paper);--fb-blue:url('../assets/ui/camp/blueprint.webp');
+  --fb-leather:var(--terra-camp-leather);--fb-brass:var(--terra-camp-brass);
+  --fb-ink:#342313;--fb-light:#ecd1a0;
+  --fb-serif:Georgia,'DejaVu Serif',serif;--fb-stamp:'DejaVu Serif',Georgia,serif;
+}
+#campPanel.fieldbook .win { display:flex;flex-direction:column;width:min(1120px,calc(100vw - 24px));height:min(860px,calc(100dvh - 24px));max-height:calc(100dvh - 24px);padding:14px;background-image:linear-gradient(#100f0ab8,#100f0a8c),var(--fb-leather);background-color:#211d12;background-size:100% 100%,512px;border:1px solid #927344;border-radius:12px;box-shadow:inset 0 0 0 4px #0b0a0877,0 12px 45px #000b; }
+#campPanel.fieldbook .win > * { order:0;grid-column:auto;grid-row:auto; }
+#campPanel.fieldbook .win > h2 { order:0; }
+#campPanel.fieldbook .win > .fbMeta { order:1; }
+#campPanel.fieldbook #campTabs { order:2; }
+#campPanel.fieldbook #campBody { order:3; }
+#campPanel.fieldbook .win > .panelFoot { order:4; }
+#campPanel.fieldbook h2 { display:flex;align-items:center;gap:12px;min-height:52px;flex:none;border-bottom:2px solid #82613b;margin:0;padding:0 0 8px; }
+#campPanel.fieldbook h2 > span:not(.fbHeading) { display:none; }
+#campPanel.fieldbook .fbHeading { flex:1;font:900 clamp(18px,3vw,30px)/1.1 var(--fb-stamp);letter-spacing:.05em;color:var(--fb-light); }
+#campPanel.fieldbook :is(.fbBack,.fbSections,.x) { width:48px;height:48px;min-width:48px;padding:0;background:none;color:var(--fb-light);border:0;clip-path:none;font:700 36px/1 var(--fb-serif);border-radius:50%; }
+#campPanel.fieldbook .fbSections { font-size:24px; }
+#campPanel.fieldbook .fbBack:disabled { visibility:hidden; }
+#campPanel.fieldbook .fbMeta { display:block;flex:none;color:#c9b38c;font:12px/1.5 var(--desk-type,monospace);padding:8px 2px; }
+#campPanel.fieldbook #campTabs { flex:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0 0 8px;gap:4px; }
+#campPanel.fieldbook #campTabs[hidden] { display:none!important; }
+#campPanel.fieldbook #campTabs button { min-width:0;min-height:48px;white-space:normal; }
+#campPanel.fieldbook #campBody { flex:1;min-height:0;width:100%;padding:8px 4px 14px;background:transparent;overflow:auto; }
+#campPanel.fieldbook .panelFoot { flex:none;display:flex;gap:16px;justify-content:space-between;align-items:center;margin:0;padding:10px 0 0;border-top:1px solid #8a693e; }
+#campPanel.fieldbook .panelFoot > span { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+#campPanel.fieldbook :is(.panelFoot > button,.fbChangeJob,.supplyActions [data-supply-assign]) { background-image:linear-gradient(#ffc76622,#6b390911),var(--fb-brass);background-size:auto,256px;color:#2c1d0c;border:2px solid #b78b4d;border-radius:8px;box-shadow:inset 0 0 0 2px #ffe1a36b,0 3px 0 #38220e,0 5px 8px #0007;font:900 17px/1.2 var(--fb-stamp);min-height:52px;padding:10px 22px;clip-path:none; }
+#campPanel.fieldbook .panelFoot > [data-close] { min-width:200px; }
+#campPanel.fieldbook .panelFoot > .fbMore { background-image:var(--fb-leather);color:var(--fb-light); }
+#campPanel.fieldbook .panelFoot > .fbPauseInfo { width:44px;min-width:44px;min-height:44px;height:48px;padding:0;border:1px dashed #a2875b;background:none;box-shadow:none;color:var(--fb-light);font:700 20px/1 var(--fb-serif); }
+#campPanel.fieldbook .fbPhoto { background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important; }
+#campPanel.fieldbook .fbFace0 { background-image:url('../assets/ui/camp/portrait-01.webp')!important; }
+#campPanel.fieldbook .fbFace1 { background-image:url('../assets/ui/camp/portrait-02.webp')!important; }
+#campPanel.fieldbook .fbFace2 { background-image:url('../assets/ui/camp/portrait-03.webp')!important; }
+#campPanel.fieldbook .fbFace3 { background-image:url('../assets/ui/camp/portrait-04.webp')!important; }
+#campPanel.fieldbook .fbFace4 { background-image:url('../assets/ui/camp/portrait-05.webp')!important; }
+#campPanel.fieldbook .fbFace5 { background-image:url('../assets/ui/camp/portrait-06.webp')!important; }
+#campPanel.fieldbook .fbFace6 { background-image:url('../assets/ui/camp/portrait-07.webp')!important; }
+#campPanel.fieldbook .fbFace7 { background-image:url('../assets/ui/camp/portrait-08.webp')!important; }
+#campPanel.fieldbook .fbPhoto > span { visibility:hidden; }
+#campPanel.fieldbook :is(button,summary,input):focus-visible { outline:3px solid #ffd489;outline-offset:2px; }
+
+/* Главная папка: снабжение и три крупных входа. Исходный журнал раскрывается ниже. */
+#campPanel.fieldbook .fbHomeBoard { display:grid;gap:20px; }
+#campPanel.fieldbook .fbHomeBoard .campSupply { position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;padding:16px 20px;background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border:0;border-radius:4px;box-shadow:0 5px 9px #0008; }
+#campPanel.fieldbook .fbHomeBoard .campSupply > strong { display:none; }
+#campPanel.fieldbook .fbHomeBoard .supplyRows { grid-template-columns:1fr;gap:5px; }
+#campPanel.fieldbook .fbHomeBoard .supplyResource { display:flex;flex-direction:row;align-items:center;gap:12px;border:0;padding:0; }
+#campPanel.fieldbook .fbHomeBoard .supplyResource .supplyName { min-width:80px; }
+#campPanel.fieldbook .fbHomeBoard .supplyResource :is(strong,b) { font:800 20px/1.3 var(--fb-serif);color:var(--fb-ink); }
+#campPanel.fieldbook .fbHomeBoard .supplyResource b { white-space:nowrap; }
+#campPanel.fieldbook .fbHomeBoard .supplyResource small { display:none; }
+#campPanel.fieldbook .fbHomeBoard .supplyResource[data-urgent=true] b { color:#8a2f22;border-bottom:2px solid #8a2f22; }
+#campPanel.fieldbook .fbHomeBoard .supplyActions { align-self:center;grid-column:2;grid-row:1; }
+#campPanel.fieldbook .fbHomeBoard .supplyActions > :not([data-supply-assign]) { display:none; }
+#campPanel.fieldbook .fbHomeBoard .supplyActions [data-supply-assign] { font-size:16px;padding:10px 16px; }
+#campPanel.fieldbook .fbSupplyRules { grid-column:1/-1;border-top:1px solid #7e603955;padding-top:5px; }
+#campPanel.fieldbook .fbSupplyRules summary { color:#65452c;font:12px/1.4 var(--fb-serif);cursor:pointer;min-height:32px; }
+#campPanel.fieldbook .fbSupplyRules small { display:block;color:#65452c;font-size:12px;margin:6px 0; }
+#campPanel.fieldbook .fbFolders { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:6px 14px 14px 4px; }
+#campPanel.fieldbook .fbFolder { position:relative;display:flex;flex-direction:column;align-items:stretch;min-width:0;min-height:310px;padding:16px 18px 24px;background-image:var(--fb-paper);background-size:100% 100%;border:1px solid #af8c56;border-radius:4px 13px 8px 4px;box-shadow:0 4px 0 #c6a271,0 7px 0 #5c4026,0 11px 18px #000b;color:var(--fb-ink);text-align:left;cursor:pointer;transform:rotate(-.6deg); }
+#campPanel.fieldbook .fbFolder-work { background-image:var(--fb-blue);color:#e7d4b4;transform:rotate(.5deg); }
+#campPanel.fieldbook .fbFolder-map { background-image:linear-gradient(#a5b27c25,#67804822),var(--fb-paper);transform:rotate(-.3deg); }
+#campPanel.fieldbook .fbFolderArt { height:180px;display:block;border:7px solid #eddbc0;box-shadow:0 3px 7px #0006;transform:rotate(-3deg);margin:0 5px 20px 0; }
+#campPanel.fieldbook .fbFolder-work .fbFolderArt { background:url('../assets/ui/camp/sawmill.webp') center/contain no-repeat;border:0;box-shadow:none;transform:none; }
+#campPanel.fieldbook .fbFolder-map .fbFolderArt { position:relative;border:1px dashed #40533c77;box-shadow:none;transform:none;background:repeating-radial-gradient(ellipse at 30% 70%,#0000 0 15px,#62784755 16px 17px,#0000 18px 28px); }
+#campPanel.fieldbook .fbFolder-map .fbFolderArt::after { content:'⚑';position:absolute;left:43%;top:24%;color:#7b3226;font-size:72px; }
+#campPanel.fieldbook .fbFolderText strong { display:block;font:900 clamp(18px,2vw,25px)/1.2 var(--fb-stamp);letter-spacing:.03em;border:2px solid #8f3d2c;color:#813523;transform:rotate(-3deg);padding:5px 8px; }
+#campPanel.fieldbook .fbFolder-work strong { border-color:#e7d4b4;color:#e7d4b4;transform:none; }
+#campPanel.fieldbook .fbFolder-map strong { color:#334b2f;border-color:#4b5d3b; }
+#campPanel.fieldbook .fbFolderText small { display:block;font:13px/1.4 var(--fb-serif);color:inherit;margin-top:12px; }
+#campPanel.fieldbook .fbFolderArrow { position:absolute;right:-10px;top:42%;background-image:var(--fb-brass);border:1px solid #9f7135;border-radius:0 10px 10px 0;box-shadow:2px 2px 3px #0007;color:#382613;font:700 45px/1 var(--fb-serif);padding:10px 4px; }
+#campPanel.fieldbook .fbOverviewDetails { margin-top:22px; }
+#campPanel.fieldbook .fbOverviewDetails > summary { padding:12px 0;min-height:48px;color:#d6bf9a;font:14px/1.4 var(--fb-serif);cursor:pointer; }
+
+/* Фотокарточки личного состава. */
+#campPanel.fieldbook .opsRoster { background:none;border:0;padding:0;color:var(--fb-light);box-shadow:none; }
+#campPanel.fieldbook .opsRosterHead { display:none; }
+#campPanel.fieldbook .opsRoster .residentFilters { background:none;border:0;gap:8px;margin:0; }
+#campPanel.fieldbook .opsRoster .residentFilters button { background-image:var(--fb-paper);background-size:100% 100%;border:0;border-radius:12px 12px 0 0;color:var(--fb-ink);min-height:52px;box-shadow:inset 0 -5px 8px #6a4b2c33;font:800 15px/1 var(--fb-serif); }
+#campPanel.fieldbook .opsRoster .residentFilters button[aria-pressed=true] { box-shadow:inset 0 -3px 0 #9c3927;background-color:#fff2d2; }
+#campPanel.fieldbook .residentFilters svg { display:none; }
+#campPanel.fieldbook .opsQuickOrder { margin:8px 0;color:var(--fb-light);border-color:#81623e; }
+#campPanel.fieldbook .opsQuickOrder > summary { color:var(--fb-light);min-height:44px; }
+#campPanel.fieldbook .opsRoster .residentSearch { margin:8px 0; }
+#campPanel.fieldbook .opsRoster .residentSearch input { background:#e6d4b31a;color:#ead2aa;border:1px solid #8e7149;padding:8px; }
+#campPanel.fieldbook .opsRoster .residentSearch input::placeholder { color:#c8b28f; }
+#campPanel.fieldbook .opsRoster .residentSearch button { color:var(--fb-light);background:none; }
+#campPanel.fieldbook .opsRoster .residentSearchStatus { color:#c8b28f; }
+#campPanel.fieldbook .opsRoster .residentRows { grid-template-columns:repeat(4,minmax(0,1fr));gap:20px; }
+#campPanel.fieldbook .opsRoster .residentRow { display:flex;flex-direction:column;position:relative;align-items:stretch;padding:12px 10px 8px;border:1px solid #a98650;border-radius:9px 5px 10px 3px;background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);box-shadow:0 3px 0 #b69664,0 6px 0 #64482b,0 10px 13px #0009; }
+#campPanel.fieldbook .opsRoster .residentRow::before { content:'';position:absolute;top:-8px;left:16px;width:11px;height:38px;border:2px solid #c6bd9a;border-radius:8px;transform:rotate(-8deg);box-shadow:1px 2px 2px #0008;z-index:1;pointer-events:none; }
+#campPanel.fieldbook .opsRoster .residentSummary { position:relative;display:flex;flex-direction:column;align-items:stretch;padding:0;gap:10px;width:100%;border:0;color:var(--fb-ink); }
+#campPanel.fieldbook .opsRoster .residentSummary .residentPortrait { width:100%;height:auto;aspect-ratio:1/1;box-sizing:border-box;border:5px solid #e8d4af;border-bottom-width:12px;border-radius:1px;box-shadow:0 3px 6px #0007;transform:rotate(-2deg);flex:none; }
+#campPanel.fieldbook .opsRoster .residentNameBlock { gap:8px; }
+#campPanel.fieldbook .opsRoster .residentNameBlock > strong { overflow:visible;font:800 21px/1.1 var(--fb-serif); }
+#campPanel.fieldbook .residentNameBlock > small { display:none; }
+#campPanel.fieldbook .opsRoster .fbProfession { align-self:flex-start;border:2px solid #893323;padding:3px 5px;color:#893323;font:900 13px/1 var(--fb-stamp);text-transform:uppercase;transform:rotate(-3deg); }
+#campPanel.fieldbook .residentNameBlock .residentBadge { background:transparent;border:0;border-top:1px solid #85684477;border-radius:0;padding:7px 0 0;color:#3d4e2f;font:700 13px/1.2 var(--fb-serif); }
+#campPanel.fieldbook .residentNameBlock .fbLegacyProfession { display:none; }
+#campPanel.fieldbook .residentSummary > .campReason { display:none; }
+#campPanel.fieldbook .fbWarning { position:absolute;top:-10px;right:-4px;color:#552b15;background-image:var(--fb-brass);padding:5px 10px;font:900 24px/1 var(--fb-serif);transform:rotate(8deg); }
+#campPanel.fieldbook .fbCardOrder { margin-top:auto;padding-top:8px;border-top:1px solid #85684477; }
+#campPanel.fieldbook .fbCardOrder > summary { text-align:center;cursor:pointer;min-height:44px;display:grid;place-items:center;font:700 12px var(--fb-serif);color:#674a2e; }
+#campPanel.fieldbook .fbCardOrder button { width:100%;color:#412d19;background:#f0dfbd;border-color:#947046; }
+#campPanel.fieldbook .opsRoster > .campFold { margin-top:24px; }
+#campPanel.fieldbook .opsRoster > .campFold > summary { background-image:var(--fb-brass);border:2px solid #b88a49;padding:14px;text-align:center;color:#342313;min-height:56px;font:900 21px/1.1 var(--fb-stamp);box-shadow:0 3px 0 #4a2e15; }
+#campPanel.fieldbook .opsRosterEmpty .opsEmptyRoster { background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);border-radius:6px;box-shadow:0 5px 0 #87603c,0 10px 15px #0008; }
+#campPanel.fieldbook .opsRosterEmpty .opsRecruit > summary { background-image:var(--fb-brass);background-size:256px;border:1px solid #97703f;color:var(--fb-ink);font-family:var(--fb-stamp); }
+
+/* Разворот личного дела: фото, потребности, назначение. Приказы по запросу. */
+#campPanel.fieldbook .campResidents.dossier { display:grid;grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr);gap:16px 28px;padding:24px;color:var(--fb-ink);background-image:var(--fb-paper);background-size:100% 100%;border-radius:10px;box-shadow:0 5px 0 #bc9c6a,0 9px 0 #5e442a,0 12px 20px #0009; }
+#campPanel.fieldbook .dossier > * { order:0;min-width:0; }
+#campPanel.fieldbook .dossier > [data-camp-back] { grid-column:1/-1;width:auto;margin:0;background:none;color:#583d25;border:0;box-shadow:none;min-height:44px;padding:0;text-align:left; }
+#campPanel.fieldbook .dossier .residentIdentityHead { order:0;grid-column:1;grid-row:2/5;display:flex;flex-direction:column;margin:0;padding:0;gap:20px; }
+#campPanel.fieldbook .dossier .residentIdentityHead .residentPortrait { width:min(100%,280px);height:auto;aspect-ratio:1/1.1;border:9px solid #eadbbd;border-bottom-width:23px;box-sizing:border-box;padding:0; }
+#campPanel.fieldbook .dossier .residentIdentityInfo h3 { font:800 32px/1.1 var(--fb-serif); }
+#campPanel.fieldbook .dossier .residentIdentityHead .residentBadge { font:900 17px var(--fb-stamp); }
+#campPanel.fieldbook .dossier .dossierStamp { display:none; }
+#campPanel.fieldbook .dossier .residentIdentityHead .deskInfo { top:0;right:0; }
+#campPanel.fieldbook .dossier > .dossierNeeds { grid-column:2;grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px;align-self:start;margin:0;padding:14px 0 20px;border-bottom:1px solid #785b3977; }
+#campPanel.fieldbook .dossier .dossierNeed { grid-template-columns:24px minmax(0,1fr);gap:8px; }
+#campPanel.fieldbook .dossier .dossierNeedName { font:700 17px var(--fb-serif); }
+#campPanel.fieldbook .dossier .dossierNeed .dossierBar { grid-column:2;height:12px; }
+#campPanel.fieldbook .dossier .dossierNeed b { display:none; }
+#campPanel.fieldbook .dossier .dossierNeed:last-child { grid-column:1/-1; }
+#campPanel.fieldbook .dossier > .fbAssignment { grid-column:2;grid-row:3;align-self:start;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;padding:12px 0 24px;border-bottom:1px solid #785b3977; }
+#campPanel.fieldbook .fbAssignment small { display:block;color:#66492c;font:14px var(--fb-serif); }
+#campPanel.fieldbook .fbAssignmentStamp { display:block;border:3px double #53633d;color:#3e5330;padding:6px 12px;margin:12px 0;font:900 22px/1.2 var(--fb-stamp);text-transform:uppercase;transform:rotate(-3deg); }
+#campPanel.fieldbook .fbActivity { font:700 14px var(--fb-serif); }
+#campPanel.fieldbook .fbChangeJob::before { content:'⚒︎';margin-right:6px;font-size:22px; }
+#campPanel.fieldbook .dossier > :is(.campJobs,.dossierOrderTitle) { display:none; }
+#campPanel.fieldbook .dossier.fbChoosingJob > :is(.campJobs,.dossierOrderTitle) { display:grid;grid-column:1/-1; }
+#campPanel.fieldbook .dossier.fbChoosingJob > .dossierOrderTitle { grid-row:5; }
+#campPanel.fieldbook .dossier.fbChoosingJob > .campJobs { grid-row:6;margin-top:0; }
+#campPanel.fieldbook .dossier.fbChoosingJob > .dossierRadio { grid-row:7; }
+#campPanel.fieldbook .dossier > .fbCompanionFold { grid-column:2;grid-row:4;align-self:start;border-bottom:1px solid #785b3977; }
+#campPanel.fieldbook .fbCompanionFold > summary { min-height:48px;cursor:pointer;padding:12px 0;font:700 16px var(--fb-serif);color:#65472a; }
+#campPanel.fieldbook .fbCompanionFold > .campCompanion { color:#342313;background:#f6e8c477;border:1px dashed #8a704955; }
+#campPanel.fieldbook .dossier > .dossierRadio { order:0;position:static;margin:0;box-shadow:none;border-bottom:0;grid-column:1/-1;grid-row:5;display:grid;grid-template-columns:70px 58px minmax(0,100px) 70px;align-items:center;justify-content:center;gap:22px;padding:20px 0 0;border-top:1px solid #785b3977;background:none;color:#3f2d1b; }
+#campPanel.fieldbook .dossier .dossierStep { background:none;color:#5d4025;border:1px solid #97764a;box-shadow:none;min-height:48px; }
+#campPanel.fieldbook .dossier .dossierDial { position:absolute;width:1px;height:1px;min-height:0;padding:0;overflow:hidden;clip-path:inset(50%); }
+#campPanel.fieldbook .fbFileCount { font:700 15px/1.3 var(--desk-type,monospace);text-align:center; }
+#campPanel.fieldbook .fbCurrentPhoto { display:block;width:58px;height:68px;border:4px solid #e9d9bb;box-shadow:0 2px 4px #0006; }
+
+/* Чертежи: настоящие цены, состояния и кнопки улучшений. */
+#campPanel.fieldbook .blueprints { background-image:var(--fb-blue);background-size:512px;padding:12px;border:2px solid #947a4f;border-radius:12px; }
+#campPanel.fieldbook .blueprints .deskTags { background-image:var(--fb-leather);border:0; }
+#campPanel.fieldbook .blueprints .deskTag { background-image:var(--fb-paper);background-size:100% 100%;color:var(--fb-ink);box-shadow:0 4px 5px #0006; }
+#campPanel.fieldbook .blueprints .campGrid { grid-template-columns:repeat(4,minmax(0,1fr));gap:16px; }
+#campPanel.fieldbook .blueprints .campCard.bp { display:flex;flex-direction:column;gap:8px;background-image:var(--fb-blue);background-size:100% 100%;border:1px solid #bba67d;border-radius:10px 3px 8px 3px;padding:14px;box-shadow:0 3px 0 #796244,0 7px 9px #0009; }
+#campPanel.fieldbook .blueprints .bp:has(.fbBlueprintArt) > .campIcon { display:none; }
+#campPanel.fieldbook .blueprints .bp > strong { font:900 18px/1.2 var(--fb-stamp);text-transform:uppercase; }
+#campPanel.fieldbook .fbBlueprintArt { height:160px;background:center/contain no-repeat;grid-column:1/-1; }
+#campPanel.fieldbook .fbBlueprintArt[data-plan=sawmill] { background-image:url('../assets/ui/camp/sawmill.webp'); }
+#campPanel.fieldbook .fbBlueprintArt[data-plan=generator] { background-image:url('../assets/ui/camp/generator.webp'); }
+#campPanel.fieldbook .fbBlueprintArt[data-plan=pump] { background-image:url('../assets/ui/camp/pump.webp'); }
+#campPanel.fieldbook .fbBlueprintArt[data-plan=watch] { background-image:url('../assets/ui/camp/watch.webp'); }
+#campPanel.fieldbook .blueprints .bpStamp { font:900 13px var(--fb-stamp); }
+#campPanel.fieldbook .blueprints .bp[data-cost-sig] .campButton { min-height:48px; }
+#campPanel.fieldbook .fbOtherPlans { margin:16px 0; }
+#campPanel.fieldbook .fbOtherPlans > summary { min-height:48px;padding:12px 4px;cursor:pointer;color:#ead9b6;font:700 16px var(--fb-serif); }
+
+@media(max-width:900px) {
+ #campPanel.fieldbook .opsRoster .residentRows { grid-template-columns:repeat(2,minmax(0,1fr));gap:18px; }
+ #campPanel.fieldbook .blueprints .campGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #campPanel.fieldbook .fbFolders { grid-template-columns:1fr; }
+ #campPanel.fieldbook .fbFolder { min-height:185px;display:grid;grid-template-columns:150px minmax(0,1fr);align-items:center;gap:22px;padding:15px 24px 20px 14px; }
+ #campPanel.fieldbook .fbFolderArt { height:150px;margin:0; }
+ #campPanel.fieldbook .fbFolder-work .fbFolderArt { height:150px; }
+ #campPanel.fieldbook .fbFolderText strong { font-size:25px; }
+}
+@media(max-width:600px) {
+ #campPanel.fieldbook { padding:0; }
+ #campPanel.fieldbook .win { width:100%;height:100dvh;max-height:100dvh;padding:8px 10px 10px;border:0;border-radius:0; }
+ #campPanel.fieldbook h2 { gap:5px;min-height:48px; }
+ #campPanel.fieldbook .fbHeading { font-size:20px; }
+ #campPanel.fieldbook :is(.fbBack,.fbSections,.x) { width:44px;height:44px;min-width:44px; }
+ #campPanel.fieldbook .fbMeta { font-size:10px;padding:6px 0; }
+ #campPanel.fieldbook #campBody { padding:8px 3px 14px; }
+ #campPanel.fieldbook #campTabs { grid-template-columns:repeat(3,minmax(0,1fr)); }
+ #campPanel.fieldbook .fbHomeBoard { gap:18px; }
+ #campPanel.fieldbook .fbHomeBoard .campSupply { grid-template-columns:1fr;padding:14px; }
+ #campPanel.fieldbook .fbHomeBoard .supplyRows { grid-template-columns:repeat(2,minmax(0,1fr));gap:8px; }
+ #campPanel.fieldbook .fbHomeBoard .supplyResource { flex-wrap:wrap;gap:4px 8px; }
+ #campPanel.fieldbook .fbHomeBoard .supplyResource .supplyName { min-width:0; }
+ #campPanel.fieldbook .fbHomeBoard .supplyResource :is(strong,b) { font-size:17px; }
+ #campPanel.fieldbook .fbHomeBoard .supplyActions { grid-column:1;grid-row:auto; }
+ #campPanel.fieldbook .fbFolder { grid-template-columns:115px minmax(0,1fr);gap:12px;min-height:160px;padding:14px 20px 20px 12px; }
+ #campPanel.fieldbook .fbFolderArt { height:125px; }
+ #campPanel.fieldbook .fbFolderText strong { font-size:22px;padding:5px; }
+ #campPanel.fieldbook .fbFolderText small { font-size:12px; }
+ #campPanel.fieldbook .fbFolder-map { grid-template-columns:1fr; }
+ #campPanel.fieldbook .fbFolder-map .fbFolderText { grid-row:1; }
+ #campPanel.fieldbook .fbFolder-map .fbFolderArt { grid-row:2;height:110px; }
+ #campPanel.fieldbook .panelFoot > [data-close] { min-width:0;flex:1; }
+ #campPanel.fieldbook .panelFoot > button { padding:10px 16px;font-size:18px; }
+ #campPanel.fieldbook .opsRoster .residentFilters { gap:4px;grid-template-columns:repeat(4,minmax(0,1fr)); }
+ #campPanel.fieldbook .opsRoster .residentFilters button { font-size:11px;padding:6px 3px;gap:4px; }
+ #campPanel.fieldbook .opsRoster .residentFilters b { font-size:15px; }
+ #campPanel.fieldbook .opsRoster .residentRows { gap:15px 12px; }
+ #campPanel.fieldbook .opsRoster .residentRow { padding:10px 7px 6px; }
+ #campPanel.fieldbook .opsRoster .residentNameBlock > strong { font-size:18px; }
+ #campPanel.fieldbook .opsRoster .fbProfession { font-size:11px;padding:3px; }
+ #campPanel.fieldbook .residentNameBlock .residentBadge { font-size:12px; }
+ #campPanel.fieldbook .campResidents.dossier { grid-template-columns:1fr;padding:16px;gap:16px; }
+ #campPanel.fieldbook .dossier .residentIdentityHead { grid-column:1;grid-row:auto;display:grid;grid-template-columns:minmax(100px,.8fr) minmax(0,1fr);gap:15px;align-items:center; }
+ #campPanel.fieldbook .dossier .residentIdentityInfo h3 { font-size:24px; }
+ #campPanel.fieldbook .dossier .residentIdentityHead .residentBadge { font-size:13px; }
+ #campPanel.fieldbook .dossier .residentIdentityHead .deskInfo { top:-8px;right:-8px;width:44px;height:44px;min-width:44px; }
+ #campPanel.fieldbook .dossier > :is(.dossierNeeds,.fbAssignment,.fbCompanionFold,.dossierRadio) { grid-column:1;grid-row:auto; }
+ #campPanel.fieldbook .dossier .dossierNeedName { font-size:15px; }
+ #campPanel.fieldbook .dossier .dossierRadio { grid-template-columns:44px 44px minmax(0,1fr) 44px;gap:8px; }
+ #campPanel.fieldbook .dossier .dossierStep { min-width:44px;width:44px;padding:0;font-size:0; }
+ #campPanel.fieldbook .dossier .dossierStep::before,#campPanel.fieldbook .dossier .dossierStep::after { font-size:18px; }
+ #campPanel.fieldbook .fbCurrentPhoto { width:44px;height:52px; }
+ #campPanel.fieldbook .blueprints { padding:8px; }
+ #campPanel.fieldbook .blueprints .campCard.bp { padding:10px 8px; }
+ #campPanel.fieldbook .blueprints .bp > strong { font-size:14px; }
+ #campPanel.fieldbook .fbBlueprintArt { height:125px; }
+}
+@media(orientation:landscape) and (max-height:520px) {
+ #campPanel.fieldbook .win { width:100%;height:100dvh;max-height:100dvh;padding:5px 12px; }
+ #campPanel.fieldbook h2 { min-height:44px;padding-bottom:3px; }
+ #campPanel.fieldbook .fbMeta { position:absolute;right:180px;top:17px;padding:0;max-width:40%;font-size:10px; }
+ #campPanel.fieldbook .fbHeading { font-size:21px; }
+ #campPanel.fieldbook .panelFoot { padding:5px 0; }
+ #campPanel.fieldbook .panelFoot > button { min-height:44px;padding:6px 20px;font-size:15px; }
+ #campPanel.fieldbook .fbFolders { grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+ #campPanel.fieldbook .fbFolder { display:flex;min-height:220px;padding:12px;gap:8px; }
+ #campPanel.fieldbook .fbFolderArt { height:110px;width:100%; }
+ #campPanel.fieldbook .fbFolderText strong { font-size:18px; }
+ #campPanel.fieldbook .opsRoster .residentRows { grid-template-columns:repeat(4,minmax(0,1fr));gap:14px; }
+ #campPanel.fieldbook .opsRoster .residentNameBlock > strong { font-size:17px; }
+ #campPanel.fieldbook .campResidents.dossier { grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr);padding:16px; }
+ #campPanel.fieldbook .blueprints .campGrid { grid-template-columns:repeat(4,minmax(0,1fr));gap:12px; }
+ #campPanel.fieldbook .fbBlueprintArt { height:130px; }
+}
+@media(prefers-reduced-motion:reduce) { #campPanel.fieldbook * { scroll-behavior:auto; } }

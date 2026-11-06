@@ -20,9 +20,13 @@ with sync_playwright() as p:
     page.locator('#skip').click()
     page.locator('#bCamp').click()
     page.wait_for_function('!!window.terraCampUI')
+    def switch(tab):
+        if page.locator('#campTabs').get_attribute('hidden') is not None:
+            page.locator('.fbSections').click()
+        page.locator('#campTabs [data-camp-tab="'+tab+'"]').click()
     page.evaluate("game.p.camp.rep=1000;game.camp.recruit({id:'qa-info'})")
     before = page.evaluate('JSON.stringify(game.p.camp)')
-    page.locator('#campTabs [data-camp-tab="settlers"]').click()
+    switch('settlers')
     page.locator('[data-resident="qa-info"]').click()
     source = page.locator('.dossier .deskInfo')
     source.focus()
@@ -85,7 +89,7 @@ with sync_playwright() as p:
     expect(source).to_be_focused()
 
     # Building sheets use the same close and restore path.
-    page.locator('#campTabs [data-camp-tab="build"]').click()
+    switch('build')
     building = page.locator('.bp .deskInfo').first
     building.focus()
     page.keyboard.press('Enter')
@@ -107,7 +111,7 @@ with sync_playwright() as p:
     expect(page.locator('.campInfoBackdrop')).to_have_count(0)
     assert page.evaluate('game.state') == 'play'
     page.locator('#bCamp').click()
-    page.locator('#campTabs [data-camp-tab="overview"]').click()
+    switch('overview')
     assert page.evaluate('game.ui.campPanel.tab') == 'overview'
     assert not errors, errors
     print('PASS camp info: 4 viewports, focus trap/return, sticky close, backdrop, buildings, native refresh and panel cleanup; JS0')

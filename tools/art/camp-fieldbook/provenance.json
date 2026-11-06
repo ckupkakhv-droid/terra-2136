@@ -1,0 +1,84 @@
+{
+  "generator": "OpenAI image generation",
+  "date": "2026-11-06",
+  "sources": {
+    "materials": {
+      "file": "exec-8a587147-0637-489d-b383-c08df6eecf5b.png",
+      "sha256": "eb6e7b7f28606d1c57aa4d02d76224ae2087ccabc4fd0470fc4f27c3176d2a70"
+    },
+    "portraits": {
+      "file": "exec-6bcde1bb-c151-4613-bc2b-1e1cedc56796.png",
+      "sha256": "bc2cbea49c431ba59fdbec358f26fde850115ce4aa70cd848f2e6a15e0037802"
+    },
+    "blueprints": {
+      "file": "exec-ce8e9eba-97c0-4d41-961a-cd3eb3f4ada7.png",
+      "sha256": "8042d040f4a491c95d34dbab15738876065f3ab87cf8f317bdafde06cc1ac518"
+    }
+  },
+  "exports": {
+    "blueprint.webp": {
+      "bytes": 19704,
+      "sha256": "7cb11392417c00e0a50455576f33420006be38dc64f6e13308a2ab70f6720bc2"
+    },
+    "brass.webp": {
+      "bytes": 33692,
+      "sha256": "81ab43c56ee0eb81d4681f36e43a926c6260e29da9e095f6c0ebe3e0d2be1445"
+    },
+    "generator.webp": {
+      "bytes": 60406,
+      "sha256": "126f49eff2e223fb3dfc0980ed863107a1397468e2f68a81677d128b27e49d6e"
+    },
+    "leather.webp": {
+      "bytes": 44150,
+      "sha256": "1e3a566e0f622519dc23438da884c67e9fcf585fd784912d33384f3da13f1945"
+    },
+    "paper.webp": {
+      "bytes": 27178,
+      "sha256": "14ecc75644447e8a20f9ba0289cba4cd219e098e2be54ea7a8b20b8fa89a73b3"
+    },
+    "portrait-01.webp": {
+      "bytes": 10822,
+      "sha256": "206e05b67e9291eb42ba079e7dd4d3c2bf14f911451266f49e2dbb5cedc8e619"
+    },
+    "portrait-02.webp": {
+      "bytes": 10388,
+      "sha256": "33194fa20773d494a46f87d9430288826da87a2990632676a38462f5875ed2e4"
+    },
+    "portrait-03.webp": {
+      "bytes": 11136,
+      "sha256": "56f167745df22a483ee2368fe3fc60435e8b06a0b22e943b6c1a0195c6b961c0"
+    },
+    "portrait-04.webp": {
+      "bytes": 10876,
+      "sha256": "601aebc653c6aa371e72a186540c9d4e7cc4378ff4b9226a52db5551f89d4823"
+    },
+    "portrait-05.webp": {
+      "bytes": 10446,
+      "sha256": "e0d407548655892bd2071cc87c04a0d25ca1188a7d13f83f3b5e36dbc65fa8f0"
+    },
+    "portrait-06.webp": {
+      "bytes": 10500,
+      "sha256": "d6decb60e4210b4b370ff5f15458cbe38c7dd2e8406f3124d0e1c41fdc6d53ed"
+    },
+    "portrait-07.webp": {
+      "bytes": 9632,
+      "sha256": "3ff5194cde9f38adb578892d33782899cea082b385e73d8010a3382bf05f1231"
+    },
+    "portrait-08.webp": {
+      "bytes": 10362,
+      "sha256": "b61e6a22f8df2fd7e92f997d31bacdb3904c5a941729b5aa41721264c720077c"
+    },
+    "pump.webp": {
+      "bytes": 76482,
+      "sha256": "b2b3b08b9b6bec729fe50ebe216ff875f2e5a9d9d7996a425fef60576e110943"
+    },
+    "sawmill.webp": {
+      "bytes": 89674,
+      "sha256": "e773965b70ba165cf86c23bfbe1de76b6e3311147bc9813a1ee516ee48f6f5a1"
+    },
+    "watch.webp": {
+      "bytes": 51612,
+      "sha256": "970951b404cee9860cd64b06738b3a2bb22fef3576415fc52630b6853dda941c"
+    }
+  }
+}

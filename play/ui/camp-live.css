@@ -77,6 +77,14 @@
   display: none !important;
 }
 
+/* Постоянно виден только один компактный знак; имя и команды — по нажатию. */
+.campLiveTag { width:48px;height:48px;min-width:48px;max-width:48px;min-height:48px;padding:10px;border:1px solid #bb9a5b;border-radius:50%;clip-path:none;align-items:center;background:#191a14ed;box-shadow:0 2px 5px #0009,inset 0 0 0 3px #76613d66; }
+.campLiveTag > :is(b,i) { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%); }
+.campLiveTag::after { content:'';position:absolute;right:0;bottom:0;width:10px;height:10px;border:2px solid #171911;border-radius:50%;background:var(--camp-live-tone); }
+.campLiveGlyph svg { display:block;width:26px;height:26px;stroke:#ecd3a5;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round; }
+.campLiveCount { position:absolute;right:-5px;top:-5px;min-width:19px;min-height:19px;padding:2px;border-radius:50%;background:#d6ae66;color:#2b2113;font:800 12px/15px sans-serif;text-align:center; }
+.campLiveCount[hidden] { display:none; }
+
 #campLiveBack {
   position: fixed;
   inset: 0;
@@ -176,6 +184,19 @@
   text-align: center;
 }
 #campLiveMenu.is-stack #campLiveNote { position: static; }
+#campLiveMenu.is-stack { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:290px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;padding:16px;border:1px solid #a28050;border-radius:10px;background-image:var(--terra-camp-paper,linear-gradient(#ead6ab,#cab080));background-size:100% 100%;color:#352716;box-shadow:0 6px 0 #6b4e2d,0 12px 24px #0009; }
+#campLiveMenu.is-stack h3 { grid-column:1/-1;margin:0;padding-right:38px;font:800 20px/1.15 Georgia,serif; }
+#campLiveMenu.is-stack .campLiveHeader { position:sticky;top:-16px;grid-column:1/-1;min-height:60px;margin:-16px -16px 0;padding:16px 58px 10px 16px;background-image:var(--terra-camp-paper,linear-gradient(#ead6ab,#cab080));background-size:100% 100%;z-index:1; }
+#campLiveMenu.is-stack .campLiveHeader h3 { padding:0; }
+#campLiveMenu.is-stack .campLiveStatus { grid-column:1/-1;display:block;padding:0 0 9px;border-bottom:1px solid #6d543766;color:#655032;font:13px/1.3 Georgia,serif; }
+#campLiveMenu.is-stack button { min-width:0;width:100%;padding:10px 8px;background:#775f3a14;border:1px solid #7f6745;color:#3a2b17;white-space:normal;font:700 14px/1.2 Georgia,serif; }
+#campLiveMenu.is-stack button span { white-space:normal; }
+#campLiveMenu.is-stack .campLiveClose { position:absolute;right:8px;top:8px;width:48px;min-width:48px;height:48px;min-height:48px;padding:0;text-align:center;justify-content:center;border-radius:50%;background:none;font-size:20px; }
+#campLiveMenu.is-stack[data-kind=group] [role=menuitem] { grid-column:1/-1; }
+#campLiveMenu.is-stack #campLiveNote { grid-column:1/-1;background:#e7d1aa;color:#853a29;border-color:#886242; }
+#campLivePreview { position:fixed;z-index:17;width:max-content;max-width:min(250px,calc(100vw - 24px));padding:12px 16px;background-image:var(--terra-camp-paper,linear-gradient(#ead6ab,#cab080));background-size:100% 100%;color:#362818;border:1px solid #a28050;border-radius:4px;box-shadow:0 4px 10px #0009;pointer-events:none; }
+#campLivePreview strong { display:block;font:800 17px/1.2 Georgia,serif; }
+#campLivePreview span { display:block;font:13px/1.3 Georgia,serif;margin-top:4px; }
 
 #campLiveAim {
   position: fixed;
@@ -239,6 +260,10 @@
   border-color: #e25b4a;
   color: #ffd0c8;
 }
+#campLivePlace button[data-act="confirm"] { align-self:center;width:88px;height:88px;min-height:88px;border:3px solid #d2aa5f;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px;background-image:var(--terra-camp-brass,linear-gradient(#fac35c,#a1742f));background-size:180px;color:#2e2111;box-shadow:inset 0 0 0 2px #f8d18b,0 4px 0 #533516,0 7px 14px #0008;font:800 13px/1.1 Georgia,serif;text-transform:uppercase; }
+#campLivePlace button[data-act="confirm"]::before { content:'⚒︎';font:32px/1 Georgia,serif; }
+#campLivePlace button[data-act="confirm"][data-valid="0"] { border-color:#c56c52;color:#5a281b; }
+#campLivePlace button[data-act="cancel"] { border-radius:6px;background-image:var(--terra-camp-leather);background-size:256px;font-family:Georgia,serif; }
 #campLivePlace button:focus-visible, #campLiveAim:focus-visible {
   outline: 2px solid #ffd091;
   outline-offset: 2px;
