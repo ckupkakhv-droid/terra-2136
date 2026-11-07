@@ -43,6 +43,12 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     return {x:game.dg.ch.cx*48+i*16+8,z:game.dg.ch.cz*48+j*16+8};
   };
   const navigation=installSewerNavigation(game,{active,pumps:()=>pumps,center,boss:()=>raphael.enemy});
+  // Прежний примитив насоса. Один и тот же вызов либо рисуется, либо сжигает
+  // тот же ГСЧ на пустой пачке, если вместо него стоит модель насоса I.
+  function paintPump(batch, shapes, x, z) {
+    batch.box(x+4,.2,z,1.4,1.3,1.2,'#567567');
+    batch.add(shapes.sph,x+4,1.6,z,.6,.16,.6,'#b78745');
+  }
   const originalDungeon = bridge.Chunk.prototype.dungeon;
   bridge.Chunk.prototype.dungeon = function(theme, ...args) {
     if (theme !== 'metro' || args[0] !== '12,-10') return originalDungeon.call(this, theme, ...args);
@@ -67,8 +73,8 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
       }
       for (const dz of [-6,6]) s.box(x,2.8,z+dz,15,.2,.25,'#343b37');
       if ([1,3].includes(k)) {
-        s.box(x+4,.2,z,1.4,1.3,1.2,'#567567');
-        s.add(bridge.shapes.sph,x+4,1.6,z,.6,.16,.6,'#b78745');
+        const detailed = k===1 && globalThis.TERRA_PUMP1?.replace(this, s, bridge.shapes, x, z, paintPump) === true;
+        if (!detailed) paintPump(s, bridge.shapes, x, z);
       }
       if (k===0) {this.ents.push({x,z:z-4,kind:'exit',name:'Лестница на поверхность'});s.box(x,.04,z-4,2,.04,2,'#8fbba2');}
       if (k>0 && k<6) this.cont(x-4,z+3,'toolbox');
@@ -247,7 +253,7 @@ export function installSewers(game, bridge = window.TERRA_SEWER_BRIDGE) {
     if(action.hidden!==(nearby===null))action.hidden=nearby===null;
   }
   const loop=game.loop;let lastUI=-Infinity;
-  game.loop=function(time){const result=loop.call(this,time);if(time-lastUI>=150){lastUI=time;updateSurfaceUI();}return result;};
+  game.loop=function(time){globalThis.TERRA_PUMP1?.frame(this);const result=loop.call(this,time);if(time-lastUI>=150){lastUI=time;updateSurfaceUI();}return result;};
   updateSurfaceUI();
   game.sewers={get pumps(){return [...pumps]},get ratCount(){return rats.count},active,openMap:mapButton.onclick};
 }
