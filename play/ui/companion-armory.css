@@ -1,0 +1,30 @@
+/* Строка склада на карточке напарника и в деле жителя. Общий альбом не перекрашивается. */
+#campPanel .ccArmory {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin-top: 4px;
+}
+#campPanel .ccArmory p,
+#campPanel .ccArmory small {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #3f2d1b;
+  font: 13px/1.3 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel .ccArmory button {
+  width: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 2px solid #6d542c;
+  background: #f6e8c4;
+  color: #342313;
+  font: 700 14px/1.2 Georgia, 'DejaVu Serif', serif;
+  white-space: normal;
+}
+#campPanel .ccArmory button:disabled {
+  border-style: dashed;
+  opacity: 1;
+}
