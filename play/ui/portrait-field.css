@@ -13,33 +13,54 @@
       url('../assets/ui/camp/scene-trail.webp') center 30% / cover no-repeat,
       #1a140e;
   }
-  #menu.contourMenu .logo {
+  /* Одна обложка: бумага титула, кожа команд, латунь одного действия, тёмный колофон. */
+  #menu.contourMenu .logo,
+  #menu.contourMenu .sub,
+  #menu.contourMenu .mbtns,
+  #menu.contourMenu .ver {
     width: min(340px, 100%);
-    margin: 0 0 4px;
-    padding: 8px 14px 2px;
-    background: url('../assets/ui/camp/paper.webp') center / cover;
-    color: #3a2414;
+    margin: 0;
+    border: 0;
+    border-left: 8px solid #3a2414;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #menu.contourMenu .logo {
+    padding: 16px 16px 0;
+    background-color: #f4e4c6;
+    background-image:
+      linear-gradient(180deg, rgba(244, 228, 198, .96), rgba(244, 228, 198, .92)),
+      url('../assets/ui/camp/paper.webp');
+    background-size: auto, cover;
+    background-position: center;
+    color: #2a160c;
     font-size: clamp(42px, 12vw, 64px);
-    letter-spacing: .08em;
+    letter-spacing: .1em;
     text-shadow: none;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
   }
   #menu.contourMenu .sub {
-    width: min(340px, 100%);
-    margin: 0 0 14px;
-    padding: 0 14px 10px;
-    background: url('../assets/ui/camp/paper.webp') center / cover;
-    color: #6a4424;
-    letter-spacing: .18em;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+    padding: 2px 16px 12px;
+    background-color: #f4e4c6;
+    background-image:
+      linear-gradient(180deg, rgba(244, 228, 198, .92), rgba(236, 216, 184, .96)),
+      url('../assets/ui/camp/paper.webp');
+    background-size: auto, cover;
+    background-position: center;
+    color: #3a2614;
+    font-size: 12px;
+    letter-spacing: .08em;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   #menu.contourMenu .mbtns {
-    width: min(340px, 100%);
     max-height: min(46dvh, 420px);
-    margin: 0;
-    padding: 10px 12px 12px;
-    background: url('../assets/ui/camp/paper.webp') center / cover;
-    box-shadow: 0 16px 32px rgba(0, 0, 0, .4);
+    padding: 12px 12px 6px;
+    background-color: #1c140e;
+    background-image:
+      linear-gradient(180deg, rgba(32, 24, 16, .9), rgba(20, 14, 10, .94)),
+      url('../assets/ui/camp/leather.webp');
+    background-size: auto, cover;
+    background-position: center;
   }
   #menu.contourMenu .btn,
   #menu.contourMenu .menuFieldTools {
@@ -49,7 +70,7 @@
     border-radius: 0;
     background: transparent;
     box-shadow: none;
-    color: #342313;
+    color: #f6ead8;
   }
   #menu.contourMenu .btn {
     min-height: 48px;
@@ -57,21 +78,38 @@
     font-size: 15px;
     letter-spacing: .06em;
   }
+  #menu.contourMenu .btn:active,
+  #menu.contourMenu .menuFieldTools > summary:active {
+    transform: none;
+    filter: brightness(1.12);
+  }
   #menu.contourMenu .btn.expeditionPrimary {
-    margin-bottom: 6px;
-    color: #2a160c;
-    background: url('../assets/ui/camp/brass.webp') center / cover;
-    box-shadow: inset 0 0 0 1px rgba(90, 54, 18, .45);
+    margin-bottom: 4px;
+    color: #24160c;
+    background-color: #f0d7a4;
+    background-image:
+      linear-gradient(180deg, rgba(240, 215, 164, .62), rgba(196, 146, 76, .4)),
+      url('../assets/ui/camp/brass.webp');
+    background-size: auto, cover;
+    background-position: center;
+    box-shadow: 0 3px 0 #5a3a18;
+  }
+  #menu.contourMenu .btn.dis {
+    color: #cbbba6;
+    background: transparent;
+    box-shadow: none;
+    opacity: 1;
   }
   #menu.contourMenu .menuFieldTools > summary {
     min-height: 48px;
-    color: #342313;
+    color: #f6ead8;
     font-size: 15px;
   }
   #menu.contourMenu .ver {
-    width: min(340px, 100%);
-    margin-top: 8px;
-    color: #ecdcc0;
+    padding: 8px 12px 10px;
+    background: #16110c;
+    color: #f3e6cf;
+    box-shadow: 0 16px 28px rgba(0, 0, 0, .45);
   }
 
   #pause .win {
@@ -104,9 +142,10 @@
 
 #fieldDock { display: none; }
 #hud.portraitField #fieldDock {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 6px;
+  align-items: stretch;
   margin-top: 6px;
   pointer-events: auto;
 }
@@ -116,14 +155,20 @@
   gap: 6px;
   min-width: 44px;
   min-height: 44px;
-  max-width: 132px;
-  padding: 4px 8px;
-  color: #342313;
-  background: url('../assets/ui/camp/paper.webp') center / cover;
-  border: 1px solid #8a6840;
-  box-shadow: 0 2px 0 rgba(42, 24, 12, .35);
-  font: 700 13px/1.2 Georgia, 'DejaVu Serif', serif;
+  max-width: none;
+  padding: 6px 8px;
+  color: #2a160c;
+  background-color: #f4e4c6;
+  background-image:
+    linear-gradient(180deg, rgba(244, 228, 198, .96), rgba(236, 216, 184, .94)),
+    url('../assets/ui/camp/paper.webp');
+  background-size: auto, cover;
+  background-position: center;
+  border: 0;
+  box-shadow: 0 2px 0 #5c4026;
+  font: 700 13px/1.15 Georgia, 'DejaVu Serif', serif;
   pointer-events: auto;
+  touch-action: manipulation;
 }
 .fieldChip[hidden] { display: none !important; }
 .fieldChip .fieldGlyph { width: 22px; height: 22px; flex: none; display: grid; place-items: center; }
@@ -131,19 +176,62 @@
 .fieldChip .fieldGlyph img { width: 22px; height: 22px; }
 .fieldChipText, .fieldTime {
   min-width: 0;
-  max-width: 7.5em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .fieldTime:empty { display: none; }
-.fieldChip.isUrgent {
-  max-width: 168px;
-  color: #fff4ef;
-  background: #6e2430 url('../assets/ui/camp/leather.webp') center / cover;
-  border-color: #e7b2a4;
+#hud.portraitField #fieldGoal { grid-column: 1; grid-row: 1; }
+#hud.portraitField #fieldGoal .fieldChipText {
+  flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
-.fieldChip.isFresh { box-shadow: inset 0 0 0 2px #e4c48f, 0 2px 0 rgba(42, 24, 12, .35); }
+#hud.portraitField #fieldPouch {
+  grid-column: 2;
+  grid-row: 1;
+  justify-content: center;
+  min-width: 64px;
+  padding-inline: 8px;
+  color: #f6ead8;
+  background: #1c140e;
+  box-shadow: 0 2px 0 #000;
+}
+#hud.portraitField #fieldPouch .fieldChipText { white-space: nowrap; }
+#hud.portraitField #fieldRadio {
+  grid-column: 3;
+  grid-row: 1;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  justify-content: center;
+  color: #f6ead8;
+  background: #1c140e;
+  box-shadow: 0 2px 0 #000;
+}
+#hud.portraitField #fieldRadio .fieldChipText { display: none; }
+#hud.portraitField #fieldAlert { grid-column: 1 / -1; }
+.fieldChip.isUrgent {
+  flex-wrap: nowrap;
+  color: #fff6f2;
+  background: #4a1822;
+  box-shadow: 0 2px 0 #2a0c12;
+}
+.fieldChip.isUrgent .fieldChipText {
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fieldChip.isUrgent .fieldTime {
+  flex: none;
+  margin-left: auto;
+  white-space: nowrap;
+  font-weight: 800;
+}
+.fieldChip.isFresh { box-shadow: inset 0 0 0 2px #e4c48f, 0 2px 0 #2a0c12; }
+.fieldChip:active { filter: brightness(1.08); }
 .fieldChip:focus-visible, #fieldSheetClose:focus-visible {
   outline: 3px solid #e4c48f;
   outline-offset: 2px;
@@ -173,9 +261,46 @@
 #hud.portraitField #zone,
 #hud.portraitField #kills { display: none !important; }
 #hud.portraitField #evHud,
-#hud.portraitField #radio {
+#hud.portraitField #radio,
+#hud.portraitField #evMini {
+  display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+#hud.portraitField #xpFeedback:not([hidden]) {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 4px 0 0;
+  padding: 3px 8px;
+  background: #14110e;
+  color: #f3e6cf;
+  text-shadow: none;
+  font-size: 12px;
+  line-height: 1.35;
+}
+#hud.portraitField #toasts {
+  left: max(8px, var(--sl));
+  right: auto;
+  width: max-content;
+  max-width: min(200px, 52vw);
+  pointer-events: none;
+  z-index: 6;
+}
+#hud.portraitField #toasts .toast:not(:last-child) { display: none; }
+#hud.portraitField .toast {
+  max-width: min(200px, 52vw);
+  background: #14110e;
+  color: #f6e7d4;
+  border: 0;
+  border-left: 3px solid #d46558;
+  border-radius: 0;
+  text-shadow: none;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.3;
+  white-space: normal;
+  animation: none;
 }
 #hud.portraitField #tr {
   position: absolute;
@@ -212,11 +337,17 @@
   flex-direction: column;
   width: 100%;
   min-height: 0;
-  padding: 12px 12px 14px;
+  padding: 12px 14px 14px 18px;
   overflow: hidden;
-  color: #342313;
-  background: url('../assets/ui/camp/paper.webp') center / cover;
-  border: 1px solid #8a6840;
+  color: #2a160c;
+  background-color: #f4e4c6;
+  background-image:
+    linear-gradient(180deg, rgba(244, 228, 198, .96), rgba(236, 216, 184, .94)),
+    url('../assets/ui/camp/paper.webp');
+  background-size: auto, cover;
+  background-position: center;
+  border: 0;
+  border-left: 8px solid #3a2414;
   box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
   font: 16px/1.45 Georgia, 'DejaVu Serif', serif;
 }
@@ -230,23 +361,46 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  color: #6a341c;
+  color: #2a160c;
   font-size: 20px;
-  letter-spacing: .04em;
+  letter-spacing: .02em;
   overflow-wrap: anywhere;
 }
 #fieldSheetClose {
   flex: none;
   width: 44px;
   height: 44px;
-  color: #342313;
-  background: url('../assets/ui/camp/brass.webp') center / cover;
-  border: 1px solid #8a6840;
+  color: #24160c;
+  background-color: #f0d7a4;
+  background-image:
+    linear-gradient(180deg, rgba(240, 215, 164, .7), rgba(196, 146, 76, .45)),
+    url('../assets/ui/camp/brass.webp');
+  background-size: auto, cover;
+  background-position: center;
+  border: 0;
+  box-shadow: 0 2px 0 #5a3a18;
   font: 700 22px/1 Georgia, serif;
+}
+#fieldSheet .fieldStamp {
+  margin: 8px 0 0;
+  color: #6e2e22;
+  font-weight: 800;
 }
 #fieldSheetBody {
   overflow: auto;
   min-height: 0;
   touch-action: pan-y;
 }
-#fieldSheetBody p { margin: 8px 0 0; overflow-wrap: anywhere; }
+#fieldSheetBody p { margin: 8px 0 0; overflow-wrap: anywhere; color: #2a160c; }
+@media (prefers-reduced-motion: reduce) {
+  #hud.portraitField *,
+  #menu.contourMenu *,
+  #fieldSheet * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+  #menu.contourMenu .btn:active,
+  .fieldChip:active { filter: none; }
+}
