@@ -157,7 +157,8 @@
     if (window.terraCampFieldbook) {
       const camp = game()?.p?.camp;
       const hurt = !!(s.wounded || s.status === 'injured' || s.injuredUntil > (camp?.sim?.tick || 0));
-      return {text:window.terraCampFieldbook.activity(s, camp),tone:hurt?'bad':s.status==='blocked'||s.trip?.amount?'warn':s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
+      const enRoute = !!window.terraCampFieldbook.buildEnRoute?.(s);
+      return {text:window.terraCampFieldbook.activity(s, camp),tone:hurt?'bad':enRoute||s.status==='blocked'||s.trip?.amount||s.status==='travel'?'warn':s.job==='idle'?'idle':'ok'};
     }
     if (s.wounded || s.status === 'injured') return { text: 'ранен', tone: 'bad' };
     if (s.job === 'idle' || s.status === 'rest') return { text: 'отдых', tone: 'idle' };

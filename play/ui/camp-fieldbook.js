@@ -10,6 +10,21 @@
   const professions={scientist:'Учёный',engineer:'Инженер',medic:'Медик',scout:'Разведчик',builder:'Строитель',gatherer:'Собиратель',hauler:'Грузчик',guard:'Боец',farmer:'Фермер',crafter:'Мастер',gunsmith:'Оружейник',trader:'Торговец'};
   const jobs={'gather:wood':'Дерево','gather:scrap':'Лом','gather:water':'Вода','gather:food':'Еда',idle:'Отдых',build:'Стройка',repair:'Ремонт',craft:'Ремесло',operate:'Генератор',guard:'Охрана',patrol:'Патруль',scout:'Разведка'};
   const cfg=()=>window.TERRA_DEFENSE_CTX?.B?.camp;
+  // Обычная стройка и ремонт пишут status=working ещё на подходе.
+  // Место уже есть в сцене: тот же зазор 0.4, что у сбора. В сейв ничего не пишем.
+  function buildEnRoute(s){
+    const root=String(s?.job||'').split(':')[0];
+    if((root!=='build'&&root!=='repair')||s.status!=='working')return false;
+    const id=s.order?.target;
+    if(!id||id==='generator')return false;
+    const g=window.game,b=g?.p?.camp?.buildings?.[id];
+    if(!b||b.project?.paused||b.type==='segment'||b.type==='warehouse')return false;
+    let site=null;
+    try{const ctx=g.workerSceneContext?.();site=ctx?.worksites?.[id]||ctx?.facilityPositions?.[id];}catch(e){return false;}
+    if(!Number.isFinite(site?.x)||!Number.isFinite(site?.z))return false;
+    if(!Number.isFinite(s.pos?.x)||!Number.isFinite(s.pos?.z))return true;
+    return Math.hypot(s.pos.x-site.x,s.pos.z-site.z)>0.4;
+  }
   const GENERIC=new Set(['','Нет доступной цели','Сейчас недоступно','Сейчас нельзя','Простой']);
   const DENIAL={
     'courier-busy':'Житель выполняет поручение курьера',
@@ -80,6 +95,7 @@
       return s.status==='travel'?(returning?'Несёт припасы':'Идёт за ресурсом'):(returning?'Сдаёт припасы':'Собирает');
     }
     if(s.status==='travel')return 'В пути';
+    if(buildEnRoute(s))return s.job==='repair'?'Идёт к ремонту':'Идёт к стройке';
     return s.job==='idle'?'Свободен':s.status==='working'?'Работает':'Ожидает';
   }
   function jobHold(camp,settler,job){
@@ -189,6 +205,8 @@
       const head=root.querySelector('.residentIdentityHead');
       if(!s||!head)return;
       portrait(head.querySelector('.residentPortrait'),s);
+      const act=root.querySelector('.fbActivity'),actText=activity(s);
+      if(act&&act.textContent!==actText)act.textContent=actText;
       if(!root.querySelector(':scope > .fbAssignment')){
         const assignment=el('section','fbAssignment');assignment.setAttribute('aria-label','Текущее назначение');
         const line=el('div','');line.append(el('small','','Назначение'),el('strong','fbAssignmentStamp',jobLabel(s)),el('span','fbActivity',activity(s)));
@@ -202,13 +220,13 @@
         let count=radio.querySelector('.fbFileCount');if(!count){count=el('span','fbFileCount');count.setAttribute('aria-hidden','true');radio.querySelector('.dossierDial')?.after(count);}
         const nums=radio.querySelector('.dossierDial')?.textContent.match(/\d+/g)||[],text=nums.length>1?nums[0].padStart(2,'0')+' / '+nums[1].padStart(2,'0'):nums[0]||'0';if(count.textContent!==text)count.textContent=text;
       }
-      const stamp=root.querySelector('.fbAssignmentStamp'),act=root.querySelector('.fbActivity');
+      const stamp=root.querySelector('.fbAssignmentStamp'),activityNode=root.querySelector('.fbActivity');
       const text=activity(s),label=jobLabel(s);
       if(stamp&&stamp.textContent!==label)stamp.textContent=label;
       for(const node of root.querySelectorAll(':scope > small'))if(node.textContent.trim()==='Ручной отдых · автоназначение выключено')node.hidden=node.textContent.trim()!==text;
       const echoed=[...root.querySelectorAll(':scope > small')].some(node=>!node.hidden&&node.textContent.trim()===text);
-      if(act&&act.textContent!==text)act.textContent=text;
-      if(act)act.hidden=echoed;
+      if(activityNode&&activityNode.textContent!==text)activityNode.textContent=text;
+      if(activityNode)activityNode.hidden=echoed;
     }
     function blueprints(root){
       const grid=root.querySelector(':scope > .campGrid');
@@ -258,7 +276,7 @@
     function schedule(){if(!queued){queued=true;queueMicrotask(decorate);}}
     panel.addEventListener('terra:camp-tab',schedule);panel.addEventListener('terra:camp-refresh',schedule);
     new MutationObserver(schedule).observe(panel,{attributes:true,attributeFilter:['class']});decorate();
-    window.terraCampFieldbook=Object.freeze({activity,portrait,roleState,jobHold,denialText,orderReason});
+    window.terraCampFieldbook=Object.freeze({activity,portrait,roleState,jobHold,denialText,orderReason,buildEnRoute});
   }
   if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 })();
