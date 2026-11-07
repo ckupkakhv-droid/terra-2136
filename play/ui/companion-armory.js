@@ -214,7 +214,23 @@
     if (!game?.p || !resident || !home) return null;
     const held = isGun(resident.gear?.weapon) ? resident.gear.weapon : null;
     const role = roleNeeds(game.p.camp, resident);
-    if (!held && !role) return null;
+    if (!held && !role) {
+      const root = document.createElement('div');
+      root.className = 'ccArmory';
+      root.dataset.armoryResident = resident.id;
+      const note = document.createElement('p');
+      note.textContent = 'Ствол не выдан';
+      const why = document.createElement('small');
+      why.textContent = idleReason(game.p.camp, resident);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.disabled = true;
+      button.dataset.armoryAction = 'issue';
+      button.textContent = 'Выдать из сундука';
+      root.append(note, why, button);
+      root.dataset.armorySig = [resident.id, note.textContent, why.textContent, 'denied'].join('\n');
+      return root;
+    }
     const guns = stockGuns(game.p, home);
     const near = dist(resident.pos, home) <= REACH;
     const box = chests(game.p, home).length;
