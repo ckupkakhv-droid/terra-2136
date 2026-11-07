@@ -99,7 +99,10 @@
   function paintCard(card) {
     place(card);
     const sig = signature(card);
-    if (card.dataset.ccSig === sig && card.querySelector(':scope > .ccLayout')) return;
+    if (card.dataset.ccSig === sig && card.querySelector(':scope > .ccLayout')) {
+      window.terraArmory?.mountCard(card, residentFor(card));
+      return;
+    }
     const restore = armed && !armed.isConnected ? armed.dataset?.companionAction || '' : '';
     if (restore) armed = null;
     const resident = residentFor(card);
@@ -181,6 +184,7 @@
     card.dataset.ccPilot = '1';
     card.dataset.ccSig = signature(card);
     if (drawer) drawer.open = wasOpen;
+    window.terraArmory?.mountCard(card, resident);
     place(card);
     if (restore) {
       const button = card.querySelector('[data-companion-action="' + CSS.escape(restore) + '"]');
