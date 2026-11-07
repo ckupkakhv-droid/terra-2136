@@ -53,7 +53,7 @@ SETUP = r"""() => {
   game.p.eq.push(pack);
   const home = origin;
   if (!Array.isArray(game.p.base)) game.p.base = [];
-  game.p.base.push({t: 'chest', x: home.x + 1, z: home.z, r: 0, items: [{weapon: issued}, {weapon: empty}]});
+  game.p.base.push({t: 'chest', x: home.x + 3, z: home.z + 3, r: 0, items: [{weapon: issued}, {weapon: empty}]});
   const hero = (game.p.eq || []).map(item => item && item.uid).filter(uid => uid != null);
   return {hero, home, fc: camp.fieldCompanion.v};
 }"""
@@ -87,14 +87,18 @@ DROP = r"""() => {
   const resident = game.p.camp.settlers['qa-mate'];
   const wid = 'crate:4,5:6,7';
   const row = {id: 'wood', n: 1};
-  const x = resident.pos.x + 0.4;
-  const z = resident.pos.z;
-  if (!game.world.broken || !game.world.pend) return {ok: false, reason: 'pend'};
+  const dirs = [[0, -0.7], [-0.7, 0], [0, 0.7], [-0.5, -0.5], [0.5, -0.5], [-0.5, 0.5]];
+  let spot = null;
+  for (const [dx, dz] of dirs) {
+    const x = resident.pos.x + dx, z = resident.pos.z + dz;
+    if (game.world.segHit(resident.pos.x, resident.pos.z, x, z, 0.6) < 0) { spot = {x, z}; break; }
+  }
+  if (!spot || !game.world.broken || !game.world.pend) return {ok: false, reason: spot ? 'pend' : 'sight'};
   game.world.broken.add(wid);
   game.world.pend.set(wid, [row]);
-  game.pickups.push({x, z, id: 'wood', n: 1, t: 1e9, ph: 0, wid, row, state: 'rest'});
-  const sight = game.world.segHit(resident.pos.x, resident.pos.z, x, z, 0.6);
-  return {ok: true, sight, pickups: game.pickups.filter(item => item.wid === wid).length};
+  game.pickups.push({x: spot.x, z: spot.z, id: 'wood', n: 1, t: 1e9, ph: 0, wid, row, state: 'rest'});
+  game.p.camp.fieldCompanion.mode = 'wait';
+  return {ok: true, sight: game.world.segHit(resident.pos.x, resident.pos.z, spot.x, spot.z, 0.6), spot};
 }"""
 
 
@@ -144,6 +148,7 @@ with sync_playwright() as p:
     assert before['campV'] == 1 and before['fc']['v'] == 1
 
     wood_before = before['wood']
+    page.wait_for_timeout(800)
     dropped = page.evaluate(DROP)
     assert dropped['ok'] and dropped['sight'] < 0, dropped
     page.locator('#bCamp').click()
@@ -167,6 +172,7 @@ with sync_playwright() as p:
     assert stored['cargo'] is None
     assert stored['wood'] == wood_before + 1, stored['wood']
     assert stored['fc']['keys'] == before['fc']['keys']
+    page.evaluate("() => { game.p.camp.fieldCompanion.mode = 'follow'; }")
 
     page.evaluate("() => game.ui.campPanel.refresh()")
     reveal(page)
@@ -197,20 +203,22 @@ with sync_playwright() as p:
     assert not second.get('ok'), second
     assert page.evaluate(CENSUS)['places'] == issued['places']
 
+    page.locator('#campPanel .panelFoot [data-close="campPanel"]').click()
+    page.wait_for_function("() => game.state === 'play'")
     shot = page.evaluate(r"""() => {
       const resident = game.p.camp.settlers['qa-mate'];
       const origin = resident.pos;
-      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.8, 0.6]];
+      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.8, 0.6], [-0.8, 0.6]];
       let point = null;
       for (const [dx, dz] of dirs) {
         const x = origin.x + dx, z = origin.z + dz;
-        if (game.world.segHit(origin.x, origin.z, x, z, 0.4) < 0) { point = {x, z}; break; }
+        if (game.world.segHit(origin.x, origin.z, x, z, 1.1) < 0) { point = {x, z}; break; }
       }
-      if (!point) return {ok: false, reason: 'sight'};
+      if (!point) return {ok: false, reason: 'sight', state: game.state};
       game.p.x = origin.x;
       game.p.z = origin.z;
       const enemy = game.spawnEnemy('zombie', point.x, point.z, {force: 1, aggro: 1});
-      if (!enemy) return {ok: false, reason: 'spawn'};
+      if (!enemy) return {ok: false, reason: 'spawn', state: game.state};
       enemy.spd = 0;
       enemy.dmg = 0;
       enemy.aggro = true;
@@ -218,13 +226,17 @@ with sync_playwright() as p:
       const hp = enemy.hp;
       const mag = resident.gear.weapon.mag;
       const uid = resident.gear.weapon.uid;
-      game.guardsUpdate(0.3);
+      game.guardsUpdate(1);
       const bullet = game.bullets[0] ? {dmg: game.bullets[0].dmg, wt: game.bullets[0].wt, src: game.bullets[0].companionSource || null} : null;
       game.combatUpdate(0.08);
+      const store = game.saveStore();
       return {
-        ok: true, uid, magBefore: mag, magAfter: resident.gear.weapon.mag,
+        ok: true, uid, state: game.state, v: game.p.camp.fieldCompanion && game.p.camp.fieldCompanion.v,
+        mode: game.p.camp.fieldCompanion && game.p.camp.fieldCompanion.mode,
+        magBefore: mag, magAfter: resident.gear.weapon.mag,
         hpBefore: hp, hpAfter: enemy.hp, dead: !!enemy.dead, bullet,
-        sight: game.world.segHit(origin.x, origin.z, point.x, point.z, 0.4),
+        sight: game.world.segHit(origin.x, origin.z, point.x, point.z, 1.1),
+        crystal: game._crystalLiveStore === store && game._crystalLiveGeneration === store.generation,
       };
     }""")
     assert shot.get('ok'), shot
@@ -296,43 +308,65 @@ with sync_playwright() as p:
     scout = page.evaluate(r"""() => {
       const id = 'qa-scout';
       if (!game.camp.recruit({id}).ok) return {ok: false, reason: 'recruit'};
-      const resident = game.p.camp.settlers[id];
+      const person = () => game.p.camp.settlers[id];
       const origin = game.homePos();
-      resident.pos = {x: origin.x, z: origin.z};
-      resident.job = 'scout';
-      resident.order = {};
-      resident.mission = undefined;
-      delete resident.mission;
+      person().pos = {x: origin.x, z: origin.z};
+      person().job = 'idle';
+      person().order = {};
+      delete person().mission;
       const denied = terraArmory.issue(id);
-      resident.job = 'guard';
-      resident.order = {};
+      person().job = 'scout';
+      const givenScout = terraArmory.issue(id, 9101);
+      const back = terraArmory.recall(id);
+      person().job = 'guard';
+      person().order = {};
       const noPost = terraArmory.issue(id);
-      resident.job = 'guard';
-      resident.order = {postId: 'camp:watch'};
+      person().order = {postId: 'camp:watch'};
       const given = terraArmory.issue(id, 9101);
-      const changed = game.camp.assignResidentTask({residentId: id, task: 'auto'});
-      const after = game.p.camp.settlers[id];
+      const beforeOwners = terraArmory.owners(9101);
+      const changed = game.camp.assignResidentTask({residentId: id, task: 'wood'});
+      const after = person();
+      const owners = terraArmory.owners(9101);
       const chest = (game.p.base || []).some(box => box && box.t === 'chest' && (box.items || []).some(row => row.weapon && row.weapon.uid === 9101));
-      return {ok: true, denied, noPost, given, changed, job: after.job, gear: after.gear.weapon, chest};
+      const automaticReturn = changed.ok === true && !after.gear?.weapon && chest && owners.length === 1 && owners[0] === 'chest';
+      return {
+        ok: true, denied, givenScout, back, noPost, given,
+        changed: {ok: changed.ok === true, reason: changed.reason || '', status: changed.status || ''},
+        beforeOwners, owners, job: after.job, gear: after.gear?.weapon?.uid || null, chest, automaticReturn,
+      };
     }""")
     assert scout.get('ok'), scout
     assert not scout['denied']['ok'], scout['denied']
+    assert scout['givenScout']['ok'] and scout['givenScout']['uid'] == 9101, scout['givenScout']
+    assert scout['back']['ok'], scout['back']
     assert not scout['noPost']['ok'] and 'посту' in scout['noPost']['reason'], scout['noPost']
     assert scout['given']['ok'] and scout['given']['uid'] == 9101, scout['given']
-    assert scout['changed'].get('ok'), scout['changed']
-    assert scout['gear'] is None and scout['chest'], scout
+    assert scout['beforeOwners'] == ['settler'], scout['beforeOwners']
+    assert len(scout['owners']) == 1, scout['owners']
     role_snap = page.evaluate(CENSUS)
-    assert len(of(9101, role_snap)) == 1 and of(9101, role_snap)[0]['where'] == 'chest'
+    assert len(of(9101, role_snap)) == 1
     assert of(9101, role_snap)[0]['mag'] == 3 and of(9101, role_snap)[0]['e'] == 3
+    if scout['changed']['ok']:
+        assert scout['automaticReturn'] is True, scout
+        assert scout['owners'] == ['chest']
+        assert of(9101, role_snap)[0]['where'] == 'chest'
+    else:
+        assert scout['automaticReturn'] is False, scout
+        assert scout['owners'] == ['settler']
+        assert scout['gear'] == 9101
+        assert of(9101, role_snap)[0]['where'] == 'settler:qa-scout'
 
     death = page.evaluate(r"""() => {
-      const resident = game.p.camp.settlers['qa-scout'];
-      resident.job = 'scout';
-      resident.order = {};
-      const given = terraArmory.issue('qa-scout', 9101);
-      resident.dead = true;
+      const person = () => game.p.camp.settlers['qa-scout'];
+      let given = {ok: true, kept: person().gear?.weapon?.uid || null};
+      if (given.kept !== 9101) {
+        person().job = 'scout';
+        person().order = {};
+        given = terraArmory.issue('qa-scout', 9101);
+      }
+      person().dead = true;
       const blocked = terraArmory.issue('qa-scout', 9103);
-      const still = resident.gear.weapon && resident.gear.weapon.uid;
+      const still = person().gear.weapon && person().gear.weapon.uid;
       const back = terraArmory.recall('qa-scout');
       const owners = terraArmory.owners(9101);
       return {given, blocked, still, back, owners};
@@ -361,7 +395,14 @@ with sync_playwright() as p:
         'afterSave': of(9101, loaded),
         'returned': of(9101, returned),
         'finish': {'stock': finished['done'].get('stock'), 'gear': finished['gear']},
-        'scout': {'denied': scout['denied'].get('reason'), 'noPost': scout['noPost'].get('reason'), 'job': scout['job']},
+        'role': {
+            'assignment': 'accepted' if scout['changed']['ok'] else 'denied',
+            'reason': scout['changed'].get('reason'),
+            'job': scout['job'],
+            'automaticReturn': scout['automaticReturn'],
+            'owners': scout['owners'],
+            'boundary': 'assignResidentTask на охране с постом не является сменой роли, если команда отклонена. Автовозврат проверяется только при ok.',
+        },
         'death': {'owners': death['owners'], 'stillBeforeRecall': death['still']},
         'final': {'gun9101': of(9101, final), 'pack9102': of(9102, final), 'hero': final['hero'], 'campV': final['campV'], 'saveV': final['saveV']},
         'pageErrors': errors,
