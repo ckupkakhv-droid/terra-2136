@@ -1,0 +1,295 @@
+/* Экспедиционный контур: только оформление HUD, главного меню и общих состояний лагеря.
+   Бумага альбома, команды и цвета смысла (здоровье, радиация, срочность) остаются. */
+
+#hud.contourHud .panel,
+#hud.contourHud #obj {
+  background: linear-gradient(180deg, rgba(22, 24, 20, .94), rgba(10, 11, 9, .9));
+  border: 1px solid rgba(196, 164, 106, .4);
+  box-shadow: none;
+  clip-path: none;
+  border-radius: 12px;
+}
+#hud.contourHud #lvl {
+  width: 44px;
+  height: 44px;
+  clip-path: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #e4c98a, #6e4e24 72%);
+}
+#hud.contourHud .bar { clip-path: none; border-radius: 4px; }
+#hud.contourHud .bar.hp { height: 16px; }
+#hud.contourHud .bar.hp span { font-size: 14px; line-height: 16px; }
+#hud.contourHud .bar.st { height: 6px; }
+#hud.contourHud .bar.xp { height: 4px; }
+#hud.contourHud .small { font-size: 14px; gap: 8px; }
+#hud.contourHud #dropHud { flex-wrap: wrap; font-size: 12px; gap: 6px 8px; }
+#hud.contourHud #dropHud .gi { width: 14px; height: 14px; }
+#hud.contourHud #zone,
+#hud.contourHud #kills { font-size: 12px; line-height: 1.25; }
+#hud.contourHud #zone { max-width: 100%; flex-wrap: wrap; justify-content: center; white-space: normal; overflow-wrap: anywhere; }
+#hud.contourHud #objT { font-size: 14px; }
+#hud.contourHud #objH,
+#hud.contourHud #objD,
+#hud.contourHud #wMast { font-size: 12px; }
+#hud.contourHud #wName { font-size: 14px; }
+#hud.contourHud #topBtns > button { clip-path: none; border-radius: 12px; }
+#hud.contourHud :is(#lvlW, #objectiveToggle, #topBtns > button, #evPulse):focus-visible {
+  outline: 2px solid #e4c98a;
+  outline-offset: 2px;
+}
+#hud.contourHud #topBtns .ib {
+  background: rgba(16, 17, 14, .9);
+  border-color: rgba(196, 164, 106, .45);
+  color: #f0e2c4;
+}
+#hud.contourHud #evPulse {
+  width: 44px;
+  height: 44px;
+  left: auto;
+  right: -4px;
+  bottom: auto;
+  top: -4px;
+}
+#hud.contourHud #evHud.on {
+  z-index: 6;
+  animation: none;
+  transform: none;
+}
+#hud.contourHud #evHud.on :is(.evh b, .evn span, .evw span, .evd span) {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+#hud.contourHud #radio {
+  z-index: 6;
+  align-items: flex-start;
+  animation: none;
+  transform: none;
+}
+#hud.contourHud #radioT {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#hud.contourHud #mm { box-shadow: 0 0 0 2px rgba(196, 164, 106, .45), 0 0 0 5px rgba(0, 0, 0, .55); }
+
+/* Портрет: столбик карты и кнопки друг под другом, без наложения на зону. */
+@media (orientation: portrait) {
+  #hud.contourHud {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 112px;
+    align-content: start;
+    align-items: start;
+  }
+  #hud.contourHud #leftHudStack {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: flex;
+    width: auto;
+    max-width: none;
+    grid-column: 1;
+    grid-row: 1;
+    margin: var(--st) 8px 0 var(--sl);
+  }
+  #hud.contourHud #tl,
+  #hud.contourHud #obj {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+  }
+  #hud.contourHud #tr {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: auto;
+    grid-column: 2;
+    grid-row: 1;
+    margin: var(--st) var(--sr) 0 0;
+    width: 112px;
+  }
+  #hud.contourHud #mmW,
+  #hud.contourHud #mm { width: 96px; height: 96px; }
+  #hud.contourHud #topBtns {
+    position: relative;
+    right: auto;
+    top: auto;
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: column;
+    align-items: flex-end;
+    width: auto;
+    margin: 8px var(--sr) 0 0;
+  }
+  #hud.contourHud #wName { font-size: 14px; }
+  #hud.contourHud #wMast { display: block; }
+  #hud.contourHud #zone { font-size: 12px; }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  /* Зона уходит из-под миникарты: справа там сенсорные команды. */
+  #hud.contourHud #zone {
+    position: fixed;
+    left: 50%;
+    top: calc(var(--st) + 58px);
+    right: auto;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: min(280px, 46vw);
+    margin: 0;
+    z-index: 12;
+    padding: 4px 8px;
+    background: rgba(12, 13, 11, .9);
+    border: 1px solid rgba(196, 164, 106, .4);
+    border-radius: 8px;
+  }
+  #hud.contourHud #kills {
+    position: fixed;
+    left: 50%;
+    top: calc(var(--st) + 92px);
+    transform: translateX(-50%);
+    margin: 0;
+    z-index: 12;
+    padding: 2px 8px;
+    background: rgba(12, 13, 11, .9);
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  #hud.contourHud #dropHud { font-size: 12px; gap: 4px 6px; }
+  #hud.contourHud #dropHud .gi { width: 12px; height: 12px; }
+}
+
+/* Главное меню: компактная колонка, главная команда и свёрнутый резерв. */
+#menu.contourMenu {
+  padding: calc(var(--st) + 12px) var(--sr) var(--sb) var(--sl);
+}
+#menu.contourMenu .ver {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  width: min(320px, 100%);
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+#menu.contourMenu .logo {
+  font-size: clamp(44px, 9vw, 88px);
+  text-shadow: 0 0 18px rgba(196, 120, 48, .45), 0 4px 0 #2a180c;
+}
+#menu.contourMenu .sub { margin-bottom: 16px; font-size: 12px; letter-spacing: .28em; }
+#menu.contourMenu .mbtns {
+  width: min(320px, 100%);
+  max-height: min(52dvh, calc(100dvh - var(--st) - var(--sb) - 160px));
+  padding: 0 2px 8px;
+}
+#menu.contourMenu .btn {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  margin: 6px 0;
+  padding: 12px 16px;
+  letter-spacing: .04em;
+  font-size: 14px;
+  white-space: normal;
+  color: #f3e6cf;
+  background: rgba(18, 18, 16, .72);
+  border: 1px solid rgba(196, 164, 106, .45);
+  clip-path: none;
+  border-radius: 12px;
+}
+#menu.contourMenu .btn.expeditionPrimary {
+  font-size: 16px;
+  color: #1c140c;
+  background: linear-gradient(180deg, #e7cb8e, #a87434);
+  border-color: #f0d7a6;
+}
+#menu.contourMenu .menuFieldTools {
+  width: 100%;
+  margin: 6px 0 0;
+  border: 1px solid rgba(196, 164, 106, .4);
+  border-radius: 12px;
+  background: rgba(12, 13, 11, .72);
+}
+#menu.contourMenu .menuFieldTools > summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #f0e2c4;
+}
+#menu.contourMenu .menuFieldTools > summary:focus-visible,
+#menu.contourMenu .btn:focus-visible {
+  outline: 2px solid #e4c98a;
+  outline-offset: 2px;
+}
+#menu.contourMenu .menuFieldTools > :not(summary) { margin-left: 8px; margin-right: 8px; }
+#menu.contourMenu .menuFieldTools .btn { font-size: 13px; }
+#menu.contourMenu #crystalBackupCapacity,
+#menu.contourMenu .menuFieldTools > p {
+  max-width: none !important;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #d9c7a4;
+}
+#campPanel.fieldbook .fbPauseInfo {
+  width: auto;
+  min-width: 44px;
+  height: auto;
+  min-height: 44px;
+  padding: 6px 10px;
+  font-size: 13px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+#campPanel.fieldbook .contourReason,
+#campPanel.fieldbook .fbHomeBoard .supplyActions > .contourReason {
+  display: block;
+  grid-column: 1 / -1;
+  flex: 1 1 100%;
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #6a3a28;
+}
+
+@media (max-height: 520px) {
+  #menu.contourMenu .logo { font-size: 42px; margin-bottom: 0; }
+  #menu.contourMenu .sub { margin: 2px 0 8px; }
+  #menu.contourMenu .mbtns { max-height: calc(100dvh - var(--st) - var(--sb) - 120px); }
+  #menu.contourMenu .btn { min-height: 44px; margin: 4px 0; padding: 8px 12px; }
+}
+
+/* Лагерь: альбом остаётся. Дополняем фокус, причину отказа и подпись паузы. */
+#campPanel.fieldbook .fbSupplyRules summary { min-height: 44px; display: flex; align-items: center; }
+#campPanel.fieldbook [data-supply-assign]:disabled { opacity: .72; }
+#campPanel.fieldbook #campTabs button:not(.on):not(.campMobilePlay) { opacity: .8; }
+#campPanel.fieldbook #campTabs button.on { opacity: 1; box-shadow: inset 0 0 0 2px #e4c98a; }
+#campPanel.fieldbook :is(.fbFolder, button, summary, input):focus-visible {
+  outline: 3px solid #e4c98a;
+  outline-offset: 2px;
+}
+@media (max-width: 600px) {
+  #campPanel.fieldbook .fbMeta { font-size: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hud.contourHud *,
+  #menu.contourMenu *,
+  #campPanel.fieldbook * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

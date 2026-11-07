@@ -1,0 +1,101 @@
+{
+  "manifest": {
+    "lod0": 774,
+    "lod1": 483,
+    "lod2": 158
+  },
+  "bytes": 19724,
+  "sha256": "57b0c03e8917cbb729b20833627e5f101107b0af1bcb8fd34be3ff8ed2754191",
+  "excisedVertices": 828,
+  "primitiveHash": -265457090,
+  "body": {
+    "shared": true,
+    "culled": true,
+    "lights": true,
+    "top": 1.71999990940094,
+    "playerY": 0,
+    "floor": 0.20000000298023224,
+    "box": {
+      "min": [
+        -0.6399999856948853,
+        0.20000000298023224,
+        -0.5600000023841858
+      ],
+      "max": [
+        0.6399804353713989,
+        1.71999990940094,
+        0.5600292682647705
+      ]
+    },
+    "names": [
+      "sewer-pump-1-lod0",
+      "sewer-pump-1-lod1",
+      "sewer-pump-1-lod2"
+    ],
+    "save": 7,
+    "profile": null
+  },
+  "play": {
+    "calls": 21,
+    "triangles": 29756,
+    "geometries": 131,
+    "textures": 51,
+    "level": 0,
+    "distance": 22.918623457687577
+  },
+  "draw": {
+    "calls": 1,
+    "triangles": 774,
+    "geometries": 134,
+    "textures": 52,
+    "texturesUnchanged": true
+  },
+  "lod": [
+    {
+      "name": "lod0",
+      "level": 0,
+      "distance": 18.00000000000255,
+      "calls": 12,
+      "triangles": 19844,
+      "geometries": 134,
+      "textures": 52,
+      "meshTris": 774,
+      "culled": true
+    },
+    {
+      "name": "lod1",
+      "level": 1,
+      "distance": 39.99999999999935,
+      "calls": 41,
+      "triangles": 23955,
+      "geometries": 144,
+      "textures": 52,
+      "meshTris": 483,
+      "culled": true
+    },
+    {
+      "name": "lod2",
+      "level": 2,
+      "distance": 63.99999999999825,
+      "calls": 73,
+      "triangles": 30900,
+      "geometries": 157,
+      "textures": 52,
+      "meshTris": 158,
+      "culled": true
+    }
+  ],
+  "disposed": {
+    "before": 157,
+    "after": 154,
+    "left": false,
+    "ids": [
+      "21b6fa71-631a-42fd-8804-c07e0a44db52",
+      "9a2ba6b1-68d4-46cf-b2b3-61ef3a10d74a",
+      "7b397bde-d44c-45b9-99db-d6a12d1b3442"
+    ],
+    "gone": true
+  },
+  "fallbackTextures": 52,
+  "textureDelta": 0
+}

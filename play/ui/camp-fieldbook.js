@@ -1,21 +1,127 @@
 /* Полевой альбом: реальные жители, штатные кнопки и данные лагеря. */
+/* companion-card-loader */
+{ const base = document.currentScript?.src || new URL('ui/', location.href);
+  const s = document.createElement('script'); s.src = new URL('companion-card.js', base).href; document.head.append(s);
+  const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('companion-card.css', base).href; document.head.append(l); }
+/* /companion-card-loader */
 (() => {
   'use strict';
   const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls;if(text!=null)n.textContent=text;return n;};
   const professions={scientist:'Учёный',engineer:'Инженер',medic:'Медик',scout:'Разведчик',builder:'Строитель',gatherer:'Собиратель',hauler:'Грузчик',guard:'Боец',farmer:'Фермер',crafter:'Мастер',gunsmith:'Оружейник',trader:'Торговец'};
   const jobs={'gather:wood':'Дерево','gather:scrap':'Лом','gather:water':'Вода','gather:food':'Еда',idle:'Отдых',build:'Стройка',repair:'Ремонт',craft:'Ремесло',operate:'Генератор',guard:'Охрана',patrol:'Патруль',scout:'Разведка'};
   const cfg=()=>window.TERRA_DEFENSE_CTX?.B?.camp;
-  function activity(s) {
-    if(s.wounded||s.status==='injured')return 'Ранен';
-    if(s.status==='blocked')return s.workBlock==='unloaded'?'Маршрут не загружен':s.workBlock==='obstacle'?'Проход перекрыт':'Простой';
+  // Обычная стройка и ремонт пишут status=working ещё на подходе.
+  // Место уже есть в сцене: тот же зазор 0.4, что у сбора. В сейв ничего не пишем.
+  function buildEnRoute(s){
+    const root=String(s?.job||'').split(':')[0];
+    if((root!=='build'&&root!=='repair')||s.status!=='working')return false;
+    const id=s.order?.target;
+    if(!id||id==='generator')return false;
+    const g=window.game,b=g?.p?.camp?.buildings?.[id];
+    if(!b||b.project?.paused||b.type==='segment'||b.type==='warehouse')return false;
+    let site=null;
+    try{const ctx=g.workerSceneContext?.();site=ctx?.worksites?.[id]||ctx?.facilityPositions?.[id];}catch(e){return false;}
+    if(!Number.isFinite(site?.x)||!Number.isFinite(site?.z))return false;
+    if(!Number.isFinite(s.pos?.x)||!Number.isFinite(s.pos?.z))return true;
+    return Math.hypot(s.pos.x-site.x,s.pos.z-site.z)>0.4;
+  }
+  const GENERIC=new Set(['','Нет доступной цели','Сейчас недоступно','Сейчас нельзя','Простой']);
+  const DENIAL={
+    'courier-busy':'Житель выполняет поручение курьера',
+    cargo:'Дождитесь доставки груза',
+    unavailable:'Житель занят или ранен',
+    job:'Такой работы нет',
+    route:'Маршрут недоступен',
+    territory:'Нужна территория',
+    adjacent:'Нужна связь с домашним районом',
+    operator:'Нужен инженер',
+    'warehouse-builder':'Нужен доступный строитель или инженер.',
+    'warehouse-unavailable':'Склад недоступен: проверьте аванпост и контроль территории.',
+    project:'Нет стройки',
+    paused:'Стройка на паузе',
+    captive:'В плену',
+    full:'Уже полный',
+    point:'Нужно свободное место 8×8 м',
+    outpost:'Аванпост недоступен',
+    unloaded:'Путь не загружен',
+    obstacle:'Проход перекрыт',
+  };
+  function denialText(value){return typeof value==='string'&&Object.hasOwn(DENIAL,value)?DENIAL[value]:'';}
+  function roleState(camp,s){
+    if(!s||s.dead)return {group:'waiting',text:'Недоступен',free:false};
+    if(camp?.fieldCompanion?.settlerId===s.id){
+      const mode=camp.fieldCompanion.mode;
+      return {group:s.status==='blocked'?'waiting':'working',text:mode==='return'?'Напарник · возвращается':mode==='wait'?'Напарник · ждёт здесь':'Напарник · с героем',free:false};
+    }
+    if(s.mission)return {group:'working',text:'На задании',free:false};
+    const tick=camp?.sim?.tick||0;
+    const hurt=s.captive?'В плену':s.wounded||s.injuredUntil>tick?'Ранен · ждёт восстановления':'';
+    if(hurt)return {group:'waiting',text:hurt,free:false};
+    if(camp?.warehouseCourier?.settlerId===s.id){
+      const text=s.status==='blocked'?s.workBlock==='unloaded'?'Курьер: путь не загружен':'Курьер: маршрут недоступен':'Курьер · груз закреплён';
+      return {group:s.status==='blocked'?'waiting':'working',text,free:false};
+    }
+    if(s.trip?.amount)return {group:'working',text:'Переносит груз · сначала разгрузка',free:false};
+    if(s.job==='idle'){
+      const manual=!!s.order?.stick&&!s.order?.courier&&camp?.warehouseCourier?.settlerId!==s.id;
+      const rest=!!s.order?.rest||(s.needs?.rest??100)<=(cfg()?.utility?.restStart??25);
+      const text=manual?'Ручной отдых · автоназначение выключено':rest?'Восстанавливает силы':'';
+      return {group:text?'waiting':'free',text:text||'Готов к приказу',free:!text};
+    }
+    const building=camp?.buildings?.[s.order?.target];
+    let wait='';
+    if(s.job==='build'&&building?.project?.paused)wait='Стройка приостановлена';
+    else if(s.status==='blocked'){
+      if(s.workBlock==='unloaded')wait='Путь не загружен · подойдите к рабочему';
+      else if(s.workBlock==='obstacle')wait='Проход перекрыт';
+      else if(s.job==='build'&&!building?.project)wait='Стройка завершена · ожидает смены задачи';
+      else if(s.job==='build'&&building?.project?.delivery&&!building.project.delivery.delivered&&building.project.delivery.carrier&&building.project.delivery.carrier!==s.id)wait='Материалы несёт другой рабочий';
+      else if(s.job==='build'||s.job==='repair')wait='Рабочий подход недоступен';
+      else if(String(s.job).startsWith('haul:')){
+        const route=camp?.routes?.[s.job.slice(5)];
+        const store=route&&(route.from==='camp'?camp.res:camp.buildings?.[route.from]?.store);
+        wait=route?store?.[route.res]>0?'Доставка ожидает доступного маршрута':'Нет груза на складе отправления':'Маршрут недоступен';
+      }else wait='Ожидает доступной рабочей цели';
+    }
+    return wait?{group:'waiting',text:wait,free:false}:null;
+  }
+  function activity(s,camp){
+    camp=camp||window.game?.p?.camp||null;
+    const role=roleState(camp,s);
+    if(role&&!role.free)return role.text;
     if(s.job?.startsWith('gather:')&&!s.facility&&!s.order?.outpost){
       const returning=(s.work||0)/(cfg()?.work.gatherPeriod||45)>=.75;
       if(!s.work&&s.status!=='travel')return 'Назначено';
       return s.status==='travel'?(returning?'Несёт припасы':'Идёт за ресурсом'):(returning?'Сдаёт припасы':'Собирает');
     }
     if(s.status==='travel')return 'В пути';
+    if(buildEnRoute(s))return s.job==='repair'?'Идёт к ремонту':'Идёт к стройке';
     return s.job==='idle'?'Свободен':s.status==='working'?'Работает':'Ожидает';
   }
+  function jobHold(camp,settler,job){
+    if(!camp||!settler||!job||settler.mission)return '';
+    const kind=String(job).split(':')[0];
+    if(kind==='operate'&&settler.prof!=='engineer')return 'Нужен инженер';
+    if(kind==='operate'&&camp.buildings?.generator?.project)return 'Строительство уже идёт';
+    if(kind==='build'&&!Object.values(camp.buildings||{}).some(b=>b?.project))return 'Нет свободной стройки';
+    if(kind==='haul'&&!Object.keys(camp.routes||{}).length)return 'Маршрут недоступен';
+    if(!['gather','guard','patrol','idle'].includes(kind))return '';
+    const tick=camp.sim?.tick||0;
+    if(settler.captive)return 'В плену';
+    if(settler.wounded||settler.injuredUntil>tick)return 'Ранен · ждёт восстановления';
+    if(camp.warehouseCourier?.settlerId===settler.id)return 'Житель выполняет поручение курьера';
+    if(settler.trip?.amount)return 'Дождитесь доставки груза';
+    return '';
+  }
+  function orderReason(s,button){
+    if(!button?.disabled)return '';
+    const title=(button.getAttribute('title')||'').trim();
+    const label=(button.textContent||'').trim();
+    if(title&&title!==label&&!GENERIC.has(title))return title;
+    const role=roleState(window.game?.p?.camp,s);
+    return role&&!role.free?role.text:'';
+  }
+  function jobLabel(s){return jobs[s.job]||(String(s.job||'').startsWith('haul:')?'Перевозка':'')||s.facility||s.job||'Отдых';}
   function portrait(node,s) {
     if(!node||node.querySelector('img')||node.classList.contains('fbPhoto'))return;
     const image=window.TERRA_CAMP_ALBUM_DATA?.portrait(s)?.querySelector('img');
@@ -72,7 +178,24 @@
         const name=row.querySelector('.residentNameBlock');
         if(name){const p=el('span','fbProfession',professions[s.prof]||s.prof||'Житель');name.querySelector('strong')?.after(p);name.querySelector('.residentBadge')?.classList.add('fbLegacyProfession');}
         const order=row.querySelector('[data-resident-order]');
-        if(order){const fold=el('details','fbCardOrder');fold.append(el('summary','','Приказ'),order);row.append(fold);}
+        const state=activity(s);
+        const status=[...name?.querySelectorAll('.residentBadge')[1]?.children||[]].find(node=>node.tagName==='SPAN'&&!node.classList.contains('campIcon'));
+        if(status&&state&&['Курьер · недоступен','Свободен','Простой'].includes(status.textContent.trim())&&status.textContent.trim()!==state)status.textContent=state;
+        if(order){
+          const fold=el('details','fbCardOrder');fold.append(el('summary','','Приказ'),order);
+          const reason=orderReason(s,order);
+          const same=reason&&(reason===status?.textContent.trim());
+          if(reason&&!same){
+            const note=el('small','campReason residentOrderReason',reason);
+            note.id='resident-order-reason-'+s.id;
+            fold.append(note);
+            order.setAttribute('aria-describedby',note.id);
+          }else if(same){
+            if(!status.id)status.id='resident-order-reason-'+s.id;
+            order.setAttribute('aria-describedby',status.id);
+          }
+          row.append(fold);
+        }
         if(s.wounded||s.status==='blocked'){const warn=el('span','fbWarning','!');warn.setAttribute('aria-label',activity(s));summary.append(warn);}
       }
     }
@@ -82,9 +205,11 @@
       const head=root.querySelector('.residentIdentityHead');
       if(!s||!head)return;
       portrait(head.querySelector('.residentPortrait'),s);
+      const act=root.querySelector('.fbActivity'),actText=activity(s);
+      if(act&&act.textContent!==actText)act.textContent=actText;
       if(!root.querySelector(':scope > .fbAssignment')){
         const assignment=el('section','fbAssignment');assignment.setAttribute('aria-label','Текущее назначение');
-        const line=el('div','');line.append(el('small','','Назначение'),el('strong','fbAssignmentStamp',jobs[s.job]||s.facility||s.job||'Отдых'),el('span','fbActivity',activity(s)));
+        const line=el('div','');line.append(el('small','','Назначение'),el('strong','fbAssignmentStamp',jobLabel(s)),el('span','fbActivity',activity(s)));
         const change=el('button','fbChangeJob','Сменить');change.type='button';change.setAttribute('aria-expanded','false');
         change.addEventListener('click',()=>{const open=root.classList.toggle('fbChoosingJob');change.setAttribute('aria-expanded',String(open));if(open)root.querySelector('.campJobs')?.scrollIntoView({block:'nearest'});});
         assignment.append(line,change);root.querySelector('.dossierNeeds')?.after(assignment);
@@ -95,8 +220,13 @@
         let count=radio.querySelector('.fbFileCount');if(!count){count=el('span','fbFileCount');count.setAttribute('aria-hidden','true');radio.querySelector('.dossierDial')?.after(count);}
         const nums=radio.querySelector('.dossierDial')?.textContent.match(/\d+/g)||[],text=nums.length>1?nums[0].padStart(2,'0')+' / '+nums[1].padStart(2,'0'):nums[0]||'0';if(count.textContent!==text)count.textContent=text;
       }
-      const companion=root.querySelector(':scope > .campCompanion');
-      if(companion){const fold=el('details','fbCompanionFold');fold.append(el('summary','','Вылазка и развитие'));companion.before(fold);fold.append(companion);}
+      const stamp=root.querySelector('.fbAssignmentStamp'),activityNode=root.querySelector('.fbActivity');
+      const text=activity(s),label=jobLabel(s);
+      if(stamp&&stamp.textContent!==label)stamp.textContent=label;
+      for(const node of root.querySelectorAll(':scope > small'))if(node.textContent.trim()==='Ручной отдых · автоназначение выключено')node.hidden=node.textContent.trim()!==text;
+      const echoed=[...root.querySelectorAll(':scope > small')].some(node=>!node.hidden&&node.textContent.trim()===text);
+      if(activityNode&&activityNode.textContent!==text)activityNode.textContent=text;
+      if(activityNode)activityNode.hidden=echoed;
     }
     function blueprints(root){
       const grid=root.querySelector(':scope > .campGrid');
@@ -138,6 +268,7 @@
           if(meta.textContent!==text)meta.textContent=text;
           body.dataset.fieldbookView=tab;
           if(root){if(tab==='overview')home(root);if(tab==='settlers'){roster(root);if(root.querySelector('.residentIdentityHead'))dossier(root);}if(tab==='build')blueprints(root);if(tab==='defense')perimeter();}
+          window.terraCompanionCard?.paint();
         }
       }catch(e){console.error('[camp-fieldbook]',e);}
       observer.takeRecords();observer.observe(body,{childList:true,subtree:true});
@@ -145,7 +276,7 @@
     function schedule(){if(!queued){queued=true;queueMicrotask(decorate);}}
     panel.addEventListener('terra:camp-tab',schedule);panel.addEventListener('terra:camp-refresh',schedule);
     new MutationObserver(schedule).observe(panel,{attributes:true,attributeFilter:['class']});decorate();
-    window.terraCampFieldbook=Object.freeze({activity,portrait});
+    window.terraCampFieldbook=Object.freeze({activity,portrait,roleState,jobHold,denialText,orderReason,buildEnRoute});
   }
   if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 })();

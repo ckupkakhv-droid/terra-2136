@@ -1,0 +1,252 @@
+/* Портрет телефона: мир открыт, вторичное свёрнуто в значки.
+   Широкий кадр и альбом лагеря этим файлом не перекрашиваются. */
+
+@media (orientation: portrait) and (max-width: 520px) {
+  #menu.contourMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: calc(var(--st) + 18px) 16px calc(var(--sb) + 16px);
+    background:
+      linear-gradient(180deg, rgba(12, 9, 6, .15) 0%, rgba(12, 9, 6, .55) 58%, rgba(12, 9, 6, .82) 100%),
+      url('../assets/ui/camp/scene-trail.webp') center 30% / cover no-repeat,
+      #1a140e;
+  }
+  #menu.contourMenu .logo {
+    width: min(340px, 100%);
+    margin: 0 0 4px;
+    padding: 8px 14px 2px;
+    background: url('../assets/ui/camp/paper.webp') center / cover;
+    color: #3a2414;
+    font-size: clamp(42px, 12vw, 64px);
+    letter-spacing: .08em;
+    text-shadow: none;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+  }
+  #menu.contourMenu .sub {
+    width: min(340px, 100%);
+    margin: 0 0 14px;
+    padding: 0 14px 10px;
+    background: url('../assets/ui/camp/paper.webp') center / cover;
+    color: #6a4424;
+    letter-spacing: .18em;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .35);
+  }
+  #menu.contourMenu .mbtns {
+    width: min(340px, 100%);
+    max-height: min(46dvh, 420px);
+    margin: 0;
+    padding: 10px 12px 12px;
+    background: url('../assets/ui/camp/paper.webp') center / cover;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, .4);
+  }
+  #menu.contourMenu .btn,
+  #menu.contourMenu .menuFieldTools {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #342313;
+  }
+  #menu.contourMenu .btn {
+    min-height: 48px;
+    padding: 10px 12px;
+    font-size: 15px;
+    letter-spacing: .06em;
+  }
+  #menu.contourMenu .btn.expeditionPrimary {
+    margin-bottom: 6px;
+    color: #2a160c;
+    background: url('../assets/ui/camp/brass.webp') center / cover;
+    box-shadow: inset 0 0 0 1px rgba(90, 54, 18, .45);
+  }
+  #menu.contourMenu .menuFieldTools > summary {
+    min-height: 48px;
+    color: #342313;
+    font-size: 15px;
+  }
+  #menu.contourMenu .ver {
+    width: min(340px, 100%);
+    margin-top: 8px;
+    color: #ecdcc0;
+  }
+
+  #pause .win {
+    width: min(360px, calc(100vw - 28px));
+    max-height: calc(100dvh - 210px);
+    overflow: auto;
+    padding: 16px 16px 18px;
+    background: url('../assets/ui/camp/paper.webp') center / cover;
+    color: #342313;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+    clip-path: none;
+  }
+  #pause .win h2,
+  #pause .btn {
+    color: #342313;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    clip-path: none;
+  }
+  #pause .btn { min-height: 48px; margin: 0; letter-spacing: .05em; }
+  #pause #pResume {
+    color: #2a160c;
+    background: url('../assets/ui/camp/brass.webp') center / cover;
+  }
+  #pause .x { min-width: 44px; min-height: 44px; }
+}
+
+#fieldDock { display: none; }
+#hud.portraitField #fieldDock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  pointer-events: auto;
+}
+.fieldChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 132px;
+  padding: 4px 8px;
+  color: #342313;
+  background: url('../assets/ui/camp/paper.webp') center / cover;
+  border: 1px solid #8a6840;
+  box-shadow: 0 2px 0 rgba(42, 24, 12, .35);
+  font: 700 13px/1.2 Georgia, 'DejaVu Serif', serif;
+  pointer-events: auto;
+}
+.fieldChip[hidden] { display: none !important; }
+.fieldChip .fieldGlyph { width: 22px; height: 22px; flex: none; display: grid; place-items: center; }
+.fieldChip .fieldGlyph svg,
+.fieldChip .fieldGlyph img { width: 22px; height: 22px; }
+.fieldChipText, .fieldTime {
+  min-width: 0;
+  max-width: 7.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fieldTime:empty { display: none; }
+.fieldChip.isUrgent {
+  max-width: 168px;
+  color: #fff4ef;
+  background: #6e2430 url('../assets/ui/camp/leather.webp') center / cover;
+  border-color: #e7b2a4;
+}
+.fieldChip.isFresh { box-shadow: inset 0 0 0 2px #e4c48f, 0 2px 0 rgba(42, 24, 12, .35); }
+.fieldChip:focus-visible, #fieldSheetClose:focus-visible {
+  outline: 3px solid #e4c48f;
+  outline-offset: 2px;
+}
+
+#hud.portraitField {
+  display: block;
+}
+#hud.portraitField #leftHudStack {
+  position: absolute;
+  left: max(8px, var(--sl));
+  top: var(--st);
+  width: calc(100% - 78px - var(--sr));
+  max-width: none;
+  margin: 0;
+}
+#hud.portraitField #tl {
+  width: auto;
+  padding: 6px 8px 6px;
+}
+#hud.portraitField .bar.hp { height: 18px; }
+#hud.portraitField .bar.hp span { font-size: 15px; line-height: 18px; }
+#hud.portraitField .bar.xp,
+#hud.portraitField .row.small,
+#hud.portraitField #dropHud,
+#hud.portraitField #obj,
+#hud.portraitField #zone,
+#hud.portraitField #kills { display: none !important; }
+#hud.portraitField #evHud,
+#hud.portraitField #radio {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#hud.portraitField #tr {
+  position: absolute;
+  top: var(--st);
+  right: max(8px, var(--sr));
+  width: 56px;
+  margin: 0;
+}
+#hud.portraitField #mmW,
+#hud.portraitField #mm { width: 56px; height: 56px; }
+#hud.portraitField #topBtns {
+  position: absolute;
+  top: calc(var(--st) + 62px);
+  right: max(6px, var(--sr));
+  flex-direction: column;
+  width: 48px;
+  margin: 0;
+  gap: 6px;
+}
+#hud.portraitField #topBtns > button { width: 48px; height: 48px; }
+
+#fieldSheet {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  z-index: 20;
+  display: flex;
+  pointer-events: none;
+}
+#fieldSheet.hidden { display: none !important; }
+#fieldSheet .fieldPaper {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  padding: 12px 12px 14px;
+  overflow: hidden;
+  color: #342313;
+  background: url('../assets/ui/camp/paper.webp') center / cover;
+  border: 1px solid #8a6840;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .45);
+  font: 16px/1.45 Georgia, 'DejaVu Serif', serif;
+}
+#fieldSheet header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+#fieldSheet h2 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: #6a341c;
+  font-size: 20px;
+  letter-spacing: .04em;
+  overflow-wrap: anywhere;
+}
+#fieldSheetClose {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  color: #342313;
+  background: url('../assets/ui/camp/brass.webp') center / cover;
+  border: 1px solid #8a6840;
+  font: 700 22px/1 Georgia, serif;
+}
+#fieldSheetBody {
+  overflow: auto;
+  min-height: 0;
+  touch-action: pan-y;
+}
+#fieldSheetBody p { margin: 8px 0 0; overflow-wrap: anywhere; }

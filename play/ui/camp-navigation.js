@@ -92,6 +92,7 @@
           }
           jobOptions.set(button, option);
         }
+        clarifyTitle(button);
         const signature = `${button.disabled}:${button.title}`;
         if (signature === option.signature) continue;
         option.signature = signature;
@@ -102,19 +103,55 @@
         if (description) button.setAttribute('aria-describedby', description);
         else button.removeAttribute('aria-describedby');
       }
+      translateDenials(body);
+    }
+    function buttonName(button) {
+      const text = [...button.childNodes].filter(node => node.nodeType === Node.TEXT_NODE).map(node => node.textContent.trim()).filter(Boolean).join(' ');
+      return text || button.textContent.trim();
+    }
+    function clarifyTitle(button) {
+      if (!button.disabled) return;
+      const title = (button.title || '').trim();
+      const name = buttonName(button);
+      const generic = !title || title === name || title === 'Нет доступной цели' || title === 'Сейчас недоступно' || title === 'Сейчас нельзя' || title === 'Простой';
+      if (!generic) return;
+      const root = button.closest('.campResidents');
+      const id = root?.querySelector('[data-resident-biography]')?.dataset.residentBiography;
+      const hold = window.terraCampFieldbook?.jobHold?.(window.game?.p?.camp, window.game?.p?.camp?.settlers?.[id], button.dataset.residentJob);
+      if (!hold || hold === title) return;
+      button.title = hold;
+      button.setAttribute('aria-label', name + ': ' + hold);
+    }
+    function translateDenials(root) {
+      const read = window.terraCampFieldbook?.denialText;
+      if (!read) return;
+      const box = root.querySelector('.campResidents');
+      if (!box) return;
+      const seen = new Set();
+      for (const node of [...box.querySelectorAll('p.campReason')]) {
+        const raw = node.textContent.trim();
+        const text = read(raw);
+        if (text && text !== raw) node.textContent = text;
+        const shown = node.textContent.trim();
+        if (seen.has(shown)) node.remove();
+        else seen.add(shown);
+      }
     }
     let watchedJobs = null;
     const jobObserver = new MutationObserver(explainJobs);
     function enhanceContent() {
       enhanceResidents();
       const jobs = body.querySelector('.campJobs');
-      if (jobs === watchedJobs) return;
-      jobObserver.disconnect();
-      watchedJobs = jobs;
-      if (jobs) {
-        explainJobs();
-        jobObserver.observe(jobs, {subtree: true, attributes: true, attributeFilter: ['disabled', 'title']});
+      if (jobs !== watchedJobs) {
+        jobObserver.disconnect();
+        watchedJobs = jobs;
+        if (jobs) {
+          explainJobs();
+          jobObserver.observe(jobs, {subtree: true, attributes: true, attributeFilter: ['disabled', 'title']});
+          return;
+        }
       }
+      translateDenials(body);
     }
     new MutationObserver(enhanceContent).observe(body, {childList: true, subtree: true});
     enhanceContent();
@@ -252,5 +289,5 @@
 
 // «Живой лагерь»: метки, контекстное меню и чертёж постройки — play/ui/camp-live.*.
 { const base = document.currentScript?.src || new URL('ui/', location.href);
-  const s = document.createElement('script'); s.src = new URL('camp-live.js?v=2', base).href; document.head.append(s);
+  const s = document.createElement('script'); s.src = new URL('camp-live.js?v=3', base).href; document.head.append(s);
   const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('camp-live.css?v=2', base).href; document.head.append(l); }
