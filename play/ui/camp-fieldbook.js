@@ -227,6 +227,7 @@
       const echoed=[...root.querySelectorAll(':scope > small')].some(node=>!node.hidden&&node.textContent.trim()===text);
       if(activityNode&&activityNode.textContent!==text)activityNode.textContent=text;
       if(activityNode)activityNode.hidden=echoed;
+      window.terraArmory?.mountDossier(root, s);
     }
     function blueprints(root){
       const grid=root.querySelector(':scope > .campGrid');

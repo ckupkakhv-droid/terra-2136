@@ -242,3 +242,62 @@
  #campPanel.fieldbook .fbBlueprintArt { height:130px; }
 }
 @media(prefers-reduced-motion:reduce) { #campPanel.fieldbook * { scroll-behavior:auto; } }
+
+/* Карточка напарника пишет бумажными чернилами. Полупрозрачный фон на коже альбома
+   оставляет их почти чёрными. Сплошная бумага — общая подложка темы, не пакет стволов. */
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot.campCompanion,
+#campPanel.fieldbook.gamePanel .dossier > .campCompanion.ccPilot.campCompanion,
+#campPanel.fieldbook.gamePanel .fbHomeBoard > .campCompanion.ccPilot.campCompanion {
+  color: #2a160c;
+  background-color: #f4e4c6;
+  background-image: linear-gradient(#f4e4c6, #efe0c4);
+  border: 0;
+  border-left: 8px solid #3a2414;
+  box-shadow: 0 3px 0 #5c4026;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot .companionEquipment,
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot .ccArmory {
+  color: #2a160c;
+  background-color: #f4e4c6;
+  width: 100%;
+  min-width: 0;
+}
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot :is(
+  .companionHeader strong,
+  .ccDrawer > summary,
+  .companionEquipment summary,
+  .ccStatus,
+  .ccShoot,
+  .ccExtra
+) {
+  color: #2a160c;
+}
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot :is(.ccDefense, .ccStatus, .campReason, .companionAction > small, .ccArmory p, .ccArmory small) {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+  color: #2a160c;
+  background-color: #f4e4c6;
+}
+#campPanel.fieldbook.gamePanel .campCompanion.ccPilot :is(.campReason, .companionAction > small, .ccArmory small) {
+  color: #6e2e22;
+}
+#campPanel.fieldbook.gamePanel .ccArmory button {
+  background-color: #f0d7a4;
+  color: #24160c;
+  border-color: #6d542c;
+}
+#campPanel.fieldbook.gamePanel .ccArmory button:disabled {
+  background-color: #e7d7b8;
+  color: #3a2614;
+}
+@media (max-width: 600px) {
+  #campPanel.fieldbook.gamePanel .campCompanion.ccPilot .ccLayout {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
