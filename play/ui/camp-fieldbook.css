@@ -295,6 +295,39 @@
   background-color: #e7d7b8;
   color: #3a2614;
 }
+#campPanel.fieldbook.gamePanel .ccPilot .ccFace { grid-template-columns: 124px minmax(0, 1fr); }
+#campPanel.fieldbook.gamePanel .ccPilot .ccPhoto {
+  width: 112px; height: 136px; border: 8px solid #eadbbd; box-shadow: 2px 4px 0 #0005; position: relative;
+}
+#campPanel.fieldbook.gamePanel .ccPilot .ccPhoto::after {
+  content: ""; position: absolute; top: -12px; left: 18px; width: 16px; height: 32px;
+  border: 3px solid #c6bd9a; border-radius: 8px; transform: rotate(-10deg); pointer-events: none;
+}
+#campPanel.fieldbook.gamePanel .ccPilot .ccModes .campButton,
+#campPanel.fieldbook.gamePanel .ccPilot .ccNear .campButton {
+  min-height: 48px; min-width: 44px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 6px;
+  padding: 6px 8px; white-space: nowrap;
+  background-color: #e7c98a; background-image: linear-gradient(#f6e2b4, #c4924c); color: #24160c;
+  border: 0; box-shadow: 0 3px 0 #5a3a18; font: 800 14px/1 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel.fieldbook.gamePanel .ccPilot .ccActMark { width: 18px; height: 18px; flex: none; display: grid; place-items: center; overflow: hidden; }
+#campPanel.fieldbook.gamePanel .ccPilot .ccActMark svg { width: 18px; height: 18px; display: block; }
+#campPanel.fieldbook.gamePanel .ccStamp {
+  display: inline-block; align-self: start; color: #21401f; background: #e7f0dc; border: 2px solid #2f6b35;
+  padding: 4px 8px; font: 900 13px/1 Georgia, 'DejaVu Serif', serif; letter-spacing: .04em; text-transform: uppercase;
+}
+#campPanel.fieldbook.gamePanel .ccGunLine { display: flex; align-items: center; gap: 8px; margin: 0; color: #2a160c; }
+#campPanel.fieldbook.gamePanel .ccGunMark { width: 28px; height: 28px; display: grid; place-items: center; }
+#campPanel.fieldbook.gamePanel .ccGunMark svg { width: 28px; height: 28px; }
+#campPanel.fieldbook.gamePanel .ccMag {
+  flex: none; width: 28px; min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%;
+  background: #1c140e; color: #f6ead8; font: 800 13px/1 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel.fieldbook.gamePanel .ccArmoryHint > summary,
+#campPanel.fieldbook.gamePanel .ccHint > summary {
+  min-height: 44px; display: flex; align-items: center; cursor: pointer; color: #3a2614; font: 700 13px/1.2 Georgia, 'DejaVu Serif', serif;
+}
+#campPanel.fieldbook.gamePanel .ccArmory { display: flex; flex-direction: column; align-items: stretch; gap: 6px; }
 @media (max-width: 600px) {
   #campPanel.fieldbook.gamePanel .campCompanion.ccPilot .ccLayout {
     width: 100%;

@@ -96,10 +96,45 @@
     }
   }
 
+  function dress(card) {
+    const icons = {wait:'pause', return:'camp', pickup:'hand', map:'map', follow:'person', recruit:'person'};
+    const short = {wait:'Ждать', return:'В лагерь', pickup:'Подобрать', map:'На карте', follow:'За мной'};
+    for (const button of card.querySelectorAll('[data-companion-action]')) {
+      const key = button.dataset.companionAction;
+      if (short[key] && button.dataset.ccWord !== short[key]) {
+        if (!button.dataset.ccFull) button.dataset.ccFull = button.textContent.replace(/\s+/g, ' ').trim();
+        button.textContent = short[key];
+        button.setAttribute('aria-label', button.dataset.ccFull || short[key]);
+        button.dataset.ccWord = short[key];
+      }
+      if (!button.querySelector('.ccActMark') && icons[key]) {
+        const src = document.querySelector('[data-ic="' + icons[key] + '"] svg');
+        if (src) {
+          const mark = document.createElement('i');
+          mark.className = 'ccActMark';
+          mark.setAttribute('aria-hidden', 'true');
+          mark.append(src.cloneNode(true));
+          button.prepend(mark);
+        }
+      }
+      const block = button.closest('.companionAction');
+      const small = block?.querySelector(':scope > small');
+      if (small && block && !block.querySelector('.ccHint')) {
+        const hint = document.createElement('details');
+        hint.className = 'ccHint';
+        const sum = document.createElement('summary');
+        sum.textContent = 'Зачем';
+        hint.append(sum, small);
+        block.append(hint);
+      }
+    }
+  }
+
   function paintCard(card) {
     place(card);
     const sig = signature(card);
     if (card.dataset.ccSig === sig && card.querySelector(':scope > .ccLayout')) {
+      dress(card);
       window.terraArmory?.mountCard(card, residentFor(card));
       return;
     }
@@ -180,6 +215,7 @@
       extra.append(node);
     }
     if (extra.childNodes.length) layout.append(extra);
+    dress(card);
     card.classList.add('ccPilot');
     card.dataset.ccPilot = '1';
     card.dataset.ccSig = signature(card);

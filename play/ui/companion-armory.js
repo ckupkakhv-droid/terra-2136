@@ -219,15 +219,24 @@
       root.className = 'ccArmory';
       root.dataset.armoryResident = resident.id;
       const note = document.createElement('p');
-      note.textContent = 'Ствол не выдан';
+      note.className = 'ccGunLine';
+      note.textContent = 'В сундуке пусто';
+      const stamp = document.createElement('b');
+      stamp.className = 'ccStamp';
+      stamp.textContent = 'Без ствола';
       const why = document.createElement('small');
       why.textContent = idleReason(game.p.camp, resident);
+      const hint = document.createElement('details');
+      hint.className = 'ccArmoryHint';
+      const sum = document.createElement('summary');
+      sum.textContent = 'Пояснение';
+      hint.append(sum, why);
       const button = document.createElement('button');
       button.type = 'button';
       button.disabled = true;
       button.dataset.armoryAction = 'issue';
       button.textContent = 'Выдать из сундука';
-      root.append(note, why, button);
+      root.append(stamp, note, hint, button);
       root.dataset.armorySig = [resident.id, note.textContent, why.textContent, 'denied'].join('\n');
       return root;
     }
@@ -238,8 +247,25 @@
     root.className = 'ccArmory';
     root.dataset.armoryResident = resident.id;
     const note = document.createElement('p');
-    const name = held ? (held.nm || held.wt) + ' · uid ' + held.uid + ' · магазин ' + (held.mag ?? 0) : 'В сундуке свободных стволов: ' + guns.length;
-    note.textContent = name;
+    note.className = 'ccGunLine';
+    const stamp = document.createElement('b');
+    stamp.className = 'ccStamp';
+    stamp.textContent = held ? 'Вооружён' : 'Без ствола';
+    if (held) {
+      root.dataset.weaponUid = String(held.uid);
+      const mark = document.createElement('i');
+      mark.className = 'ccGunMark';
+      mark.setAttribute('aria-hidden', 'true');
+      const src = document.querySelector('[data-ic="rifle"]') || document.querySelector('[data-ic="gun"]') || document.querySelector('[data-ic="melee"]');
+      if (src) mark.innerHTML = src.innerHTML;
+      const title = document.createElement('b');
+      title.textContent = held.nm || held.wt || 'Ствол';
+      const mag = document.createElement('span');
+      mag.className = 'ccMag';
+      mag.textContent = String(held.mag ?? 0);
+      mag.setAttribute('aria-label', 'магазин ' + (held.mag ?? 0));
+      note.append(mark, title, mag);
+    } else note.textContent = guns.length ? 'В сундуке ' + guns.length : 'В сундуке пусто';
     const why = document.createElement('small');
     why.textContent = role === 'scout'
       ? 'Дальнего боя разведки нет. Ствол только при себе.'
@@ -281,8 +307,13 @@
         button.dataset.armoryBusy = '0';
       }
     });
-    root.append(note, why, button);
-    root.dataset.armorySig = [resident.id, name, why.textContent, button.textContent, button.disabled ? '0' : '1'].join('\n');
+    const hint = document.createElement('details');
+    hint.className = 'ccArmoryHint';
+    const sum = document.createElement('summary');
+    sum.textContent = 'Пояснение';
+    hint.append(sum, why);
+    root.append(stamp, note, hint, button);
+    root.dataset.armorySig = [resident.id, held ? held.uid : '', held ? held.mag : guns.length, why.textContent, button.textContent, button.disabled ? '0' : '1'].join('\n');
     return root;
   }
 
