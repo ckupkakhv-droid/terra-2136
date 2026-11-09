@@ -1,7 +1,7 @@
 /* Полевой альбом: реальные жители, штатные кнопки и данные лагеря. */
 /* companion-card-loader */
 { const base = document.currentScript?.src || new URL('ui/', location.href);
-  const s = document.createElement('script'); s.src = new URL('companion-card.js', base).href; document.head.append(s);
+  const s = document.createElement('script'); s.src = new URL('companion-card.js?v=3', base).href; document.head.append(s);
   const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = new URL('companion-card.css', base).href; document.head.append(l); }
 /* /companion-card-loader */
 (() => {
@@ -227,6 +227,7 @@
       const echoed=[...root.querySelectorAll(':scope > small')].some(node=>!node.hidden&&node.textContent.trim()===text);
       if(activityNode&&activityNode.textContent!==text)activityNode.textContent=text;
       if(activityNode)activityNode.hidden=echoed;
+      window.terraArmory?.mountDossier(root, s);
     }
     function blueprints(root){
       const grid=root.querySelector(':scope > .campGrid');

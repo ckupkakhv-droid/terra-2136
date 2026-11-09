@@ -86,6 +86,12 @@
     return node;
   }
 
+  function para(text) {
+    const node = document.createElement('p');
+    node.textContent = text;
+    return node;
+  }
+
   function paint(next) {
     const title = document.getElementById('fieldSheetTitle');
     const body = document.getElementById('fieldSheetBody');
@@ -96,9 +102,8 @@
       title.textContent = plain('objT') || 'Цель';
       const hint = plain('objH');
       const detail = plain('objD');
-      if (hint) body.append(line('Куда', hint));
-      if (detail) body.append(line('Подробно', detail));
-      if (!hint && !detail) body.append(line('Запись', plain('obj') || 'Пока пусто'));
+      if (hint) body.append(para(hint));
+      if (detail && detail !== hint) body.append(para(detail));
     } else if (next === 'fieldPouch') {
       title.textContent = 'Сводка';
       for (const [id, label] of [['food', 'Еда'], ['water', 'Вода'], ['clock', 'Время'], ['zone', 'Место'], ['kills', 'Бой'], ['dropN_bag', 'Рюкзак'], ['dropN_scrap', 'Лом'], ['dropN_wood', 'Дерево'], ['dropN_chem', 'Химия'], ['dropN_cloth', 'Ткань']]) {
@@ -108,7 +113,7 @@
     } else if (next === 'fieldRadio') {
       title.textContent = 'Радио';
       const message = plain('radioT') || 'Тишина.';
-      body.append(line('Передача', message));
+      body.append(para(message));
       readRadio = message;
       const chipNode = document.getElementById('fieldRadio');
       if (chipNode) chipNode.classList.remove('isFresh');
@@ -117,8 +122,19 @@
       const name = (ev?.querySelector('.evh b')?.textContent || 'Событие').trim();
       const timer = (document.getElementById('evTm')?.textContent || '').trim();
       title.textContent = name;
-      if (timer) body.append(line('Срок', timer));
-      body.append(line('Текст', plain('evHud')));
+      if (timer) {
+        const stamp = document.createElement('p');
+        stamp.className = 'fieldStamp';
+        stamp.textContent = timer;
+        body.append(stamp);
+      }
+      const seen = new Set([name, timer]);
+      for (const node of ev?.querySelectorAll('.evw span, .evd span') || []) {
+        const text = node.textContent.replace(/\s+/g, ' ').trim();
+        if (!text || seen.has(text)) continue;
+        seen.add(text);
+        body.append(para(text));
+      }
       readEvent = name;
       const chipNode = document.getElementById('fieldAlert');
       if (chipNode) chipNode.classList.remove('isFresh');
@@ -190,9 +206,11 @@
     const on = playing();
     document.documentElement.classList.toggle('portraitMenu', portrait());
     hud.classList.toggle('portraitField', on);
+    const toasts = document.getElementById('toasts');
     if (!on) {
       quiet(false);
       close(false);
+      if (toasts) toasts.style.top = '';
       return;
     }
     mount();
@@ -211,6 +229,7 @@
     const message = plain('radioT');
     const showRadio = radioLive();
     radio.hidden = !showRadio;
+    radio.querySelector('.fieldChipText').textContent = '';
     if (showRadio && message !== seenRadio) {
       seenRadio = message;
       if (message !== readRadio) radio.classList.add('isFresh');
@@ -237,9 +256,13 @@
     const inv = document.getElementById('inv');
     if (inv && !inv.classList.contains('hidden')) close(false);
     if (kind === 'fieldAlert') {
-      const timer = document.querySelector('#fieldSheetBody p');
+      const stamp = document.querySelector('#fieldSheetBody .fieldStamp');
       const fresh = (document.getElementById('evTm')?.textContent || '').trim();
-      if (timer && fresh && timer.textContent !== 'Срок: ' + fresh) timer.textContent = 'Срок: ' + fresh;
+      if (stamp && fresh && stamp.textContent !== fresh) stamp.textContent = fresh;
+    }
+    if (toasts) {
+      const below = document.getElementById('fieldDock')?.getBoundingClientRect().bottom || 96;
+      toasts.style.top = Math.round(below + 8) + 'px';
     }
     place();
   }
